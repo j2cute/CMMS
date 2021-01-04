@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ClassLibrary.Models.AspNetUser>
+@{
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+
+<section class="content-header">
+    <a class="btn btn-success" href="@Url.Action("Create","Admin")"><i class="fa fa-plus"></i> Add New User</a>
+    <a class="btn btn-info" href="@Url.Action("ViewAllRoles","Admin")"><i class="fa fa-eye"></i> View Roles</a>
+</section>
+<section class="content">
+    <div class="row">
+        <!-- /.box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Application Users Information</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td> @item.UserName</td>
+                            <td>
+                                @if ((item.UserName.ToLower() == "admin123"))
+                                {
+                                    <p style="color:red">Not Allowed</p>
+                                }
+
+                                else
+                                {
+                                    <a class="btn-primary btn-sm" href="@Url.Action("EditUser", "Admin", new { UserName = item.UserName, Email = item.Email }) "><i class="fa fa-pencil fa-lg"></i></a>
+                                    @Html.ActionLink("Edit/Assign Roles", "EditRoles", new { UserName = item.UserName, Email = item.Email }, new { @class = "btn-sm btn-warning" }) <i></i>
+                                    @Html.ActionLink("Delete", "DeleteUser", new { UserName = item.UserName, Email = item.Email }, new { onclick = "return confirm('Are you sure you wish to delete this user?');", @class = "btn-sm btn-danger" })
+                                }
+                            </td>   
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+  $(function () {
+    $('#example1').DataTable()
+  })
+</script>

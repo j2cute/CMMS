@@ -1,0 +1,76 @@
+﻿@using ClassLibrary.Models
+@model LoginViewModel
+
+<style>
+
+    #test ul {
+       text-decoration:none;
+       list-style:none;
+    }
+</style>
+
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="login-form wrapper fadeInDown">
+        <br />
+        <div id="formContent">
+
+            <!-- Tabs Titles -->
+            <h2 class="active"> Log In </h2>
+            @*<h2 class="inactive underlineHover">Sign Up </h2>*@
+            <!-- Icon -->
+            @*@style="text-transform: lowercase"*@
+            <!-- Login Form -->
+            <div class="form">
+                <hr />
+                <div id="alg_left">
+                    @Html.LabelFor(m => m.UserName, new { @class = "fadeIn second" })
+                    <div>
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-fadeIn second" })<br />
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div id="alg_left">
+                    @Html.LabelFor(m => m.Password, new { @class = "fadeIn third" })
+                    <div>
+                        @*@Html.PasswordFor(m => m.Password, new { @class = "fadeIn third" })*@
+                        @Html.PasswordFor(m => m.Password, new { @class = "fadeIn third" })<br />
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="">
+                    <div style="font-family:Arial;">
+                        @Html.CheckBoxFor(m => m.RememberMe, new { @class = "fadeIn Fourth" })
+                        @Html.LabelFor(m => m.RememberMe)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Log in" class="btn btn-default" />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger", @id = "test" })
+                </div>
+               
+            </div>
+          
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <strong>PN Configuration Module</strong>
+
+            </div>
+
+        </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

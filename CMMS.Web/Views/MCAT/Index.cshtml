@@ -1,0 +1,107 @@
+﻿@model IEnumerable<ClassLibrary.Models.tbl_MCAT>
+@{
+    ViewBag.Title = "Index";
+}
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h4>MCAT Records</h4>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+
+<section class="content">
+  
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+
+                <!-- jquery validation -->
+                <div class="box">
+                    <div class="box-header">
+                        <a class="btn btn-success" data-modal='' href="@Url.Action("Create","MCAT")"><i class="fa fa-plus"></i> Add New Type</a>
+
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+
+                    <div class="box-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+               
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td> @item.MCAT_ID</td>
+                                        <td> @item.MCAT_Name</td>
+
+                                        @{
+                                            if (this.User.IsInRole("Admin"))
+                                            {
+                                                <td>
+                                                    <a class="btn-primary btn-sm" data-modal='' href="@Url.Action("Edit", "MCAT", new { id = item.MCAT_ID })"><i class="fa fa-pencil"></i></a> |
+                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "MCAT", new { id = item.MCAT_ID }) "><i class="fa fa-eye"></i></a> |
+                                                    <a class="btn-danger btn-sm" data-modal='' href="@Url.Action("Delete", "MCAT", new { id = item.MCAT_ID })"><i class="fa fa-trash"></i></a>
+
+                                                </td> }
+                                            else
+                                            {
+                                                <td>
+                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "MCAT", new { id = item.MCAT_ID }) "><i class="fa fa-eye"></i></a> |
+                                                </td> }
+
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="box-footer">
+
+                    </div>
+
+                </div>
+                <!-- /.card -->
+
+            </div>
+            <!--/.col (left) -->
+            <!--/.col (right) -->
+        </div>
+        <!-- /.row -->
+
+</section>
+
+<script>
+    $(function () {
+        $('#example1').DataTable()
+    });
+</script>
+
+
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/Scripts/common/modalPopup.js")
+}

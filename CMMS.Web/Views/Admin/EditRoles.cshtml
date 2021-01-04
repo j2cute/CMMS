@@ -1,0 +1,129 @@
+﻿@model ClassLibrary.Models.UserAndRolesDTO
+
+@{
+    ViewBag.Title = "EditRoles";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<section class="content-header">
+    <h1>
+        EDIT / ASSIGN ROLES MODULE
+        <small>Detail</small>
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Edit / Assign User Roles</h3>
+            </div>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @disabled = "true" } })
+                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                    <div class="col-md-4">
+                                        <div class="col-sm-10">
+                                            <p id="Status" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Roles</label>
+                                    @Html.DropDownList("AddRole")
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        <!-- /.card-body -->
+                        <div class="box-footer">
+
+                            <a class="btn btn-default" href="@Url.Action("Index", "Admin")"><i class="fa fa-chevron-circle-left fa-lg"></i> Back</a>
+                            <input type="submit" value="Add Role" class="btn btn-primary" />
+
+                        </div>
+            }
+                </div>
+
+    </div>
+</section>
+
+
+<section class="content">
+    <div class="row">
+        <!-- /.box -->
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">User Assign Roles Information</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Existing Roles</th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.colUserRoleDTO)
+                        {
+                        <tr>
+
+                            <td> @item.RoleName</td>
+                            <td>
+                                @if (!((Model.UserName.ToLower() ==
+                                    this.User.Identity.Name.ToLower()) &&
+                                    item.RoleName == "Administrator") &&
+                                    item.RoleName != "No Roles Found")
+                                {
+                                    @Html.ActionLink("Delete", "DeleteRole",
+                                   new { Email = item.UserName, UserName = item.UserName, RoleName = item.RoleName },
+                                    new
+                                    {
+                                        @class = "btn-danger btn-sm",
+                                        onclick =
+                                    "return confirm('Are you sure you wish to delete this role?');"
+                                    })
+                                }
+                            </td>
+                            @*<td>
+            <a class="btn-primary btn-sm" href="@Url.Action("Edit", "LegalAssistanceModule", new { id = item.Personnel_tbl.PersonnelID, item.PersonnelDetail_tbl.PersonnelDetailID, item.LegalAssistanceDetail_tbl.Pd_OpponentID, item.LegalAssistanceDetail_tbl.OpponentID })"><i class="fa fa-pencil fa-lg"></i></a> |
+            <a class="btn-info btn-sm" href="@Url.Action("Details", "LegalAssistanceModule", new { id = item.Personnel_tbl.PersonnelID, item.PersonnelDetail_tbl.PersonnelDetailID, item.LegalAssistanceDetail_tbl.OpponentID })"><i class="fa fa-eye fa-lg"></i></a> |
+            <a class="btn-danger btn-sm" href="@Url.Action("Delete", "LegalAssistanceModule", new { id = item.Personnel_tbl.PersonnelID, item.PersonnelDetail_tbl.PersonnelDetailID, item.LegalAssistanceDetail_tbl.OpponentID, item.LegalAssistanceDetail_tbl.Pd_PersonnelID, item.LegalAssistanceDetail_tbl.Pd_OpponentID })"><i class="fa fa-trash fa-lg"></i></a>
+        </td>*@
+
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>

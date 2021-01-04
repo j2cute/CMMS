@@ -1,0 +1,88 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div id="jstree">
+    </div>
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <input type="hidden" name="selectedItems" id="selectedItems" />
+        <input type="submit" value="Submit" />
+    }
+    <link href="~/Scripts/themes/default/style.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+    <script src="~/Scripts/jstree.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#jstree').on('changed.jstree', function (e, data) {
+                console.log(data);
+
+                var test = data;
+
+                var i, j;
+                var selectedItems = [];
+
+               
+                for (i = data.instance.get_node(data.selected[0]).parents.length-2; i>=0; i--) {
+                    
+                    var parentNodeId = data.instance.get_node(data.selected[0]).parents[i];
+
+                    //Add the Node to the JSON Array.
+                    selectedItems.push({
+                        text: data.instance.get_node(parentNodeId).text,
+                        id: parentNodeId,
+                        parent: data.instance.get_node(parentNodeId).parent
+                    });
+                }
+
+            
+                selectedItems.push({
+                    text: data.instance.get_node(data.selected[0]).text,
+                    id: data.instance.get_node(data.selected[0]).id,
+                    parent: data.instance.get_node(data.selected[0]).parent
+                });
+
+                for (i = 0; i < data.instance.get_node(data.selected[0]).children_d.length; i++) {
+
+                    var childNodeId = data.instance.get_node(data.selected[0]).children_d[i];
+
+                    debugger;
+
+                    //Add the Node to the JSON Array.
+                    selectedItems.push({
+                        text: data.instance.get_node(childNodeId).text,
+                        id: childNodeId,
+                        parent: data.instance.get_node(childNodeId).parent
+                    });
+                }
+
+
+                //Serialize the JSON Array and save in HiddenField.
+
+                console.log(JSON.stringify(selectedItems));
+
+                $('#selectedItems').val(JSON.stringify(selectedItems));
+            }).jstree({
+                "core": {
+                    "themes": {
+                        "variant": "large"
+                    },
+                    "data": @Html.Raw(ViewBag.Json)
+                    },
+                "checkbox": {
+                    "keep_selected_style": false
+                },
+                "plugins": ["wholerow", "checkbox"],
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+﻿@model ClassLibrary.Models.tbl_PartType
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="modal-header">
+    <h4 class="modal-title">View MCAT Type</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+<div class="modal-body">
+        @Html.HiddenFor(model => model.PartTypeID)
+        <div class="box box-primary box-solid">
+            <div class="box-header">
+          
+                <div class="form-group row">
+                    <div class=" col-md-3"></div>
+                </div>
+            </div>
+            <br />
+
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="box-body" id="InputFields">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Id</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PartTypeID, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                        @Html.ValidationMessageFor(model => model.PartTypeID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Name</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.PartName, new { htmlAttributes = new { @class = "form-control", @disabled="disabled" } })
+                        @Html.ValidationMessageFor(model => model.PartName, "", new { @class = "text-danger" })
+                    </div>
+                </div>                
+            </div>
+
+        </div>
+
+        <div class="modal-footer" id="footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+
+</div>
+
+

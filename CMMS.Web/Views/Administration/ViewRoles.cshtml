@@ -1,0 +1,95 @@
+﻿@model ILS.UserManagement.ViewModels.RolesViewModel
+@{
+    ViewBag.Title = "ViewARoles";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<section class="content-header">
+    <a class="btn btn-default" href="@Url.Action("Index", "Admin")"><i class="fa fa-chevron-circle-left fa-lg"></i> Back </a>
+    <a class="btn btn-success" data-modal='' href="@Url.Action("Create","Administration")"><i class="fa fa-plus"></i> Create new role</a>
+</section>
+<section class="content">
+    <div class="row">
+        <!-- /.box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Application Roles Information</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Actions</th>
+                            <th>Role Name</th>
+                            @*<th>Operations</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.tbl_Role_list)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                                <i class="fa fa-cog"></i> Actions
+                                                <span class="caret ng-tns-c275-7"></span>
+                                            </button>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item btn primary" data-modal=''  href="@Url.Action("Edit", "Administration", new { id = item.RoleId })"><i class="fa fa-pencil fa-lg"></i> Edit</a><br />
+                                                <a class="dropdown-item btn danger" data-modal=''  href="@Url.Action("Delete", "Administration", new { id = item.RoleId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
+                                              
+                                            </div>
+                                        </div>
+                                        <!-- /btn-group -->
+
+                                    </div>
+                                </td>
+                                <td> @item.Name</td>
+                                @*<td>
+                                        @if (item.RoleName.ToLower() != "administrator")
+                                        {
+                                            @Html.ActionLink("Delete", "DeleteUserRole",
+                                           new { RoleName = item.RoleName },
+                                           new
+                                           {
+                                               onclick =
+                                           "return confirm('Are you sure you wish to delete this role?');"
+                                           })
+                                        }
+                                    </td>*@
+                                @*<td>
+                                     </td>*@
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(function () {
+        $('#example1').DataTable()
+    });
+</script>
+
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}

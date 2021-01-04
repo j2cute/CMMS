@@ -1,0 +1,9 @@
+﻿
+<option value="">......Select......</option>
+@if (ViewBag.M_MOP != null)
+{
+    foreach (var item in ViewBag.M_MOP)
+    {
+        <option value="@item.Value">@item.Text</option>
+    }
+}

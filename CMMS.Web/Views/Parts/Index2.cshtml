@@ -1,0 +1,123 @@
+﻿ @model ClassLibrary.ViewModels.PartsViewModels
+<link href = "~/Content/morris.css" rel = "stylesheet" />
+<link href="~/Content/Digtalstyle.css" rel="stylesheet" />
+<script src="~/Content/Digitalscript.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/raphael.min.js"></script>
+<script src="~/Scripts/morris.min.js"></script>
+<section class="content-header">
+    <h1>
+        Restore & Delete Permanently (Parts Record)
+       
+    </h1>
+
+</section>
+<!-- Main content -->
+<section class="content">
+    
+        <div class="row">
+          <div class="col-md-12">
+              <div class="box">
+                  <div class="box-header">
+                 </div>
+                  <!-- /.box-header -->
+                  <div class="box-body">
+                      <table id="example1" class="table table-bordered table-striped" style="width:100%">
+                          <thead>
+                              <tr>
+                                  <th>Actions</th>
+                                  <th>Cage Code</th>
+                                  <th>Part No</th>
+                                  <th>Part Name</th>
+                                  <th>NSN</th>
+                                  <th>Part Type</th>
+                                  @*<th>MCAT</th>     
+                                  <th>Unit Price</th>
+                                  <th>Currency</th>    
+                                  <th>MTBF</th>
+                                  <th>BRF</th>
+                                  <th>SMR</th>*@
+                                  @*<th>Length</th>
+                                  <th>Width</th>
+                                  <th>Height</th>         
+                                  <th>Diameter</th>
+                                  <th>Weight</th>*@    
+                                  <th></th>
+                              </tr>
+                          </thead>
+                          <tbody>
+                              @foreach (var item in Model.tbl_Parts_list)
+                              {
+                                  <tr>
+                                      @{
+                                          if (this.User.IsInRole("Admin"))
+                                          {
+                                              <td>
+                                                  <a class="btn-primary btn-sm" title="Restore" data-modal="" href="@Url.Action("Restore", "Parts", new { id = item.PartId })"><i class="fa fa-refresh"></i></a> |
+                                                  <a class="btn-danger btn-sm" title="Delete" data-modal="" href="@Url.Action("Delete2", "Parts", new { id = item.PartId })"><i class="fa fa-trash"></i></a>
+   </td> }
+                                          else
+                                          {
+                                              <td>
+                                                  <a class="btn-primary btn-sm" title="Restore" data-modal="" href="@Url.Action("Restore", "Parts", new { id = item.PartId })"><i class="fa fa-refresh"></i></a> |
+                                                  <a class="btn-danger btn-sm" title="Delete" data-modal="" href="@Url.Action("Delete2", "Parts", new { id = item.PartId})"><i class="fa fa-trash"></i></a>
+</td>
+                                              }
+                                          }
+                                      <td> @item.CageCode</td>
+                                      <td> @item.Part_No</td>
+                                      <td> @item.PART_NAME</td>
+                                      <td> @item.NSN</td>
+                                      <td> @item.tbl_PartType.PartName</td>
+                                      @*<td> @item.tbl_MCAT.MCAT_Name</td>
+                                      <td> @item.UNIT_PRICE</td>
+                                      <td> @item.CurrencyID</td>
+                                      <td> @item.MTBF</td>
+                                      <td> @item.BRF</td>
+                                      <td> @item.SMR</td>*@
+                                      @*<td> @item.LENGTH</td>
+                                      <td> @item.WIDTH</td>
+                                      <td> @item.HEIGHT</td>
+                                      <td> @item.WEIGHT</td>*@
+
+               
+                                      <td>
+                                          <a data-modal='' href="@Url.Action("Details", "Parts", new { id = item.PartId}) ">Details</a> 
+
+                                      </td>
+                                  </tr>
+                                          }
+                          </tbody>
+                      </table>
+
+
+                  </div>
+                  <!-- /.box-body -->
+              </div>
+
+          </div>
+
+        </div>
+    
+</section>
+
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "scrollX": true,
+        })
+    });
+</script>
+
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}
+

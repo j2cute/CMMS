@@ -1,0 +1,799 @@
+﻿@model ClassLibrary.ViewModels.MopViewModels
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<link href="~/Content/morris.css" rel="stylesheet" />
+<link href="~/Content/Digtalstyle.css" rel="stylesheet" />
+<script src="~/Content/Digitalscript.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<link href="~/Scripts/themes/default/style.min.css" rel="stylesheet" />
+<script src="~/Scripts/jstree.min.js"></script>
+
+<style>
+    .modal-dialog {
+        width: 80% !important;
+    }
+
+    .avatar-preview {
+        width: 192px;
+        height: 192px;
+        position: relative;
+        border: 6px solid #F8F8F8;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    }
+    a{
+        cursor: pointer;
+    }
+</style>
+
+
+@*<script>
+    $('#gridMop').DataTable();
+</script>*@
+
+
+<script>
+    $(document).ready(function () {
+        var mopTable;
+        $("#ConfigEquipment").hide();
+        $("#Proceed").click(function () {
+            resetFormInputs();
+            $("#ConfigEquipment").show();
+            $("#M_MOP_SiteId").val($('#C_Site_Config_SiteId').val());
+        });
+
+        function resetFormInputs(context) {
+            var siteId = $('#C_Site_Config_SiteId').val();
+            jQuery('#WizardPicturePreview').attr("src", "../Content/Img/default-avatar.png")
+            //$("#File").prop('disabled', false)
+            jQuery(':input', '#AllDetails')
+                .removeAttr('checked')
+                .removeAttr('selected')
+                .attr("style", "pointer-events: '';")
+                .not(':button, :submit, :reset, :hidden')
+                .each(function () {
+                    jQuery(this).val(jQuery(this).prop('defautValue'));
+                });
+            $('#C_Site_Config_SiteId').val(siteId);
+        }
+
+        $('#jstree').on('changed.jstree', function (e, data) {
+            var data = data.instance.get_node(data.selected[0]);
+            var eswbs = data.id;
+            $('#eswbs').val(eswbs);
+            var siteId = $('#C_Site_Config_SiteId').val();
+            $.ajax({
+                type: "Post",
+                url: "/Mop/GetMOPData",
+                data: {
+                    SiteId: siteId,
+                    eswbs: JSON.parse(eswbs)
+                },
+                //  contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+
+                success: OnSuccess,
+                failure: function (response) {
+          
+                    $("#gridMop").DataTable().destroy();
+                    $('#gridMop').DataTable({  scrollX: true, } ).clear().draw();
+
+                    swal({
+                        title: "Oops...", text: "No MOPs Found!", type: "error",
+                    });
+                },
+                error: function (response) {
+                    $("#gridMop").DataTable().destroy();
+                    $('#gridMop').DataTable({ scrollX: true, }).clear().draw();
+                    swal({
+                        title: "Oops...", text: "No MOPs Found!", type: "error",
+                    });
+                }
+            });
+        });
+    });
+    function GetSelectedData() {
+          var siteId = $('#siteId').val();
+          var pmsNo = $('#pmsNo').val();
+          var mopNo = $('#mopNo').val();
+        $.ajax({
+                cache: 'false',
+                type: "Post",
+                // contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("GetSelectedData", "MOP")',
+
+            dataType: 'json',  // add this line
+            data: {
+                siteId: siteId,
+                pmsNo: pmsNo,
+                mopNo: mopNo
+            },
+            success: function (data) {
+                $("#M_MOPModel_SiteId").val(data.M_MOPModel.SiteId)
+                $("#M_MOPModel_PMS_No").val(data.M_MOPModel.PMS_No);
+                $("#M_MOPModel_MOP_No").val(data.M_MOPModel.MOP_No);
+                $("#M_MOPModel_MOP_Desc").val(data.M_MOPModel.MOP_Desc);
+                $("#M_MOPModel_By_Whom").val(data.M_MOPModel.By_Whom);
+                $("#M_MOPModel_Periodicity").val(data.M_MOPModel.Periodicity);
+                $("#M_MOPModel_Period").val(data.M_MOPModel.Period);
+                $("#M_MOPModel_Doc").val(data.M_MOPModel.Doc);
+                $("#M_MOPModel_Task_Procedure").val(data.M_MOPModel.Task_Procedure);
+                $("#M_MOPModel_Safety_Precautions").val(data.M_MOPModel.Safety_Precautions);
+
+            },
+            failure: function (data) {
+                alert("failed! Call us Please.");
+            },
+            error: function (data) {
+                alert("failed! Error.");
+
+            },
+        });
+
+    };
+    function OnSuccess(response) {
+      
+        $("#addMOP").modal('hide'); $("#editMOP").modal('hide'); $("#delMOP").modal('hide');
+        $("#gridMop").DataTable().destroy();
+        mopTable = $("#gridMop").DataTable(
+            {
+                scrollX: true,
+                bLengthChange: true,
+                lengthMenu: [[5, 10, -1], [5, 10, 15, "All"]],
+                bFilter: true,
+                bSort: true,
+                bPaginate: true,
+                data: response,
+                           @* <a class="btn-primary btn-sm" data-modal='' href="@Url.Action(" Edit", "Parts", new { id = item.Part_No, c_code =item.CageCode })" > <i class="fa fa-pencil"></i></a > |*@
+
+                columns: [
+            { 'data': 'SiteId' },
+            { 'data': 'PMS_No' },
+            { 'data': 'MOP_No' },
+            { 'data': 'MOP_Desc' },
+            { 'data': 'By_Whom' },
+            { 'data': 'PeriodMonth' },
+            { 'data': 'mmsDoc' },
+            {
+                'data': function (data, type, row, meta) {
+                    return '<a data-toggle="modal" data-target="#editMOP"  class="btn-primary btn-sm select">' + 'Edit' + '</a>' + '|' + '<a data-toggle="modal"  data-target="#delMOP"  class="btn-danger btn-sm select">' + 'Delete' + '</a>'
+                }
+
+            },
+            //'<a href="Delete/Cage/' + data.MOP_No + '">' + 'Delete' + '</a>';
+        ]
+        //   '<a data-modal="" class="btn-primary btn-sm"  href="Edit/' + data.MOP_No + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm" data-modal="" href="Delete/' + data.MOP_No + '">' + 'Delete' + '</a>';
+
+            });
+        console.log(response);
+        if (!$.trim(response)) {
+            swal({
+                title: "Oops...", text: "No MOPs Found!", type: "error",
+            });
+        }
+        else {
+            swal({
+                title: "¡Success!", type: "success", timer: 1500, showConfirmButton: false,
+            });
+        }
+    $('#gridMop tbody').on("click", '.select', function () {
+        var tblData = mopTable.rows($(this).closest('tr')).data();
+        var siteId = $(this).closest('tr').find("td:eq(0)").text();
+        var pmsNo = $(this).closest('tr').find("td:eq(1)").text();
+        var mopNo = $(this).closest('tr').find("td:eq(2)").text();
+        $('#siteId').val(siteId);
+        $('#pmsNo').val(pmsNo);
+        $('#mopNo').val(mopNo);
+        GetSelectedData();
+    });
+
+    //'<a href= "edit/config? + data + ">' + data + '</a>'
+        };
+
+    function AddMOPData() {
+        $.ajax({
+            cache: 'false',
+            type: "Post",
+            url: '@Url.Action("AddMOP", "MOP")',
+            dataType: 'json',
+            data: {
+                SiteID: $('#C_Site_Config_SiteId').val(),
+                eswbs: $('#eswbs').val(),
+
+                SiteId: $("#M_MOP_SiteId").val(),
+                PMS_No: $("#AddPMS_No").val(),
+                MOP_No: $("#M_MOP_MOP_No").val(),
+                MOP_Desc: $("#M_MOP_MOP_Desc").val(),
+                By_Whom: $("#M_MOP_By_Whom").val(),
+                Periodicity: $("#M_MOP_Periodicity").val(),
+                Period:  $("#M_MOP_Period").val(),
+                Doc: $("#M_MOP_Doc").val(),
+                Task_Procedure: $("#M_MOP_Task_Procedure").val(),
+                Safety_Precautions:  $("#M_MOP_Safety_Precautions").val(),
+
+            },
+            success: OnSuccess,
+            failure: function (response) {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+            },
+            error: function (response) {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+
+            }
+        });
+    };
+    function EditMOPData() {
+        $.ajax({
+            cache: 'false',
+            type: "Post",
+            url: '@Url.Action("EditMOP", "MOP")',
+            dataType: 'json',
+            data: {
+                SiteID: $('#C_Site_Config_SiteId').val(),
+                eswbs: $('#eswbs').val(),
+
+                SiteId : $("#M_MOPModel_SiteId").val(),
+                PMS_No: $("#M_MOPModel_PMS_No").val(),
+                MOP_No: $("#M_MOPModel_MOP_No").val(),
+                MOP_Desc: $("#M_MOPModel_MOP_Desc").val(),
+                By_Whom: $("#M_MOPModel_By_Whom").val(),
+                Periodicity:  $("#M_MOPModel_Periodicity").val(),
+                Period:  $("#M_MOPModel_Period").val(),
+                Doc:  $("#M_MOPModel_Doc").val(),
+                Task_Procedure: $("#M_MOPModel_Task_Procedure").val(),
+                Safety_Precautions:  $("#M_MOPModel_Safety_Precautions").val(),
+
+            },
+            success: OnSuccess,
+            failure: function (response) {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+
+            },
+            error: function (response) {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+
+            }
+        });
+    };
+    function DeleteMOPData() {
+        var siteId = $('#siteId').val();
+        var pmsNo = $('#pmsNo').val();
+        var mopNo = $('#mopNo').val();
+        $.ajax({
+            cache: 'false',
+            type: "Post",
+            url: '@Url.Action("DeleteMOP", "MOP")',
+            dataType: 'json',
+            data: {
+                SiteID: $('#C_Site_Config_SiteId').val(),
+                eswbs: $('#eswbs').val(),
+                s_siteId: siteId,
+                pmsNo: pmsNo,
+                mopNo: mopNo
+            },
+            success: OnSuccess,
+            failure: function (response) {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+             },
+            error: function (response) {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+             },
+        });
+    };
+
+
+</script>
+
+<!-- Main content -->
+<section class="content" style="min-height:0px !important">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Select Unit</label>
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
+                            @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2">
+
+                            <input type="button" id="Proceed" onclick="GetSiteConfig()" value="Proceed" class="btn btn-primary" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- /.row (main row) -->
+
+    <input type="hidden" name="eswbs" id="eswbs" />
+    <div class="row" id="ConfigEquipment">
+        <div class="col-md-6">
+            <div class="row" id="ConfigBox" style="margin-right:0px">
+                <div class="box box-primary box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">PLATFORM CONFIGURATION</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <input type="hidden" name="siteId" id="siteId" />
+                        <input type="hidden" name="pmsNo" id="pmsNo" />
+                        <input type="hidden" name="mopNo" id="mopNo" />
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-12">
+                                    <div class="table-bordered" style="overflow-x: scroll; width: 100%;">
+                                        <h6>Select ESWBS to View MMS5</h6>
+
+                                        <div id="jstree">
+                                        </div>
+                                    </div>
+                                    <br />
+
+
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6" id="AllDetails">
+            <div class="row" id="Mms5Details">
+                <div class="box box-danger box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">MMS 5 DETAILS</h3>
+                        <div class="box-tools pull-right">
+                            @*<input data-toggle="modal" data-target="#myModal" type="button" value="Add Child" class="btn btn-success" />*@
+
+
+                            <a data-toggle="modal" data-target="#addMOP" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add New MOP</a>
+
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div class="box-body">
+                        <table id="gridMop" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    @*<th>Actions</th>*@
+                                    <th>Site Id</th>
+                                    <th>PMS No</th>
+                                    <th>MOP NO</th>
+                                    <th>DESCRIPTION</th>
+                                    <th>BY WHOM</th>
+                                    <th>Period</th>
+                                    <th>DOC</th>
+                                    <th>Actions</th>
+                                    @*<th>PERIODICITY</th>
+        <th>PERIOD</th>
+        <th>DOC TYPE</th>
+
+        <th>TASK PROCEDURE</th>
+        <th>SAFETY PRECAUSTIONS</th>*@
+
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            @*Eswbs Detail- End*@
+
+
+        </div>
+
+
+
+    </div>
+
+</section>
+
+<div id='addMOP' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Add</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    @*@Html.HiddenFor(model => model.C_Site_Config.Part_No)
+                        @Html.HiddenFor(model => model.C_Site_Config.CageCode)*@
+                    <div class="box box-primary box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title"><b>Add MOP</b></h3>
+                        </div>
+                        <br />
+
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <div class="box-body" id="InputFields">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Site</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.SiteId, new { htmlAttributes = new { @class = "form-control" ,@readonly=true, @required = "true" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.SiteId, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>PMS No.</label>
+
+                                        @Html.DropDownListFor(model => model.M_MOP.PMS_No, new SelectList(Model._M_PMS, "PMS_NO", "PMS_NO"), "Select", new { @class = "form-control", @id = "AddPMS_No", @required = "true" })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.PMS_No, "", new { @class = "text-danger" })
+
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>MOP No.</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.MOP_No, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.MOP_No, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>MOP Description</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.MOP_Desc, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.MOP_Desc, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>By Whom</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.By_Whom, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.By_Whom, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Periodicity</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.Periodicity, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.Periodicity, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Period</label>
+
+                                        @Html.DropDownListFor(model => model.M_MOP.Period, new List<SelectListItem>
+                                         {    new SelectListItem() {Text = "H", Value="H"},
+                                              new SelectListItem() {Text = "W", Value="W"},
+                                              new SelectListItem() {Text = "M", Value="M"},
+                                              new SelectListItem() {Text = "Y", Value="Y"}
+                                         }, "...Select...", new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.Period, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Doc</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.Doc, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.Doc, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Task Procedure</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.Task_Procedure, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.Task_Procedure, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Safety Precautions</label>
+
+                                        @Html.EditorFor(model => model.M_MOP.Safety_Precautions, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.M_MOP.Safety_Precautions, "", new { @class = "text-danger" })
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="box-footer" id="footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="button" onclick="AddMOPData()" value="Submit" class="btn btn-primary pull-right" />
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="editMOP" class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit</h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                        @*@Html.HiddenFor(model => model.C_Site_Config.Part_No)
+                        @Html.HiddenFor(model => model.C_Site_Config.CageCode)*@
+                        <div class="box box-primary box-solid">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><b>Edit MOP</b></h3>
+                            </div>
+                            <br />
+
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <div class="box-body" id="InputFields">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>Site</label>
+
+                                            @Html.EditorFor(model => model.M_MOPModel.SiteId, new { htmlAttributes = new { @class = "form-control", @readonly = true, @required = "true" } })
+                                            @Html.ValidationMessageFor(model => model.M_MOPModel.SiteId, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>PMS No.</label>
+
+                                            @Html.EditorFor(model => model.M_MOPModel.PMS_No, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                            @Html.ValidationMessageFor(model => model.M_MOPModel.PMS_No, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>MOP No.</label>
+
+                                            @Html.EditorFor(model => model.M_MOPModel.MOP_No, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                            @Html.ValidationMessageFor(model => model.M_MOPModel.MOP_No, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>MOP Description</label>
+
+                                                @Html.EditorFor(model => model.M_MOPModel.MOP_Desc, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.M_MOPModel.MOP_Desc, "", new { @class = "text-danger" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>By Whom</label>
+
+                                                @Html.EditorFor(model => model.M_MOPModel.By_Whom, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.M_MOPModel.By_Whom, "", new { @class = "text-danger" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Periodicity</label>
+                                                @Html.EditorFor(model => model.M_MOPModel.Periodicity, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.M_MOPModel.Periodicity, "", new { @class = "text-danger" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Period</label>
+
+                                               @Html.DropDownListFor(model => model.M_MOPModel.Period, new List<SelectListItem>
+                                              {    new SelectListItem() {Text = "H", Value="H"},
+                                                   new SelectListItem() {Text = "W", Value="W"},
+                                                   new SelectListItem() {Text = "M", Value="M"},
+                                                   new SelectListItem() {Text = "Y", Value="Y"}
+                                              }, "...Select...", new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.M_MOPModel.Period, "", new { @class = "text-danger" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label>Doc</label>
+
+                                                @Html.EditorFor(model => model.M_MOPModel.Doc, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.M_MOPModel.Doc, "", new { @class = "text-danger" })
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Task Procedure</label>
+
+                                            @Html.EditorFor(model => model.M_MOPModel.Task_Procedure, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.M_MOPModel.Task_Procedure, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Safety Precautions</label>
+
+                                            @Html.EditorFor(model => model.M_MOPModel.Safety_Precautions, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.M_MOPModel.Safety_Precautions, "", new { @class = "text-danger" })
+
+                                        </div>
+                                    </div>
+                                 
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="box-footer" id="footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input type="button" onclick="EditMOPData()" value="Submit" class="btn btn-primary pull-right" />
+                        </div>
+                    
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id='delMOP' class='modal fade'>
+    <div class="modal-dialog modal-lg" style="width: 40% !important;">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+                <div class="modal-header">
+                    <h4 class="modal-title"><b>Confirm Delete</b></h4>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+
+                <div class="modal-body">
+                    <h3 style="color:red">Are you sure you want to delete this?</h3>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-actions no-color">
+                        <button class="btn btn-default" data-dismiss="modal">Close</button>
+                        <input type="submit" onclick="DeleteMOPData()" value="Delete" class="btn btn-danger" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}
+
+<script>
+    // Get Site Configuration
+    function GetSiteConfig() {
+        var siteId = $('#C_Site_Config_SiteId').val();
+        $.ajax({
+            cache: 'false',
+            type: "Post",
+            //  contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("GetSiteConfig", "MOP")',
+
+            dataType: 'json',  // add this line
+            data: {
+                siteId: siteId
+            },
+            success: function (vm) {
+                $("#jstree").jstree('destroy').empty();
+                    $("#jstree").jstree({
+                        "core": {
+                            "themes": {
+                                "variant": "large"
+                            },
+                            "data": JSON.parse(vm.JsonSiteConfig)
+                        },
+
+                        "plugins": ["wholerow"],
+                    });
+            },
+        });
+    };
+</script>
+
+
+
+
+@*<script>
+    var table;
+    $(document).ready(function () {
+
+        table = $('#gridMop').DataTable({
+            "scrollX": true,
+        });
+
+        $('#gridMop tbody').on("click", '.checkbox', function () {
+        
+
+            console.log(table);
+             //   var partNo = $(this).closest('tr').find("td:eq(1)").text();
+             //   var cageCode = $(this).closest('tr').find("td:eq(4)").text();
+             //   $('#C_Site_Config_Part_No').val(partNo);
+             //   $('#C_Site_Config_CageCode').val(cageCode);
+
+            
+        });
+    });
+</script>*@

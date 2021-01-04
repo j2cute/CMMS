@@ -1,0 +1,114 @@
+﻿@model ClassLibrary.ViewModels.CageViewModels
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<style>
+    .modal-dialog {
+        width: 50% !important;
+    }
+</style>
+<div class="modal-header">
+    <h4 class="modal-title">Add Cage</h4>
+
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+
+<div class="modal-body">
+    @using (Html.BeginForm("Create", "Cage", FormMethod.Post, new { @id = "myForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><b>Cage</b></h3>
+            </div>
+            <br />
+
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="box-body" id="InputFields">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Cage Code</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.tbl_Cage.CageCode, new { htmlAttributes = new { @class = "form-control" ,onchange = "CageCodeCheck()" ,@id="CageCode"} })
+                        @Html.ValidationMessageFor(model => model.tbl_Cage.CageCode, "", new { @class = "text-danger" })
+                        <div class="col-sm-10">
+                            <p id="Status" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Cage Name</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.tbl_Cage.CageName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.tbl_Cage.CageName, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Address</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.tbl_Cage.Address, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.tbl_Cage.Address, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">City</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.tbl_Cage.City, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.tbl_Cage.City, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Country</label>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.tbl_Cage.Country, new SelectList(Model._tbl_Country, "CountryName", "CountryName"), "Select", new { @class = "form-control",@required="true" })
+                        @Html.ValidationMessageFor(model => model.tbl_Cage.Country, "", new { @class = "text-danger" })
+  </div>
+                </div>
+
+               
+
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Postal Code</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.tbl_Cage.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.tbl_Cage.PostalCode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="box-footer" id="footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <input type="submit" value="Submit" class="btn btn-primary pull-right" />
+        </div>
+    }
+
+</div>
+
+<script>
+    function CageCodeCheck() {
+        $("#Status").html("Checking...");
+        $.post('@Url.Action("CageCodeCheck", "Cage")',
+            {
+                CageCode: $("#CageCode").val()
+            },
+            function (data) {
+                if (data == 0) {
+                    $("#CageCode").css("border-color", "");
+                    $("#Status").html('');
+                }
+                else {
+                    $("#Status").html('<font color="Red">Already Exist.</font>');
+                    $("#CageCode").css("border-color", "Red");
+                }
+            });
+    }
+</script>
+
+

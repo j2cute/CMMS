@@ -1,0 +1,262 @@
+﻿@model ClassLibrary.ViewModels.PartsViewModels
+@using ClassLibrary.Common;
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<style>
+    .modal-dialog {
+        width: 80% !important;
+    }
+    textarea {
+        background-color: #EEE;
+    }
+    .avatar-preview {
+        width: 192px;
+        height: 192px;
+        position: relative;
+        border: 6px solid #F8F8F8;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    }
+</style>
+<div class="modal-header">
+    <h4 class="modal-title">Details Parts</h4>
+
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+
+<div class="modal-body">
+    @using (Html.BeginForm("Details", "Parts", FormMethod.Post, new { @id = "myForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.tbl_Parts.PartId)
+        @Html.HiddenFor(model => model.tbl_Parts.CageId)
+        @Html.HiddenFor(model => model.tbl_Parts.PICTURE_FILE_NAME)
+        @Html.HiddenFor(model => model.tbl_Parts.File_Path)
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><b>Parts</b></h3>
+            </div>
+            <br />
+
+            <!-- /.card-header -->
+            <!-- form start -->
+            <div class="box-body" id="InputFields">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>CageCode</label>
+
+                                    @Html.DropDownListFor(model => model.tbl_Parts.CageCode, new SelectList(Model._tbl_Cage, "CageCode", "CageName"), "Select", new { @class = "form-control", @readonly = true })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.CageCode, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Part No</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.Part_No, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.Part_No, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Part Name</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.PART_NAME, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.PART_NAME, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>NSN</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.NSN, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.NSN, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Part Type</label>
+
+                                    @Html.DropDownListFor(model => model.tbl_Parts.PartTypeID, new SelectList(Model._tbl_PartType, "PartTypeID", "PartName"), "Select", new { @class = "form-control", @required = "true", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.PartTypeID, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>MCAT</label>
+                                    @Html.DropDownListFor(model => model.tbl_Parts.MCAT_ID, new SelectList(Model._tbl_MCAT, "MCAT_ID", "MCAT_Name"), "Select", new { @class = "form-control", @required = "true", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.MCAT_ID, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Unit Price</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.UNIT_PRICE, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.UNIT_PRICE, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Currency</label>
+
+                                    @Html.DropDownListFor(model => model.tbl_Parts.CurrencyID, new SelectList(Model._tbl_Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-control", @required = "true", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.CurrencyID, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>MTBF</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.MTBF, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.MTBF, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>BRF</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.BRF, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.BRF, "", new { @class = "text-danger" })
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>SMR</label>
+
+                                    @Html.EditorFor(model => model.tbl_Parts.SMR, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                    @Html.ValidationMessageFor(model => model.tbl_Parts.SMR, "", new { @class = "text-danger" })
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+
+                        <div class="picture-container">
+                            <div class="picture">
+                                @if (Model.tbl_Parts.PICTURE_FILE_NAME != null && Model.tbl_Parts.File_Path != null)
+                                {
+                                    var imgPath = Model.tbl_Parts.File_Path + Model.tbl_Parts.PICTURE_FILE_NAME;
+                                    var imgsrc = ImageConverter.GetImageBase64(imgPath);
+                                    <img src='@imgsrc' class="avatar-preview" id="WizardPicturePreview" title="" />
+                                }
+                                else
+                                {
+                                    <img src="~/Content/Img/part.png" class="avatar-preview" id="WizardPicturePreview" title="" />
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <fieldset>
+                    <legend>DIMENSIONS</legend>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Length(cm)</label>
+
+                                @Html.EditorFor(model => model.tbl_Parts.LENGTH, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.tbl_Parts.LENGTH, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Width(cm)</label>
+
+                                @Html.EditorFor(model => model.tbl_Parts.WIDTH, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.tbl_Parts.WIDTH, "", new { @class = "text-danger" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Height(cm)</label>
+
+                                @Html.EditorFor(model => model.tbl_Parts.HEIGHT, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.tbl_Parts.HEIGHT, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Diameter(cm)</label>
+
+                                @Html.EditorFor(model => model.tbl_Parts.DIAMETER, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.tbl_Parts.DIAMETER, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Weight(kg)</label>
+
+                                @Html.EditorFor(model => model.tbl_Parts.WEIGHT, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
+                                @Html.ValidationMessageFor(model => model.tbl_Parts.WEIGHT, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </fieldset>
+                <fieldset>
+
+                    <legend>PART CHARACTERISTICS</legend>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Part Characteristics</label>
+
+                                @Html.TextAreaFor(model => model.tbl_Parts.PART_CHARACTERISTIC, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                @Html.ValidationMessageFor(model => model.tbl_Parts.PART_CHARACTERISTIC, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+        </div>
+
+        <div class="box-footer" id="footer">
+            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+        </div>
+    }
+
+</div>
+
+
+
+

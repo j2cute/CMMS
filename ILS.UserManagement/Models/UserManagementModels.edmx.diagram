@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="882ae6aad5fa43cfb826d15a7fcb3bc4" Name="Diagram1" ZoomLevel="74">
+        <EntityTypeShape EntityType="ILS.Models.UserManagement.tbl_Permission" Width="1.5" PointX="3.75" PointY="8.25" />
+        <EntityTypeShape EntityType="ILS.Models.UserManagement.tbl_Role" Width="1.5" PointX="0.75" PointY="2.75" />
+        <EntityTypeShape EntityType="ILS.Models.UserManagement.tbl_RolePermission" Width="1.5" PointX="6" PointY="3.125" />
+        <AssociationConnector Association="ILS.Models.UserManagement.FK_tbl_RolePermission_tbl_Permission" />
+        <AssociationConnector Association="ILS.Models.UserManagement.FK_tbl_RolePermission_tbl_Role" />
+        <EntityTypeShape EntityType="ILS.Models.UserManagement.tbl_Unit" Width="1.5" PointX="6.375" PointY="9" />
+        <EntityTypeShape EntityType="ILS.Models.UserManagement.tbl_User" Width="1.5" PointX="0.75" PointY="7.375" />
+        <EntityTypeShape EntityType="ILS.Models.UserManagement.tbl_UserRole" Width="1.5" PointX="3" PointY="2.5" />
+        <AssociationConnector Association="ILS.Models.UserManagement.FK_tbl_UserRole_tbl_Role" />
+        <AssociationConnector Association="ILS.Models.UserManagement.FK_tbl_User_tbl_Unit" />
+        <AssociationConnector Association="ILS.Models.UserManagement.FK_tbl_UserRole_tbl_User" />
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

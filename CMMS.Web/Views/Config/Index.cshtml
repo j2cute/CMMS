@@ -1,0 +1,279 @@
+﻿@model ClassLibrary.ViewModels.ConfigViewModel
+<link href="~/Content/morris.css" rel="stylesheet" />
+<link href="~/Content/Digtalstyle.css" rel="stylesheet" />
+<script src="~/Content/Digitalscript.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+
+<link href="~/Scripts/themes/default/style.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jstree.min.js"></script>
+<style>
+    .slimScrollBar {
+        background: rgb(204, 204, 204) !IMPORTANT;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#ConfigBox").hide();
+        $("#Proceed").click(function () {
+            $("#ConfigBox").show();
+        });
+ });
+
+</script>
+
+
+<!-- Main content -->
+<section class="content" style="min-height:0px !important">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="box">
+            <div class="box-header">
+                <h4>  SITE CONFIGURATION  </h4>  <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="col-md-2 col-form-label">Select Unit</label>
+                        <div class="col-md-4">
+                            @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
+                            @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-2">
+                            <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row" id="ConfigBox">
+                <div class="col-md-1"></div>
+                <div class="col-md-12">
+                    <div class="box box-primary box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">CONFIGURATION SELECTION</h3>
+                            <div class="box-tools pull-right">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body chat">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-5">
+                                        <div class="table-bordered" style="overflow-x: scroll; width: 100%;">
+
+                                            <h4>Master Configuration</h4>
+
+                                            <div id="jstree">
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div>
+                                           <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
+
+                                        </div>
+                                    </div>
+                                        <div class="col-md-2">
+                                            @*@using (Html.BeginForm("Index", "Config", FormMethod.Post))
+            {*@
+                                            <input type="hidden" name="selectedItems" id="selectedItems" />
+                                            &nbsp;   &nbsp;  &nbsp; &nbsp;  &nbsp;  &nbsp; <input type="submit" id="items" value=">>" class="btn btn-success" onclick="GetSiteConfig()" style="margin-top:50px;width:50px;height:30px" />
+                                            @*}*@
+                                        </div>
+                                        <div class="col-md-5">
+                                            <div class="table-bordered" style="overflow-x: scroll; width: 100%;">
+
+                                                <h4>Site Configuration</h4>
+
+                                                <div id="jstreeSiteConfig">
+
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <!-- /.row (main row) -->
+</section>
+
+
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "scrollX": true,
+        })
+    });
+</script>
+
+<script>
+    function GetConfig() {
+        var unitId = $('#C_Site_Config_SiteId').val();
+        $.ajax({
+            cache: 'false',
+            type: "Post",
+            //  contentType: "application/json; charset=utf-8",
+            url: '@Url.Action("GetConfig", "Config")',
+
+            dataType: 'json',  // add this line
+            data: {
+                unitId: unitId
+            },
+            success: function (vm) {
+                $("#jstree").jstree('destroy').empty();
+                $("#jstreeSiteConfig").jstree('destroy').empty();
+                //$(function () {
+                //    $('#jstree').on('changed.jstree', function (e, data) {
+                //        debugger;
+                //        var test = data;
+                //        console.log(test);
+                //        var i, j;
+                //        var selectedItems = [];
+
+                //        for (i = data.instance.get_node(data.selected[0]).parents.length - 2; i >= 0; i--) {
+                //            debugger;
+
+                //            var parentNodeId = data.instance.get_node(data.selected[0]).parents[i];
+                //            console.log(parentNodeId);
+                //            //Add the Node to the JSON Array.
+                //            selectedItems.push({
+                //                text: data.instance.get_node(parentNodeId).text,
+                //                id: parentNodeId,
+                //                parent: data.instance.get_node(parentNodeId).parent
+                //            });
+                //        }
+
+                //        //console.log(selectedItems);
+                //        selectedItems.push({
+                //            text: data.instance.get_node(data.selected[0]).text,
+                //            id: data.instance.get_node(data.selected[0]).id,
+                //            parent: data.instance.get_node(data.selected[0]).parent
+                //        });
+
+                //        //console.log(selectedItems);
+                //        for (i = 0; i < data.instance.get_node(data.selected[0]).children_d.length; i++) {
+                //            var childNodeId = data.instance.get_node(data.selected[0]).children_d[i];
+                //            //Add the Node to the JSON Array.
+                //            selectedItems.push({
+                //                text: data.instance.get_node(childNodeId).text,
+                //                //  text: data.instance.get_node(childNodeId).text,
+                //                id: childNodeId,
+                //                parent: data.instance.get_node(childNodeId).parent
+                //            });
+                //        }
+                //        //console.log("children////////", selectedItems);
+                //        //Serialize the JSON Array and save in HiddenField.
+                //        $('#selectedItems').val(JSON.stringify(selectedItems));
+                //        console.log("finally..........", $('#selectedItems').val());
+
+
+                //        console.log($("#jstree").jstree("get_selected").text);
+                //        console.log ($("#jstree").jstree().get_selected(true)[0].text);
+                //    })
+                //});
+                $("#jstree").jstree({
+                    "core": {
+                        "themes": {
+                            "variant": "large"
+                        },
+                        "data": JSON.parse(vm.JsonMasterConfig)
+                    },
+                    "checkbox": {
+                        "keep_selected_style": false
+                    },
+                    "plugins": ["wholerow", "checkbox"],
+                });
+                $("#jstreeSiteConfig").jstree({
+
+                    "core": {
+                        "themes": {
+                            "variant": "large"
+                        },
+                        "data": JSON.parse(vm.JsonSiteConfig)
+                    },
+                    "checkbox": {
+                        "keep_selected_style": false
+                    },
+                    "plugins": ["wholerow", "checkbox"],
+                });
+            },
+        });
+    }
+
+   
+</script>
+<script>
+       function GetSiteConfig() {
+            var abc = $('#selectedItems').val();
+           var unitId = $('#C_Site_Config_SiteId').val();
+
+           debugger;
+           var selectedData = [];
+           var selectedIndexes;
+           selectedIndexes = $("#jstree").jstree("get_selected", true);
+           jQuery.each(selectedIndexes, function (index, value) {
+               selectedData.push(selectedIndexes[index]);
+           });
+
+           console.log("Hello");
+           selectedData = JSON.stringify(selectedData);
+           console.log(selectedData);
+
+            $.ajax({
+                // cache: 'false',
+                type: "Post",
+                //  contentType: "application/json; charset=utf-8",
+                url: '@Url.Action("GetSiteConfig", "Config")',
+
+                dataType: 'json',  // add this line
+                data: {
+                    selectedItems: selectedData,
+                    unitId: unitId
+                },
+                success: function (vm) {
+                    $("#jstreeSiteConfig").jstree('destroy').empty();
+                    $("#jstreeSiteConfig").jstree({
+
+                "core": {
+                    "themes": {
+                        "variant": "large"
+                    },
+                    "data": JSON.parse(vm.JsonSiteConfig)
+                    },
+                "checkbox": {
+                    "keep_selected_style": false
+                },
+                "plugins": ["wholerow", "checkbox"],
+            });
+                },
+            });
+    };
+
+    function OpenAllNode() {
+        let selectedNode = $("#jstree").jstree("get_selected");
+        if (selectedNode) {
+            let node_info = $('#jstree').jstree("get_node", selectedNode[0]);
+            $("#jstree").jstree("open_node", [selectedNode, node_info.children_d]);
+        }
+    }
+</script>
+
+
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}

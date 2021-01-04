@@ -1,0 +1,272 @@
+﻿@model ClassLibrary.ViewModels.CageViewModels
+@using CMMS.Web.Helper
+@{ 
+    var permissions = (List<ClassLibrary.Models.PermissionViewModel>)Session[Constants.SessionPermission];
+
+}
+<link href="~/Content/morris.css" rel="stylesheet" />
+<link href="~/Content/Digtalstyle.css" rel="stylesheet" />
+<script src="~/Content/Digitalscript.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/raphael.min.js"></script>
+
+ 
+ 
+<style>
+    a {
+        cursor: pointer;
+    }
+    td {
+        font-size: 12px !important;
+    }
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 4px !important;
+    }
+</style>
+<section class="content-header">
+    <h1>
+        Index
+
+    </h1>
+
+</section>
+<!-- Main content -->
+<section class="content" style="min-height:0px !important">
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <div class="col-lg-4 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>@Model.cageCount</h3>
+                    <p>Total Manufacturer</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-person-add"></i>
+                </div>
+
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-4 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>@Model.CageCountryCount<sup style="font-size: 20px"></sup></h3>
+                    <p>Countries</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-4 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-blue">
+
+                <div class="inner">
+
+
+                    <h3>@Model.cageActiveCount</h3>
+                    <p>Active Manufacturer</p>
+                </div>
+                <div class="icon">
+
+                </div>
+
+            </div>
+        </div>
+        <!-- ./col -->
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+    <!-- Main row -->
+    <div class="row">
+        <!-- Left col -->
+        <!-- /.Left col -->
+        <!-- right col (We are only adding the ID to make the widgets sortable)-->
+        <!-- right col -->
+    </div>
+    <!-- /.row (main row) -->
+</section>
+<section class="content">
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box">
+                <div class="box-header">
+               @if (permissions.Any(x => x.PermissionId == "CAGE_ADD"))
+               {
+                    <a id="btnAdd" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>
+               }
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table id="example1" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Actions</th>
+                                <th>Cage Code</th>
+                                <th>Cage Name</th>
+
+                                <th>Country</th>
+                                <th>Status</th>
+                              <th></th>
+
+                            </tr>
+                        </thead>
+             
+
+                    </table>
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+
+        </div>
+        <div class="col-md-4">
+
+
+                <!-- /.box -->
+                <!-- DONUT CHART -->
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Manufacturer</h3>
+                        <div class="box-tools pull-right">
+
+                        </div>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="sales-chart" style="height: 300px; position: relative;"></div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+        </div>
+    </div>
+
+</section>
+
+<script>
+  
+    $(document).ready(function () {
+        var table;
+       // $('#example1').DataTable().destroy();
+       table= $('#example1').DataTable(
+            {
+                "bServerSide": true,
+                "processing": true,
+               // "searchable": true, 
+                "scrollX": true,
+                "paging": true,
+                "filter": true,
+                "destroy": true,
+                "order": [[1, 'asc']],  
+                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+              
+
+                ajax: {
+                      //cache: 'false', 
+                    type: 'POST',
+                    url: '@Url.Action("LoadData")',
+                   
+                    dataType: 'json', 
+                    dataSrc: 'data',
+                   // contentType: "application/json; charset=utf-8",
+                   
+                },
+         // add this line
+
+
+                           @* <a class="btn-primary btn-sm" data-modal='' href="@Url.Action(" Edit", "Parts", new { id = item.Part_No, c_code =item.CageCode })" > <i class="fa fa-pencil"></i></a > |*@
+
+                columns: [
+                    {
+                        'data': function (data, type, row, meta) {
+                            return '<a  class="btn-primary btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
+                         }
+                    }, 
+                    { 'data': 'CageCode', "name": "CageCode", },
+                    { 'data': 'CageName', "name": "CageName", },
+                    { 'data': 'Country', "name": "Country", },
+                    { 'data': 'Status', "name": "Status", },
+                    {
+                        'data': function (data, type, row, meta) {
+                            return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
+                        }                          
+                    }, 
+                 
+            //},
+
+            //'<a href="Delete/Cage/' + data.MOP_No + '">' + 'Delete' + '</a>';
+               ],
+               "rowCallback": function (row, data, dataIndex) {
+                   if (data["Status"] == "InActive") {
+                       $('td', row).css('background-color', 'red');
+                     //  $('td', row).addClass("warning");
+                   }
+                 
+                  
+               },
+            //   "createdRow": function (row, data, dataIndex) {
+                 //  if (data[1] = "12345") {
+                 //      $(row).css('background-color', '#F39B9B');
+                  // }
+                   //else if (data[5] <= 70) {
+                   //    $(row).css('background-color', '#A497E5');
+                   //}
+                   //else {
+                   //    $(row).css('background-color', '#9EF395');
+                   //}
+
+              // }
+        //   '<a data-modal="" class="btn-primary btn-sm"  href="Edit/' + data.MOP_No + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm" data-modal="" href="Delete/' + data.MOP_No + '">' + 'Delete' + '</a>';
+
+            });  
+
+        $('#example1 tbody').on("click", '.select', function () {
+            var tblData = table.rows($(this).closest('tr')).data();
+            //var siteId = $(this).closest('tr').find("td:eq(0)").text();
+            var data = $('#myModalContent').load(this.href, function () {
+                $('#myModal').modal({
+                    keyboard: true
+                }, 'show');
+                bindForm(this);
+            });
+            return false;
+        });
+    });
+</script>
+
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}
+
+<script src="~/Scripts/morris.min.js"></script>
+<script>
+    var dataSource = @Html.Raw(Json.Encode(Model.dataList));
+    var donut = new Morris.Donut({
+   
+        element: 'sales-chart',
+        resize: true,
+        colors: ["#ff0000", "#54a460", "#1f67a5", "#54a460", "#008b8b", "#c0c0c0", "#8b4513", "#ff6347", "#bdb76b", "#000000", "#4169e1"],
+
+
+        data: dataSource,
+        hideHover: 'auto'
+    });
+</script>
+

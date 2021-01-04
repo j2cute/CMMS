@@ -1,0 +1,111 @@
+﻿@model ClassLibrary.Models.ExpandedUserDTO
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<style>
+    #diaglog {
+        border: dotted;
+    }
+</style>
+
+<section class="content-header">
+    <h1>
+        USER MODULE
+        <small>Detail</small>
+    </h1>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Create User</h3>
+            </div>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { onchange = "UserCheck()", @class = "form-control", @placeholder = "User Name" } })
+                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                    <p id="Status" />
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @Class = "form-control", @placeholder = "Password" } })
+                                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Confirm Password</label>
+                                    @Html.EditorFor(model => model.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @placeholder = "Confirm Password" } })
+                                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Roles</label>
+                                    @Html.DropDownList("Roles")
+                                  
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div id="diaglog">
+                                    <h4>Password Policy</h4>
+                                    . Password must be at least 6 Characters.<br />
+                                    . Password must have at least 1 uppercase (A-Z).<br />
+                                    . Password must have at least 1 lowercase (a-z).<br />
+                                    . Password must have at least 1 digit (0-9).<br />
+                                    . Password must have at least 1 non alphanumeric character.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                    <div class="box-footer">
+                        <div class="form-actions no-color">
+                           
+                            <a class="btn btn-default" href="@Url.Action("Index", "Admin")"><i class="fa fa-chevron-circle-left fa-lg"></i> Back</a>
+                            <input type="submit" value="Submit" class="btn btn-primary" />
+                        </div>
+                    </div>
+            }
+                </div>
+
+    </div>
+</section>
+<script>
+        function UserCheck() {
+            $("#Status").html("Checking...");
+            $.post('@Url.Action("CheckUserName", "Admin")',
+                {
+                    UserName: $("#UserName").val()
+                },
+                function (data) {
+                    if (data == 0) {
+                        $("#Status").html('<font color="Green">Available</font>');
+                        $("#UserName").css("border-color", "green");
+
+                    }
+                    else {
+                        $("#Status").html('<font color="Red">Already Exist, choose another user name');
+                        $("#UserName").css("border-color", "Red");
+                    }
+                });
+            }
+</script>
+@section scripts
+            {
+    @Scripts.Render("~/bundles/jqueryval")
+}

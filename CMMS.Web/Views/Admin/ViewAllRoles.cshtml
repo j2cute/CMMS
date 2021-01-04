@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ClassLibrary.Models.RoleDTO>
+
+@{
+    ViewBag.Title = "ViewAllRoles";
+    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+}
+<section class="content-header">
+    <a class="btn btn-default" href="@Url.Action("Index", "Admin")"><i class="fa fa-chevron-circle-left fa-lg"></i> Back </a>
+    <a class="btn btn-success" href="@Url.Action("AddRole","Admin")"><i class="fa fa-plus"></i> Add Role</a>
+</section>
+<section class="content">
+    <div class="row">
+        <!-- /.box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">Application Roles Information</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Role</th>
+                            @*<th>Operations</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td> @item.RoleName</td>
+                                @*<td>
+                                    @if (item.RoleName.ToLower() != "administrator")
+                                    {
+                                        @Html.ActionLink("Delete", "DeleteUserRole",
+                                       new { RoleName = item.RoleName },
+                                       new
+                                       {
+                                           onclick =
+                                       "return confirm('Are you sure you wish to delete this role?');"
+                                       })
+                                    }
+                                </td>*@
+                                @*<td>
+                                <a class="btn-primary btn-sm" href="@Url.Action("Edit", "LegalAssistanceModule", new { id = item.Personnel_tbl.PersonnelID, item.PersonnelDetail_tbl.PersonnelDetailID, item.LegalAssistanceDetail_tbl.Pd_OpponentID, item.LegalAssistanceDetail_tbl.OpponentID })"><i class="fa fa-pencil fa-lg"></i></a> |
+                                <a class="btn-info btn-sm" href="@Url.Action("Details", "LegalAssistanceModule", new { id = item.Personnel_tbl.PersonnelID, item.PersonnelDetail_tbl.PersonnelDetailID, item.LegalAssistanceDetail_tbl.OpponentID })"><i class="fa fa-eye fa-lg"></i></a> |
+                                <a class="btn-danger btn-sm" href="@Url.Action("Delete", "LegalAssistanceModule", new { id = item.Personnel_tbl.PersonnelID, item.PersonnelDetail_tbl.PersonnelDetailID, item.LegalAssistanceDetail_tbl.OpponentID, item.LegalAssistanceDetail_tbl.Pd_PersonnelID, item.LegalAssistanceDetail_tbl.Pd_OpponentID })"><i class="fa fa-trash fa-lg"></i></a>
+                            </td>*@
+
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+

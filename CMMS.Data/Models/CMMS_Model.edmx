@@ -1,0 +1,1449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="db_CMMSModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ContextKey" Type="nvarchar" MaxLength="300" Nullable="false" />
+          <Property Name="Model" Type="varbinary(max)" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="C_Config_Master">
+          <Key>
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="ESWBS" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="PESWBS" Type="nvarchar" MaxLength="25" />
+          <Property Name="Nomanclature" Type="nvarchar" MaxLength="250" />
+          <Property Name="Title" Type="nvarchar" MaxLength="278" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="C_Site_Config">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="ESWBS" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="PESWBS" Type="nvarchar" MaxLength="25" />
+          <Property Name="Nomanclature" Type="nvarchar" MaxLength="250" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" />
+          <Property Name="SMR_Code" Type="nvarchar" MaxLength="6" />
+          <Property Name="PartId" Type="int" />
+          <Property Name="CageId" Type="int" />
+        </EntityType>
+        <EntityType Name="M_MOP">
+          <Key>
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="SiteId" />
+          </Key>
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="MOP_No" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="MOP_Desc" Type="nvarchar" MaxLength="250" />
+          <Property Name="By_Whom" Type="nvarchar" MaxLength="10" />
+          <Property Name="Jic" Type="char" MaxLength="1" />
+          <Property Name="Periodicity" Type="int" />
+          <Property Name="Period" Type="varchar" MaxLength="1" />
+          <Property Name="Doc" Type="varchar" MaxLength="1" />
+          <Property Name="Task_Procedure" Type="nvarchar(max)" />
+          <Property Name="Safety_Precautions" Type="nvarchar(max)" />
+          <Property Name="IssueDate" Type="date" />
+          <Property Name="AddReference" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="M_MOP_ITEMS">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="MOP_No" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="PartId" Type="int" Nullable="false" />
+          <Property Name="MOP_ItemsId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SR_Qty" Type="int" />
+          <Property Name="UR_Qty" Type="int" />
+          <Property Name="Part_No" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="M_PMS">
+          <Key>
+            <PropertyRef Name="PMS_NO" />
+          </Key>
+          <Property Name="PMS_NO" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="PMS_DESC" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="tbl_Cage">
+          <Key>
+            <PropertyRef Name="CageId" />
+          </Key>
+          <Property Name="CageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CageCode" Type="nvarchar" MaxLength="5" />
+          <Property Name="CageName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="PostalCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedOnDate" Type="datetime" />
+          <Property Name="ModifiedOnDate" Type="datetime" />
+          <Property Name="CreatedByUser" Type="nvarchar" MaxLength="128" />
+          <Property Name="ModifiedByUser" Type="nvarchar" MaxLength="128" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_ChildParts">
+          <Key>
+            <PropertyRef Name="ChildPartId" />
+          </Key>
+          <Property Name="ParentPartId" Type="int" />
+          <Property Name="ChildPartId" Type="int" Nullable="false" />
+          <Property Name="APLNumber" Type="nvarchar" MaxLength="9" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="bit" />
+        </EntityType>
+        <EntityType Name="tbl_Country">
+          <Key>
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="CountryID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_Currency">
+          <Key>
+            <PropertyRef Name="CurrencyID" />
+          </Key>
+          <Property Name="CurrencyID" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="CurrencyName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ConversionRate" Type="decimal" Precision="2" Scale="0" />
+        </EntityType>
+        <EntityType Name="tbl_ErrorLogs">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Message" Type="nvarchar" MaxLength="500" />
+          <Property Name="StackTrace" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ExceptionType" Type="nvarchar" MaxLength="500" />
+          <Property Name="LogTime" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tbl_MCAT">
+          <Key>
+            <PropertyRef Name="MCAT_ID" />
+          </Key>
+          <Property Name="MCAT_ID" Type="nvarchar" MaxLength="1" Nullable="false" />
+          <Property Name="MCAT_Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_Parts">
+          <Key>
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="PartId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Part_No" Type="nvarchar" MaxLength="50" />
+          <Property Name="CageId" Type="int" />
+          <Property Name="CageCode" Type="nvarchar" MaxLength="5" />
+          <Property Name="PART_NAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="NSN" Type="nvarchar" MaxLength="13" />
+          <Property Name="UNIT_PRICE" Type="decimal" Precision="7" Scale="0" />
+          <Property Name="CurrencyID" Type="nvarchar" MaxLength="5" />
+          <Property Name="MCAT_ID" Type="nvarchar" MaxLength="1" />
+          <Property Name="PartTypeID" Type="nvarchar" MaxLength="1" />
+          <Property Name="LENGTH" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="WIDTH" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="HEIGHT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="WEIGHT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="DIAMETER" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="PART_MEC" Type="int" />
+          <Property Name="MTBF" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="MTTR" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SMR" Type="nvarchar" MaxLength="10" />
+          <Property Name="BRF" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PART_CHARACTERISTIC" Type="nvarchar" MaxLength="2000" />
+          <Property Name="PICTURE_FILE_NAME" Type="nvarchar" MaxLength="255" />
+          <Property Name="File_Path" Type="nvarchar" MaxLength="255" />
+          <Property Name="FileExtension" Type="nvarchar" MaxLength="50" />
+          <Property Name="CreatedOnDate" Type="datetime" />
+          <Property Name="ModifiedOnDate" Type="datetime" />
+          <Property Name="CreatedByUser" Type="nvarchar" MaxLength="128" />
+          <Property Name="ModifiedByUser" Type="nvarchar" MaxLength="128" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="Model" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tbl_PartType">
+          <Key>
+            <PropertyRef Name="PartTypeID" />
+          </Key>
+          <Property Name="PartTypeID" Type="nvarchar" MaxLength="1" Nullable="false" />
+          <Property Name="PartName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tbl_Request">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Part_No" Type="nvarchar" MaxLength="50" />
+          <Property Name="CageCode" Type="nvarchar" MaxLength="5" />
+          <Property Name="ManufacturerName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Equipment_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="NSN" Type="nvarchar" MaxLength="13" />
+          <Property Name="UNIT_PRICE" Type="decimal" Precision="7" Scale="0" />
+          <Property Name="CurrencyID" Type="nvarchar" MaxLength="5" />
+          <Property Name="LENGTH" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="WIDTH" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="HEIGHT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="WEIGHT" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="DIAMETER" Type="decimal" Precision="8" Scale="0" />
+          <Property Name="PART_MEC" Type="int" />
+          <Property Name="MTBF" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="MTTR" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="SMR" Type="nvarchar" MaxLength="10" />
+          <Property Name="BRF" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PART_CHARACTERISTIC" Type="nvarchar" MaxLength="2000" />
+          <Property Name="PICTURE_FILE_NAME" Type="nvarchar" MaxLength="255" />
+          <Property Name="File_Path" Type="nvarchar" MaxLength="255" />
+          <Property Name="FileExtension" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="DateOfInstallation" Type="date" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" />
+          <Property Name="SERIAL_NO" Type="nvarchar" MaxLength="50" />
+          <Property Name="JUSTIFICATION" Type="nvarchar" MaxLength="50" />
+          <Property Name="DETAIL_REMARKS" Type="nvarchar" MaxLength="50" />
+          <Property Name="LOCATIONS" Type="nvarchar" MaxLength="50" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="50" />
+          <Property Name="DESIGNATION" Type="nvarchar" MaxLength="50" />
+          <Property Name="CONTACT" Type="int" />
+          <Property Name="SiteId" Type="int" />
+          <Property Name="CreatedOnDate" Type="datetime" />
+          <Property Name="ModifiedOnDate" Type="datetime" />
+          <Property Name="CreatedByUser" Type="nvarchar" MaxLength="128" />
+          <Property Name="ModifiedByUser" Type="nvarchar" MaxLength="128" />
+          <Property Name="Status" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_RequestLog">
+          <Key>
+            <PropertyRef Name="RequestLogId" />
+          </Key>
+          <Property Name="RequestLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CurrentDateTime" Type="datetime" />
+          <Property Name="Status" Type="int" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="500" />
+          <Property Name="RequestId" Type="int" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="tbl_Unit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'db_CMMS.dbo.V_MMS5' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_MMS5">
+          <Key>
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+            
+            
+          </Key>
+          <Property Name="Id" Type="int" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="MOP_No" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="Doc" Type="varchar" MaxLength="1" />
+          <Property Name="Jic" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="By_Whom" Type="nvarchar" MaxLength="10" />
+          <Property Name="Periodicity" Type="int" />
+          <Property Name="Period" Type="varchar" MaxLength="1" />
+          <Property Name="Task_Procedure" Type="nvarchar(max)" />
+          <Property Name="Safety_Precautions" Type="nvarchar(max)" />
+          <Property Name="PartId" Type="int" />
+          <Property Name="Part_No" Type="nvarchar" MaxLength="50" />
+          <Property Name="PART_NAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="Model" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MOP_Desc" Type="nvarchar" MaxLength="250" />
+          <Property Name="IssueDate" Type="date" />
+          <Property Name="AddReference" Type="nvarchar(max)" />
+          <Property Name="PMS_ID" Type="nvarchar" MaxLength="22" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_MSD">
+          <Key>
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="ID" Type="nvarchar" MaxLength="34" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="MOP_No" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="PartId" Type="int" Nullable="false" />
+          <Property Name="Part_No" Type="nvarchar" MaxLength="50" />
+          <Property Name="NSN" Type="nvarchar" MaxLength="13" />
+          <Property Name="PART_NAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="SR_Qty" Type="int" />
+          <Property Name="UR_Qty" Type="int" />
+          <Property Name="PMS_ID" Type="nvarchar" MaxLength="22" />
+          <Property Name="PartTypeID" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <Association Name="FK_C_Site_Config_tbl_Unit">
+          <End Role="tbl_Unit" Type="Self.tbl_Unit" Multiplicity="1" />
+          <End Role="C_Site_Config" Type="Self.C_Site_Config" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Unit">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="C_Site_Config">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_ChildParts_tbl_Parts">
+          <End Role="tbl_Parts" Type="Self.tbl_Parts" Multiplicity="1" />
+          <End Role="tbl_ChildParts" Type="Self.tbl_ChildParts" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Parts">
+              <PropertyRef Name="PartId" />
+            </Principal>
+            <Dependent Role="tbl_ChildParts">
+              <PropertyRef Name="ChildPartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_Parts_tbl_Cage">
+          <End Role="tbl_Cage" Type="Self.tbl_Cage" Multiplicity="0..1" />
+          <End Role="tbl_Parts" Type="Self.tbl_Parts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Cage">
+              <PropertyRef Name="CageId" />
+            </Principal>
+            <Dependent Role="tbl_Parts">
+              <PropertyRef Name="CageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_Parts_tbl_PartType">
+          <End Role="tbl_PartType" Type="Self.tbl_PartType" Multiplicity="0..1" />
+          <End Role="tbl_Parts" Type="Self.tbl_Parts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_PartType">
+              <PropertyRef Name="PartTypeID" />
+            </Principal>
+            <Dependent Role="tbl_Parts">
+              <PropertyRef Name="PartTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_Request_tbl_Currency">
+          <End Role="tbl_Currency" Type="Self.tbl_Currency" Multiplicity="0..1" />
+          <End Role="tbl_Request" Type="Self.tbl_Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Currency">
+              <PropertyRef Name="CurrencyID" />
+            </Principal>
+            <Dependent Role="tbl_Request">
+              <PropertyRef Name="CurrencyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="db_CMMSModelStoreContainer">
+          <EntitySet Name="__MigrationHistory" EntityType="Self.__MigrationHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="C_Config_Master" EntityType="Self.C_Config_Master" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="C_Site_Config" EntityType="Self.C_Site_Config" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="M_MOP" EntityType="Self.M_MOP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="M_MOP_ITEMS" EntityType="Self.M_MOP_ITEMS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="M_PMS" EntityType="Self.M_PMS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Cage" EntityType="Self.tbl_Cage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_ChildParts" EntityType="Self.tbl_ChildParts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Country" EntityType="Self.tbl_Country" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Currency" EntityType="Self.tbl_Currency" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_ErrorLogs" EntityType="Self.tbl_ErrorLogs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_MCAT" EntityType="Self.tbl_MCAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Parts" EntityType="Self.tbl_Parts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_PartType" EntityType="Self.tbl_PartType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Request" EntityType="Self.tbl_Request" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_RequestLog" EntityType="Self.tbl_RequestLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Unit" EntityType="Self.tbl_Unit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="V_MMS5" EntityType="Self.V_MMS5" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_MMS5].[Id] AS [Id], 
+    [V_MMS5].[Name] AS [Name], 
+    [V_MMS5].[PMS_No] AS [PMS_No], 
+    [V_MMS5].[MOP_No] AS [MOP_No], 
+    [V_MMS5].[Doc] AS [Doc], 
+    [V_MMS5].[Jic] AS [Jic], 
+    [V_MMS5].[By_Whom] AS [By_Whom], 
+    [V_MMS5].[Periodicity] AS [Periodicity], 
+    [V_MMS5].[Period] AS [Period], 
+    [V_MMS5].[Task_Procedure] AS [Task_Procedure], 
+    [V_MMS5].[Safety_Precautions] AS [Safety_Precautions], 
+    [V_MMS5].[PartId] AS [PartId], 
+    [V_MMS5].[Part_No] AS [Part_No], 
+    [V_MMS5].[PART_NAME] AS [PART_NAME], 
+    [V_MMS5].[Model] AS [Model], 
+    [V_MMS5].[MOP_Desc] AS [MOP_Desc], 
+    [V_MMS5].[IssueDate] AS [IssueDate], 
+    [V_MMS5].[AddReference] AS [AddReference], 
+    [V_MMS5].[PMS_ID] AS [PMS_ID]
+    FROM [dbo].[V_MMS5] AS [V_MMS5]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_MSD" EntityType="Self.V_MSD" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_MSD].[ID] AS [ID], 
+    [V_MSD].[PMS_No] AS [PMS_No], 
+    [V_MSD].[MOP_No] AS [MOP_No], 
+    [V_MSD].[SiteId] AS [SiteId], 
+    [V_MSD].[PartId] AS [PartId], 
+    [V_MSD].[Part_No] AS [Part_No], 
+    [V_MSD].[NSN] AS [NSN], 
+    [V_MSD].[PART_NAME] AS [PART_NAME], 
+    [V_MSD].[SR_Qty] AS [SR_Qty], 
+    [V_MSD].[UR_Qty] AS [UR_Qty], 
+    [V_MSD].[PMS_ID] AS [PMS_ID], 
+    [V_MSD].[PartTypeID] AS [PartTypeID]
+    FROM [dbo].[V_MSD] AS [V_MSD]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_C_Site_Config_tbl_Unit" Association="Self.FK_C_Site_Config_tbl_Unit">
+            <End Role="tbl_Unit" EntitySet="tbl_Unit" />
+            <End Role="C_Site_Config" EntitySet="C_Site_Config" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_ChildParts_tbl_Parts" Association="Self.FK_tbl_ChildParts_tbl_Parts">
+            <End Role="tbl_Parts" EntitySet="tbl_Parts" />
+            <End Role="tbl_ChildParts" EntitySet="tbl_ChildParts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_Parts_tbl_Cage" Association="Self.FK_tbl_Parts_tbl_Cage">
+            <End Role="tbl_Cage" EntitySet="tbl_Cage" />
+            <End Role="tbl_Parts" EntitySet="tbl_Parts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_Parts_tbl_PartType" Association="Self.FK_tbl_Parts_tbl_PartType">
+            <End Role="tbl_PartType" EntitySet="tbl_PartType" />
+            <End Role="tbl_Parts" EntitySet="tbl_Parts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_Request_tbl_Currency" Association="Self.FK_tbl_Request_tbl_Currency">
+            <End Role="tbl_Currency" EntitySet="tbl_Currency" />
+            <End Role="tbl_Request" EntitySet="tbl_Request" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="db_CMMSModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__MigrationHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+            <PropertyRef Name="ContextKey" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContextKey" Type="String" MaxLength="300" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Model" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetRole">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaim">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogin">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaim" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogin" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <EntitySet Name="tbl_ErrorLogs" EntityType="db_CMMSModel.tbl_ErrorLogs" />
+          <EntitySet Name="tbl_Country" EntityType="db_CMMSModel.tbl_Country" />
+          <EntitySet Name="tbl_MCAT" EntityType="db_CMMSModel.tbl_MCAT" />
+          <EntitySet Name="tbl_Currency" EntityType="db_CMMSModel.tbl_Currency" />
+          <EntitySet Name="C_Config_Master" EntityType="db_CMMSModel.C_Config_Master" />
+          <EntitySet Name="tbl_Unit" EntityType="db_CMMSModel.tbl_Unit" />
+          <EntitySet Name="tbl_Request" EntityType="db_CMMSModel.tbl_Request" />
+          <AssociationSet Name="FK_tbl_Request_tbl_Currency" Association="db_CMMSModel.FK_tbl_Request_tbl_Currency">
+            <End Role="tbl_Currency" EntitySet="tbl_Currency" />
+            <End Role="tbl_Request" EntitySet="tbl_Request" />
+          </AssociationSet>
+          <EntitySet Name="M_PMS" EntityType="db_CMMSModel.M_PMS" />
+          <EntitySet Name="tbl_RequestLog" EntityType="db_CMMSModel.tbl_RequestLog" />
+          <EntitySet Name="M_MOP" EntityType="db_CMMSModel.M_MOP" />
+          <EntitySet Name="M_MOP_ITEMS" EntityType="db_CMMSModel.M_MOP_ITEMS" />
+          <EntitySet Name="tbl_PartType" EntityType="db_CMMSModel.tbl_PartType" />
+          <EntitySet Name="tbl_Cage" EntityType="db_CMMSModel.tbl_Cage" />
+          <EntitySet Name="tbl_Parts" EntityType="db_CMMSModel.tbl_Parts" />
+          <AssociationSet Name="FK_tbl_Parts_tbl_Cage" Association="db_CMMSModel.FK_tbl_Parts_tbl_Cage">
+            <End Role="tbl_Cage" EntitySet="tbl_Cage" />
+            <End Role="tbl_Parts" EntitySet="tbl_Parts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tbl_Parts_tbl_PartType" Association="db_CMMSModel.FK_tbl_Parts_tbl_PartType">
+            <End Role="tbl_PartType" EntitySet="tbl_PartType" />
+            <End Role="tbl_Parts" EntitySet="tbl_Parts" />
+          </AssociationSet>
+          <EntitySet Name="C_Site_Config" EntityType="db_CMMSModel.C_Site_Config" />
+          <AssociationSet Name="FK_C_Site_Config_tbl_Unit" Association="db_CMMSModel.FK_C_Site_Config_tbl_Unit">
+            <End Role="tbl_Unit" EntitySet="tbl_Unit" />
+            <End Role="C_Site_Config" EntitySet="C_Site_Config" />
+          </AssociationSet>
+          <EntitySet Name="tbl_ChildParts" EntityType="db_CMMSModel.tbl_ChildParts" />
+          <AssociationSet Name="FK_tbl_ChildParts_tbl_Parts" Association="db_CMMSModel.FK_tbl_ChildParts_tbl_Parts">
+            <End Role="tbl_Parts" EntitySet="tbl_Parts" />
+            <End Role="tbl_ChildParts" EntitySet="tbl_ChildParts" />
+          </AssociationSet>
+          <EntitySet Name="V_MMS5" EntityType="db_CMMSModel.V_MMS5" />
+          <EntitySet Name="V_MSD" EntityType="db_CMMSModel.V_MSD" />
+ 
+          </EntityContainer>
+        <EntityType Name="tbl_ErrorLogs">
+          <Key>
+            <PropertyRef Name="LogId" />
+          </Key>
+          <Property Name="LogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Message" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="StackTrace" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ExceptionType" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LogTime" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tbl_Country">
+          <Key>
+            <PropertyRef Name="CountryID" />
+          </Key>
+          <Property Name="CountryID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_MCAT">
+          <Key>
+            <PropertyRef Name="MCAT_ID" />
+          </Key>
+          <Property Name="MCAT_ID" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="MCAT_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_Currency">
+          <Key>
+            <PropertyRef Name="CurrencyID" />
+          </Key>
+          <Property Name="CurrencyID" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="CurrencyName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ConversionRate" Type="Decimal" Precision="2" Scale="0" />
+          <NavigationProperty Name="tbl_Request" Relationship="db_CMMSModel.FK_tbl_Request_tbl_Currency" FromRole="tbl_Currency" ToRole="tbl_Request" />
+        </EntityType>
+        <EntityType Name="C_Config_Master">
+          <Key>
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="ESWBS" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="PESWBS" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Nomanclature" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="278" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="tbl_Unit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="C_Site_Config" Relationship="db_CMMSModel.FK_C_Site_Config_tbl_Unit" FromRole="tbl_Unit" ToRole="C_Site_Config" />
+        </EntityType>
+        <EntityType Name="tbl_Request">
+          <Key>
+            <PropertyRef Name="RequestId" />
+          </Key>
+          <Property Name="RequestId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Part_No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CageCode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="ManufacturerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Equipment_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NSN" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="UNIT_PRICE" Type="Decimal" Precision="7" Scale="0" />
+          <Property Name="CurrencyID" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="LENGTH" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="WIDTH" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="HEIGHT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="WEIGHT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="DIAMETER" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="PART_MEC" Type="Int32" />
+          <Property Name="MTBF" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="MTTR" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SMR" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BRF" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PART_CHARACTERISTIC" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="PICTURE_FILE_NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="File_Path" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FileExtension" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateOfInstallation" Type="DateTime" Precision="0" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="PMS_No" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="SERIAL_NO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="JUSTIFICATION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DETAIL_REMARKS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LOCATIONS" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DESIGNATION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CONTACT" Type="Int32" />
+          <Property Name="CreatedOnDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedOnDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedByUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedByUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" />
+          <NavigationProperty Name="tbl_Currency" Relationship="db_CMMSModel.FK_tbl_Request_tbl_Currency" FromRole="tbl_Request" ToRole="tbl_Currency" />
+          <Property Name="SiteId" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_tbl_Request_tbl_Currency">
+          <End Type="db_CMMSModel.tbl_Currency" Role="tbl_Currency" Multiplicity="0..1" />
+          <End Type="db_CMMSModel.tbl_Request" Role="tbl_Request" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Currency">
+              <PropertyRef Name="CurrencyID" />
+            </Principal>
+            <Dependent Role="tbl_Request">
+              <PropertyRef Name="CurrencyID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="M_PMS">
+          <Key>
+            <PropertyRef Name="PMS_NO" />
+          </Key>
+          <Property Name="PMS_NO" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="PMS_DESC" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tbl_RequestLog">
+          <Key>
+            <PropertyRef Name="RequestLogId" />
+          </Key>
+          <Property Name="RequestLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CurrentDateTime" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" />
+          <Property Name="Remarks" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="RequestId" Type="Int32" />
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="M_MOP">
+          <Key>
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="SiteId" />
+          </Key>
+          <Property Name="PMS_No" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="MOP_No" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="MOP_Desc" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="By_Whom" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Periodicity" Type="Int32" />
+          <Property Name="Period" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Doc" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Task_Procedure" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Safety_Precautions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Jic" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="IssueDate" Type="DateTime" Precision="0" />
+          <Property Name="AddReference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="M_MOP_ITEMS">
+          <Key>
+            <PropertyRef Name="PartId" />
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="PMS_No" />
+          </Key>
+          <Property Name="MOP_ItemsId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SR_Qty" Type="Int32" />
+          <Property Name="UR_Qty" Type="Int32" />
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="PMS_No" Type="String" MaxLength="11" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MOP_No" Type="String" MaxLength="3" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Part_No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PartId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tbl_PartType">
+          <Key>
+            <PropertyRef Name="PartTypeID" />
+          </Key>
+          <Property Name="PartTypeID" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PartName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_Parts" Relationship="db_CMMSModel.FK_tbl_Parts_tbl_PartType" FromRole="tbl_PartType" ToRole="tbl_Parts" />
+        </EntityType>
+        <EntityType Name="tbl_Cage">
+          <Key>
+            <PropertyRef Name="CageId" />
+          </Key>
+          <Property Name="CageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CageCode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="CageName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOnDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedOnDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedByUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedByUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_Parts" Relationship="db_CMMSModel.FK_tbl_Parts_tbl_Cage" FromRole="tbl_Cage" ToRole="tbl_Parts" />
+        </EntityType>
+        <EntityType Name="tbl_Parts">
+          <Key>
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="PartId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Part_No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CageId" Type="Int32" />
+          <Property Name="CageCode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="PART_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NSN" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="UNIT_PRICE" Type="Decimal" Precision="7" Scale="0" />
+          <Property Name="CurrencyID" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="MCAT_ID" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PartTypeID" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="LENGTH" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="WIDTH" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="HEIGHT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="WEIGHT" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="DIAMETER" Type="Decimal" Precision="8" Scale="0" />
+          <Property Name="PART_MEC" Type="Int32" />
+          <Property Name="MTBF" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="MTTR" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="SMR" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BRF" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PART_CHARACTERISTIC" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="PICTURE_FILE_NAME" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="File_Path" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="FileExtension" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOnDate" Type="DateTime" Precision="3" />
+          <Property Name="ModifiedOnDate" Type="DateTime" Precision="3" />
+          <Property Name="CreatedByUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ModifiedByUser" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="tbl_Cage" Relationship="db_CMMSModel.FK_tbl_Parts_tbl_Cage" FromRole="tbl_Parts" ToRole="tbl_Cage" />
+          <NavigationProperty Name="tbl_PartType" Relationship="db_CMMSModel.FK_tbl_Parts_tbl_PartType" FromRole="tbl_Parts" ToRole="tbl_PartType" />
+          <NavigationProperty Name="tbl_ChildParts" Relationship="db_CMMSModel.FK_tbl_ChildParts_tbl_Parts" FromRole="tbl_Parts" ToRole="tbl_ChildParts" />
+          <Property Name="Model" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_tbl_Parts_tbl_Cage">
+          <End Type="db_CMMSModel.tbl_Cage" Role="tbl_Cage" Multiplicity="0..1" />
+          <End Type="db_CMMSModel.tbl_Parts" Role="tbl_Parts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Cage">
+              <PropertyRef Name="CageId" />
+            </Principal>
+            <Dependent Role="tbl_Parts">
+              <PropertyRef Name="CageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tbl_Parts_tbl_PartType">
+          <End Type="db_CMMSModel.tbl_PartType" Role="tbl_PartType" Multiplicity="0..1" />
+          <End Type="db_CMMSModel.tbl_Parts" Role="tbl_Parts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_PartType">
+              <PropertyRef Name="PartTypeID" />
+            </Principal>
+            <Dependent Role="tbl_Parts">
+              <PropertyRef Name="PartTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="C_Site_Config">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="ESWBS" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="PESWBS" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Nomanclature" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="PMS_No" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="SMR_Code" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="PartId" Type="Int32" />
+          <Property Name="CageId" Type="Int32" />
+          <NavigationProperty Name="tbl_Unit" Relationship="db_CMMSModel.FK_C_Site_Config_tbl_Unit" FromRole="C_Site_Config" ToRole="tbl_Unit" />
+        </EntityType>
+        <Association Name="FK_C_Site_Config_tbl_Unit">
+          <End Type="db_CMMSModel.tbl_Unit" Role="tbl_Unit" Multiplicity="1" />
+          <End Type="db_CMMSModel.C_Site_Config" Role="C_Site_Config" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Unit">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="C_Site_Config">
+              <PropertyRef Name="SiteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tbl_ChildParts">
+          <Key>
+            <PropertyRef Name="ChildPartId" />
+          </Key>
+          <Property Name="ParentPartId" Type="Int32" />
+          <Property Name="ChildPartId" Type="Int32" Nullable="false" />
+          <Property Name="APLNumber" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="Remarks" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Boolean" />
+          <NavigationProperty Name="tbl_Parts" Relationship="db_CMMSModel.FK_tbl_ChildParts_tbl_Parts" FromRole="tbl_ChildParts" ToRole="tbl_Parts" />
+        </EntityType>
+        <Association Name="FK_tbl_ChildParts_tbl_Parts">
+          <End Type="db_CMMSModel.tbl_Parts" Role="tbl_Parts" Multiplicity="1" />
+          <End Type="db_CMMSModel.tbl_ChildParts" Role="tbl_ChildParts" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tbl_Parts">
+              <PropertyRef Name="PartId" />
+            </Principal>
+            <Dependent Role="tbl_ChildParts">
+              <PropertyRef Name="ChildPartId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="V_MMS5">
+          <Key>
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+          </Key>
+          <Property Name="Id" Type="Int32" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PMS_No" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="MOP_No" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="Doc" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Jic" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="By_Whom" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Periodicity" Type="Int32" />
+          <Property Name="Period" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Task_Procedure" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Safety_Precautions" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PartId" Type="Int32" />
+          <Property Name="Part_No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PART_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MOP_Desc" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="IssueDate" Type="DateTime" Precision="0" />
+          <Property Name="AddReference" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PMS_ID" Type="String" MaxLength="22" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="V_MSD">
+          <Key>
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="PartId" />
+          </Key>
+          <Property Name="ID" Type="String" MaxLength="34" FixedLength="false" Unicode="true" />
+          <Property Name="PMS_No" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="MOP_No" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="PartId" Type="Int32" Nullable="false" />
+          <Property Name="Part_No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="NSN" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="PART_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SR_Qty" Type="Int32" />
+          <Property Name="UR_Qty" Type="Int32" />
+          <Property Name="PMS_ID" Type="String" MaxLength="22" FixedLength="false" Unicode="true" />
+          <Property Name="PartTypeID" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+
+
+	 
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="db_CMMSModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="C__MigrationHistory">
+            <EntityTypeMapping TypeName="db_CMMSModel.C__MigrationHistory">
+              <MappingFragment StoreEntitySet="__MigrationHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ContextKey" ColumnName="ContextKey" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="db_CMMSModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="db_CMMSModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="db_CMMSModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="db_CMMSModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="db_CMMSModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="tbl_ErrorLogs">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_ErrorLogs">
+              <MappingFragment StoreEntitySet="tbl_ErrorLogs">
+                <ScalarProperty Name="LogTime" ColumnName="LogTime" />
+                <ScalarProperty Name="ExceptionType" ColumnName="ExceptionType" />
+                <ScalarProperty Name="StackTrace" ColumnName="StackTrace" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="LogId" ColumnName="LogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Country">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Country">
+              <MappingFragment StoreEntitySet="tbl_Country">
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryID" ColumnName="CountryID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_MCAT">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_MCAT">
+              <MappingFragment StoreEntitySet="tbl_MCAT">
+                <ScalarProperty Name="MCAT_Name" ColumnName="MCAT_Name" />
+                <ScalarProperty Name="MCAT_ID" ColumnName="MCAT_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Currency">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Currency">
+              <MappingFragment StoreEntitySet="tbl_Currency">
+                <ScalarProperty Name="ConversionRate" ColumnName="ConversionRate" />
+                <ScalarProperty Name="CurrencyName" ColumnName="CurrencyName" />
+                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_Config_Master">
+            <EntityTypeMapping TypeName="db_CMMSModel.C_Config_Master">
+              <MappingFragment StoreEntitySet="C_Config_Master">
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Nomanclature" ColumnName="Nomanclature" />
+                <ScalarProperty Name="PESWBS" ColumnName="PESWBS" />
+                <ScalarProperty Name="ESWBS" ColumnName="ESWBS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Unit">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Unit">
+              <MappingFragment StoreEntitySet="tbl_Unit">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Request">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Request">
+              <MappingFragment StoreEntitySet="tbl_Request">
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ModifiedByUser" ColumnName="ModifiedByUser" />
+                <ScalarProperty Name="CreatedByUser" ColumnName="CreatedByUser" />
+                <ScalarProperty Name="ModifiedOnDate" ColumnName="ModifiedOnDate" />
+                <ScalarProperty Name="CreatedOnDate" ColumnName="CreatedOnDate" />
+                <ScalarProperty Name="CONTACT" ColumnName="CONTACT" />
+                <ScalarProperty Name="DESIGNATION" ColumnName="DESIGNATION" />
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="LOCATIONS" ColumnName="LOCATIONS" />
+                <ScalarProperty Name="DETAIL_REMARKS" ColumnName="DETAIL_REMARKS" />
+                <ScalarProperty Name="JUSTIFICATION" ColumnName="JUSTIFICATION" />
+                <ScalarProperty Name="SERIAL_NO" ColumnName="SERIAL_NO" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="DateOfInstallation" ColumnName="DateOfInstallation" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="File_Path" ColumnName="File_Path" />
+                <ScalarProperty Name="PICTURE_FILE_NAME" ColumnName="PICTURE_FILE_NAME" />
+                <ScalarProperty Name="PART_CHARACTERISTIC" ColumnName="PART_CHARACTERISTIC" />
+                <ScalarProperty Name="BRF" ColumnName="BRF" />
+                <ScalarProperty Name="SMR" ColumnName="SMR" />
+                <ScalarProperty Name="MTTR" ColumnName="MTTR" />
+                <ScalarProperty Name="MTBF" ColumnName="MTBF" />
+                <ScalarProperty Name="PART_MEC" ColumnName="PART_MEC" />
+                <ScalarProperty Name="DIAMETER" ColumnName="DIAMETER" />
+                <ScalarProperty Name="WEIGHT" ColumnName="WEIGHT" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="LENGTH" ColumnName="LENGTH" />
+                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+                <ScalarProperty Name="UNIT_PRICE" ColumnName="UNIT_PRICE" />
+                <ScalarProperty Name="NSN" ColumnName="NSN" />
+                <ScalarProperty Name="Equipment_Name" ColumnName="Equipment_Name" />
+                <ScalarProperty Name="ManufacturerName" ColumnName="ManufacturerName" />
+                <ScalarProperty Name="CageCode" ColumnName="CageCode" />
+                <ScalarProperty Name="Part_No" ColumnName="Part_No" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_PMS">
+            <EntityTypeMapping TypeName="db_CMMSModel.M_PMS">
+              <MappingFragment StoreEntitySet="M_PMS">
+                <ScalarProperty Name="PMS_DESC" ColumnName="PMS_DESC" />
+                <ScalarProperty Name="PMS_NO" ColumnName="PMS_NO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_RequestLog">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_RequestLog">
+              <MappingFragment StoreEntitySet="tbl_RequestLog">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RequestId" ColumnName="RequestId" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CurrentDateTime" ColumnName="CurrentDateTime" />
+                <ScalarProperty Name="RequestLogId" ColumnName="RequestLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_MOP">
+            <EntityTypeMapping TypeName="db_CMMSModel.M_MOP">
+              <MappingFragment StoreEntitySet="M_MOP">
+                <ScalarProperty Name="AddReference" ColumnName="AddReference" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="Jic" ColumnName="Jic" />
+                <ScalarProperty Name="Safety_Precautions" ColumnName="Safety_Precautions" />
+                <ScalarProperty Name="Task_Procedure" ColumnName="Task_Procedure" />
+                <ScalarProperty Name="Doc" ColumnName="Doc" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="Periodicity" ColumnName="Periodicity" />
+                <ScalarProperty Name="By_Whom" ColumnName="By_Whom" />
+                <ScalarProperty Name="MOP_Desc" ColumnName="MOP_Desc" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="MOP_No" ColumnName="MOP_No" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_MOP_ITEMS">
+            <EntityTypeMapping TypeName="db_CMMSModel.M_MOP_ITEMS">
+              <MappingFragment StoreEntitySet="M_MOP_ITEMS">
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="Part_No" ColumnName="Part_No" />
+                <ScalarProperty Name="MOP_No" ColumnName="MOP_No" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="UR_Qty" ColumnName="UR_Qty" />
+                <ScalarProperty Name="SR_Qty" ColumnName="SR_Qty" />
+                <ScalarProperty Name="MOP_ItemsId" ColumnName="MOP_ItemsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_PartType">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_PartType">
+              <MappingFragment StoreEntitySet="tbl_PartType">
+                <ScalarProperty Name="PartName" ColumnName="PartName" />
+                <ScalarProperty Name="PartTypeID" ColumnName="PartTypeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Cage">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Cage">
+              <MappingFragment StoreEntitySet="tbl_Cage">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ModifiedByUser" ColumnName="ModifiedByUser" />
+                <ScalarProperty Name="CreatedByUser" ColumnName="CreatedByUser" />
+                <ScalarProperty Name="ModifiedOnDate" ColumnName="ModifiedOnDate" />
+                <ScalarProperty Name="CreatedOnDate" ColumnName="CreatedOnDate" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CageName" ColumnName="CageName" />
+                <ScalarProperty Name="CageCode" ColumnName="CageCode" />
+                <ScalarProperty Name="CageId" ColumnName="CageId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Parts">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Parts">
+              <MappingFragment StoreEntitySet="tbl_Parts">
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ModifiedByUser" ColumnName="ModifiedByUser" />
+                <ScalarProperty Name="CreatedByUser" ColumnName="CreatedByUser" />
+                <ScalarProperty Name="ModifiedOnDate" ColumnName="ModifiedOnDate" />
+                <ScalarProperty Name="CreatedOnDate" ColumnName="CreatedOnDate" />
+                <ScalarProperty Name="FileExtension" ColumnName="FileExtension" />
+                <ScalarProperty Name="File_Path" ColumnName="File_Path" />
+                <ScalarProperty Name="PICTURE_FILE_NAME" ColumnName="PICTURE_FILE_NAME" />
+                <ScalarProperty Name="PART_CHARACTERISTIC" ColumnName="PART_CHARACTERISTIC" />
+                <ScalarProperty Name="BRF" ColumnName="BRF" />
+                <ScalarProperty Name="SMR" ColumnName="SMR" />
+                <ScalarProperty Name="MTTR" ColumnName="MTTR" />
+                <ScalarProperty Name="MTBF" ColumnName="MTBF" />
+                <ScalarProperty Name="PART_MEC" ColumnName="PART_MEC" />
+                <ScalarProperty Name="DIAMETER" ColumnName="DIAMETER" />
+                <ScalarProperty Name="WEIGHT" ColumnName="WEIGHT" />
+                <ScalarProperty Name="HEIGHT" ColumnName="HEIGHT" />
+                <ScalarProperty Name="WIDTH" ColumnName="WIDTH" />
+                <ScalarProperty Name="LENGTH" ColumnName="LENGTH" />
+                <ScalarProperty Name="PartTypeID" ColumnName="PartTypeID" />
+                <ScalarProperty Name="MCAT_ID" ColumnName="MCAT_ID" />
+                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+                <ScalarProperty Name="UNIT_PRICE" ColumnName="UNIT_PRICE" />
+                <ScalarProperty Name="NSN" ColumnName="NSN" />
+                <ScalarProperty Name="PART_NAME" ColumnName="PART_NAME" />
+                <ScalarProperty Name="CageCode" ColumnName="CageCode" />
+                <ScalarProperty Name="CageId" ColumnName="CageId" />
+                <ScalarProperty Name="Part_No" ColumnName="Part_No" />
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_Site_Config">
+            <EntityTypeMapping TypeName="db_CMMSModel.C_Site_Config">
+              <MappingFragment StoreEntitySet="C_Site_Config">
+                <ScalarProperty Name="CageId" ColumnName="CageId" />
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="SMR_Code" ColumnName="SMR_Code" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Nomanclature" ColumnName="Nomanclature" />
+                <ScalarProperty Name="PESWBS" ColumnName="PESWBS" />
+                <ScalarProperty Name="ESWBS" ColumnName="ESWBS" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_ChildParts">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_ChildParts">
+              <MappingFragment StoreEntitySet="tbl_ChildParts">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="APLNumber" ColumnName="APLNumber" />
+                <ScalarProperty Name="ChildPartId" ColumnName="ChildPartId" />
+                <ScalarProperty Name="ParentPartId" ColumnName="ParentPartId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_MMS5">
+            <EntityTypeMapping TypeName="db_CMMSModel.V_MMS5">
+              <MappingFragment StoreEntitySet="V_MMS5">
+                <ScalarProperty Name="PMS_ID" ColumnName="PMS_ID" />
+                <ScalarProperty Name="AddReference" ColumnName="AddReference" />
+                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+                <ScalarProperty Name="MOP_Desc" ColumnName="MOP_Desc" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="PART_NAME" ColumnName="PART_NAME" />
+                <ScalarProperty Name="Part_No" ColumnName="Part_No" />
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="Safety_Precautions" ColumnName="Safety_Precautions" />
+                <ScalarProperty Name="Task_Procedure" ColumnName="Task_Procedure" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
+                <ScalarProperty Name="Periodicity" ColumnName="Periodicity" />
+                <ScalarProperty Name="By_Whom" ColumnName="By_Whom" />
+                <ScalarProperty Name="Jic" ColumnName="Jic" />
+                <ScalarProperty Name="Doc" ColumnName="Doc" />
+                <ScalarProperty Name="MOP_No" ColumnName="MOP_No" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_MSD">
+            <EntityTypeMapping TypeName="db_CMMSModel.V_MSD">
+              <MappingFragment StoreEntitySet="V_MSD">
+                <ScalarProperty Name="PartTypeID" ColumnName="PartTypeID" />
+                <ScalarProperty Name="PMS_ID" ColumnName="PMS_ID" />
+                <ScalarProperty Name="UR_Qty" ColumnName="UR_Qty" />
+                <ScalarProperty Name="SR_Qty" ColumnName="SR_Qty" />
+                <ScalarProperty Name="PART_NAME" ColumnName="PART_NAME" />
+                <ScalarProperty Name="NSN" ColumnName="NSN" />
+                <ScalarProperty Name="Part_No" ColumnName="Part_No" />
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+                <ScalarProperty Name="MOP_No" ColumnName="MOP_No" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+			
+			
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
