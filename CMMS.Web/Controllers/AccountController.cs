@@ -11,7 +11,7 @@ using Microsoft.Owin.Security;
 using ClassLibrary.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Configuration;
-
+ 
 namespace WebApplication.Controllers
 {
     [Authorize]
