@@ -5,10 +5,9 @@ using System.Web;
 
 namespace CMMS.Web.Helper
 {
-    public class Constants
+    public static class SessionKeys
     {
-
-        public static string SessionPermission = "Permissions";
-            
-     }
+        public static string RolePermissions = "Permissions";
+        public static string UserId = "UserId";
+    }
 }

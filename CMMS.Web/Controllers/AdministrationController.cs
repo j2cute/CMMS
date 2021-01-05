@@ -11,10 +11,13 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebApplication.Helpers;
+using Microsoft.AspNet.Identity.Owin;
 using static ClassLibrary.Common.Enums;
+using Microsoft.AspNet.Identity;
 
 namespace WebApplication.Controllers
 {
+    //[AuthorizationFilter]
     public class AdministrationController : Controller
     {
         #region roles
@@ -280,6 +283,21 @@ namespace WebApplication.Controllers
         }
         #endregion roles
 
+        private ApplicationUserManager _userManager;
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ??
+                    HttpContext.GetOwinContext()
+                    .GetUserManager<ApplicationUserManager>();
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
 
         #region user
         public ActionResult UserIndex()
@@ -287,7 +305,7 @@ namespace WebApplication.Controllers
             UserRoleViewModel vm = new UserRoleViewModel()
             {
                 tbl_User_list = _context.tbl_User.ToList(),
-                
+
             };
             return View(vm);
         }
@@ -326,8 +344,8 @@ namespace WebApplication.Controllers
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
-                try {
-
+                try
+                {
                     if (!ModelState.IsValid)
                     {
                         UserRoleViewModel vm = new UserRoleViewModel()
@@ -342,38 +360,64 @@ namespace WebApplication.Controllers
                         return PartialView("_CreateUser", vm);
                     }
                     List<UserRoleModel> items = (new JavaScriptSerializer()).Deserialize<List<UserRoleModel>>(selectedItems);
-             
-                    if (tbl_User.UserId != null)
-                {
-                    _context.tbl_User.Add(tbl_User);
+
+                    if (tbl_User.Pno != null)
+                    {
+                        tbl_User.UserId = tbl_User.Pno;
+
+                        _context.tbl_User.Add(tbl_User);
+                        _context.SaveChanges();
+
+                        foreach (var data in items)
+                        {
+                            if (data != null)
+                            {
+                                if (!String.IsNullOrWhiteSpace(data.RoleId))
+                                {
+                                    var obj = new tbl_UserRole()
+                                    {
+
+                                        UserId = tbl_User.UserId,
+                                        RoleId = data.RoleId,
+                                        IsDefault = data.IsDefault
+
+                                    };
+                                    _context.tbl_UserRole.Add(obj);
+                                }
+                            }
+
+                        }
+                    }
                     _context.SaveChanges();
 
-                    foreach (var data in items)
-                    {
-                        if (data != null)
-                        {
-                            var obj = new tbl_UserRole()
-                            {
-                               
-                                UserId = tbl_User.UserId,
-                                RoleId = data.RoleId,
-                                IsDefault= data.IsDefault
-                                
-                            };
-                            _context.tbl_UserRole.Add(obj);
-                        }
+                    #region User Injection
 
+                    var UserName = tbl_User.UserId;
+                    var Password = tbl_User.Password.Trim();
+
+
+                    var objNewAdminUser = new ApplicationUser { UserName = tbl_User.UserId,Email = tbl_User.UserId };
+                    var AdminUserCreateResult = UserManager.Create(objNewAdminUser, Password);
+                    if(AdminUserCreateResult.Succeeded)
+                    {
+
+                        transaction.Commit();
                     }
-                }
-                _context.SaveChanges();
-                transaction.Commit();
-                return RedirectToAction("UserIndex");
+                    else
+                    {
+
+                        transaction.Rollback();
+                    }
+                    
+                    #endregion
+
+                    return RedirectToAction("UserIndex");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
                     //   Exception(ex);
-                    //  Alert("Their is something went wrong!!!", NotificationType.error);
+                   // Alert("Their is something went wrong!!!", NotificationType.error);
                     return RedirectToAction("UserIndex");
                 }
             }
@@ -385,25 +429,27 @@ namespace WebApplication.Controllers
             UserRoleViewModel vm = new UserRoleViewModel();
             var unit = _context.tbl_Unit.ToList();
             var allRoles = _context.tbl_Role.Select(x => new RolesModel
-            {     RoleId = x.RoleId,
-                Name = x.Name,  }).ToList();
-     
+            {
+                RoleId = x.RoleId,
+                Name = x.Name,
+            }).ToList();
+
             //  List<RolesModel> roles = new List<RolesModel>();
-            var result = _context.tbl_User.Where(x=>x.UserId == id).FirstOrDefault();
+            var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
             if (result.UserId != null)
-            {          
-               var userRole = _context.tbl_UserRole.Where(x => x.UserId == id).Select(x => new UserRoleModel
-               {
-                   RoleId = x.RoleId,
-                   UserId = x.UserId,
-               }).ToList();
+            {
+                var userRole = _context.tbl_UserRole.Where(x => x.UserId == id).Select(x => new UserRoleModel
+                {
+                    RoleId = x.RoleId,
+                    UserId = x.UserId,
+                }).ToList();
                 vm._tbl_Unit = unit;
                 vm.RolesModel_list = allRoles;
                 vm.tbl_User = result;
                 vm.userRoleModel_list = userRole;
 
             }
-           return PartialView("_EditUser", vm);
+            return PartialView("_EditUser", vm);
         }
 
         // POST: Roles/Edit/5
@@ -431,14 +477,16 @@ namespace WebApplication.Controllers
                     List<UserRoleModel> items = (new JavaScriptSerializer()).Deserialize<List<UserRoleModel>>(selectedItems);
 
 
-                    if (tbl_User.UserId != null)
+                    if (tbl_User.Pno != null)
                     {
+                        tbl_User.UserId = tbl_User.Pno;
+
                         _context.Entry(tbl_User).State = EntityState.Modified;
                         _context.SaveChanges();
                         _context.tbl_UserRole.RemoveRange(_context.tbl_UserRole.Where(x => x.UserId == id));
                         _context.SaveChanges();
                         if (items[0].RoleId != "")
-                        { 
+                        {
                             foreach (var data in items)
                             {
                                 if (data != null)
@@ -454,17 +502,58 @@ namespace WebApplication.Controllers
                             }
                             _context.SaveChanges();
                         }
-                  
+
+
+                        #region User Injection
+
+                        var UserName = tbl_User.UserId;
+
+                        ApplicationUser result = UserManager.FindByEmail(UserName);
+                        // Was a password sent across?
+                        if (result!=null && !string.IsNullOrEmpty(tbl_User.Password))
+                        {
+                            // Remove current password
+                            var removePassword = UserManager.RemovePassword(result.Id);
+                            if (removePassword.Succeeded)
+                            {
+                                // Add new password
+                                var AddPassword =
+                                    UserManager.AddPassword(
+                                        result.Id,
+                                        tbl_User.Password
+                                        );
+
+
+                                if(AddPassword.Succeeded)
+                                {
+                                    transaction.Commit();
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw new Exception(AddPassword.Errors.FirstOrDefault());
+                                }
+                            }
+                            else
+                            {
+                                transaction.Rollback();
+                                throw new Exception("Some error occured.");
+                            }
+                        }
+                        else
+                        {
+                            transaction.Commit();
+                        }
+
+                        #endregion
+
                     }
-               
-                    transaction.Commit();
                     return RedirectToAction("UserIndex");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    //   Exception(ex);
-                    //  Alert("Their is something went wrong!!!", NotificationType.error);
+    
                     return RedirectToAction("UserIndex");
                 }
             }
@@ -495,21 +584,34 @@ namespace WebApplication.Controllers
                         return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                     }
 
-                    var result = _context.tbl_User.Where(x => x.UserId == id).SingleOrDefault();
+                    var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
                     if (result != null)
                     {
+                       
                         result.IsActive = 0;
+
+                        _context.tbl_User.Attach(result);
+                        _context.Entry(result).Property(x => x.IsActive).IsModified = true;
+
                         _context.SaveChanges();
+
+                        #region User Injection 
+
+                        ApplicationUser user = UserManager.FindByEmail(id);
+                        UserManager.Delete(user);
+
+                        #endregion
+
                         transaction.Commit();
                     }
-                   // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
+                    // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
                     return RedirectToAction("UserIndex");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                  //  Exception(ex);
-                 //   Alert("Their is something went wrong!!!", NotificationType.error);
+                    //  Exception(ex);
+                    //   Alert("Their is something went wrong!!!", NotificationType.error);
                     return RedirectToAction("UserIndex");
                 }
             }

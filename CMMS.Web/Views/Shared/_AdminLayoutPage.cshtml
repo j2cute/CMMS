@@ -1,6 +1,6 @@
 ﻿@using CMMS.Web.Helper
 @{
-    var permissions = (List<ClassLibrary.Models.PermissionViewModel>)Session[Constants.SessionPermission];
+    var permissions = (List<ClassLibrary.Models.PermissionViewModel>)Session[SessionKeys.RolePermissions];
 }
 
 <!DOCTYPE html>
