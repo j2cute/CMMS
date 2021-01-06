@@ -46,17 +46,7 @@
                                 <th>Equipment Name</th>
                                 <th>Manufacturer Name</th>
                       
-                                @*<th>MCAT</th>
-                                    <th>Unit Price</th>
-                                    <th>Currency</th>
-                                    <th>MTBF</th>
-                                    <th>BRF</th>
-                                    <th>SMR</th>*@
-                                @*<th>Length</th>
-                                    <th>Width</th>
-                                    <th>Height</th>
-                                    <th>Diameter</th>
-                                    <th>Weight</th>*@
+
                                
                             </tr>
                         </thead>
@@ -82,17 +72,7 @@
                                     <td> @item.UNIT_PRICE</td>
                                     <td> @item.Equipment_Name</td>
                                     <td> @item.ManufacturerName</td>
-                 
-                                    @*<td> @item.tbl_MCAT.MCAT_Name</td>
-                                        <td> @item.UNIT_PRICE</td>
-                                        <td> @item.CurrencyID</td>
-                                        <td> @item.MTBF</td>
-                                        <td> @item.BRF</td>
-                                        <td> @item.SMR</td>*@
-                                    @*<td> @item.LENGTH</td>
-                                        <td> @item.WIDTH</td>
-                                        <td> @item.HEIGHT</td>
-                                        <td> @item.WEIGHT</td>*@
+            
 
 
                                   
@@ -149,7 +129,7 @@
                                                     <div class="form-group">
                                                         <label>Part No</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.Part_No, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.Part_No, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.Part_No, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -159,7 +139,7 @@
                                                     <div class="form-group">
                                                         <label>Equipment Name</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.Equipment_Name, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.Equipment_Name, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.Equipment_Name, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -168,7 +148,7 @@
                                                     <div class="form-group">
                                                         <label>PMS No.</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.PMS_No, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.PMS_No, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.PMS_No, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -180,7 +160,7 @@
                                                     <div class="form-group">
                                                         <label>NSN</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.NSN, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.NSN, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.NSN, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -197,7 +177,7 @@
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label>Manufacturer Name</label>
-                                                        @Html.EditorFor(model => model.tbl_Request.ManufacturerName, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.ManufacturerName, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.ManufacturerName, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -211,7 +191,7 @@
                                                 <div class="col-md-2">
                                                     <div class="form-group">
                                                         <label>Cage Code</label>
-                                                        @Html.EditorFor(model => model.tbl_Request.CageCode, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.CageCode, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.CageCode, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -220,7 +200,7 @@
                                                     <div class="form-group">
                                                         <label>Qty</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.Qty, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.Qty, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.Qty, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -229,7 +209,7 @@
                                                     <div class="form-group">
                                                         <label>Unit Price</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.UNIT_PRICE, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.UNIT_PRICE, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.UNIT_PRICE, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -239,7 +219,7 @@
                                                     <div class="form-group">
                                                         <label>Currency</label>
 
-                                                        @Html.DropDownListFor(model => model.tbl_Request.CurrencyID, new SelectList(Model._tbl_Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-control" })
+                                                        @Html.DropDownListFor(model => model.tbl_Request.CurrencyID, new SelectList(Model._tbl_Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-control", @readonly = true })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.CurrencyID, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -248,7 +228,7 @@
                                                     <div class="form-group">
                                                         <label>MTBF</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.MTBF, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.MTBF, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.MTBF, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -257,7 +237,7 @@
                                                     <div class="form-group">
                                                         <label>BRF</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.BRF, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.BRF, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.BRF, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -284,7 +264,7 @@
                                                     <div class="form-group">
                                                         <label>Location(s)</label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.LOCATIONS, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.LOCATIONS, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.LOCATIONS, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -293,7 +273,7 @@
                                                     <div class="form-group">
                                                         <label>Serial No(s) <span style="font-size:smaller;color:darkgray;">If multiple separated by commas</span></label>
 
-                                                        @Html.EditorFor(model => model.tbl_Request.SERIAL_NO, new { htmlAttributes = new { @class = "form-control" } })
+                                                        @Html.EditorFor(model => model.tbl_Request.SERIAL_NO, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                         @Html.ValidationMessageFor(model => model.tbl_Request.SERIAL_NO, "", new { @class = "text-danger" })
 
                                                     </div>
@@ -304,7 +284,7 @@
                                             <div class="form-group">
                                                 <label>Date of Installation</label>
 
-                                                @Html.EditorFor(model => model.tbl_Request.DateOfInstallation, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(model => model.tbl_Request.DateOfInstallation, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                 @Html.ValidationMessageFor(model => model.tbl_Request.DateOfInstallation, "", new { @class = "text-danger" })
 
                                             </div>
@@ -318,7 +298,7 @@
                                                 <div class="form-group">
                                                     <label>Length(cm)</label>
 
-                                                    @Html.EditorFor(model => model.tbl_Request.LENGTH, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.LENGTH, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.LENGTH, "", new { @class = "text-danger" })
 
                                                 </div>
@@ -327,7 +307,7 @@
                                                 <div class="form-group">
                                                     <label>Width(cm)</label>
 
-                                                    @Html.EditorFor(model => model.tbl_Request.WIDTH, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.WIDTH, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.WIDTH, "", new { @class = "text-danger" })
 
                                                 </div>
@@ -336,7 +316,7 @@
                                                 <div class="form-group">
                                                     <label>Height(cm)</label>
 
-                                                    @Html.EditorFor(model => model.tbl_Request.HEIGHT, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.HEIGHT, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.HEIGHT, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -345,7 +325,7 @@
                                                 <div class="form-group">
                                                     <label>Diameter(cm)</label>
 
-                                                    @Html.EditorFor(model => model.tbl_Request.DIAMETER, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.DIAMETER, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.DIAMETER, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -353,7 +333,7 @@
                                                 <div class="form-group">
                                                     <label>Weight(kg)</label>
 
-                                                    @Html.EditorFor(model => model.tbl_Request.WEIGHT, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.WEIGHT, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.WEIGHT, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -366,7 +346,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    @Html.TextAreaFor(model => model.tbl_Request.PART_CHARACTERISTIC, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.TextAreaFor(model => model.tbl_Request.PART_CHARACTERISTIC, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.PART_CHARACTERISTIC, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -382,7 +362,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            @Html.TextAreaFor(model => model.tbl_Request.JUSTIFICATION, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.TextAreaFor(model => model.tbl_Request.JUSTIFICATION, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                             @Html.ValidationMessageFor(model => model.tbl_Request.JUSTIFICATION, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -395,7 +375,7 @@
                                                 <div class="row">
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            @Html.TextAreaFor(model => model.tbl_Request.DETAIL_REMARKS, new { htmlAttributes = new { @class = "form-control" } })
+                                                            @Html.TextAreaFor(model => model.tbl_Request.DETAIL_REMARKS, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                             @Html.ValidationMessageFor(model => model.tbl_Request.DETAIL_REMARKS, "", new { @class = "text-danger" })
                                                         </div>
                                                     </div>
@@ -411,7 +391,7 @@
 
                                                 <label class="col-md-3">Name:</label>
                                                 <div class="col-md-9">
-                                                    @Html.EditorFor(model => model.tbl_Request.NAME, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.NAME, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.NAME, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -419,7 +399,7 @@
                                             <div class="form-group">
                                                 <label class="col-md-3">Designation:</label>
                                                 <div class="col-md-9">
-                                                    @Html.EditorFor(model => model.tbl_Request.DESIGNATION, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.DESIGNATION, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.DESIGNATION, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
@@ -427,7 +407,7 @@
                                             <div class="form-group">
                                                 <label class="col-md-3">Contact No.:</label>
                                                 <div class="col-md-9">
-                                                    @Html.EditorFor(model => model.tbl_Request.CONTACT, new { htmlAttributes = new { @class = "form-control" } })
+                                                    @Html.EditorFor(model => model.tbl_Request.CONTACT, new { htmlAttributes = new { @class = "form-control",@readonly=true } })
                                                     @Html.ValidationMessageFor(model => model.tbl_Request.CONTACT, "", new { @class = "text-danger" })
                                                 </div>
                                             </div>
