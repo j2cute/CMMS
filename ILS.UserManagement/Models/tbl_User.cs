@@ -11,7 +11,8 @@ namespace ILS.UserManagement.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class tbl_User
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -21,8 +22,14 @@ namespace ILS.UserManagement.Models
         }
     
         public string UserId { get; set; }
+
+ 
         public string Pno { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public string Password { get; set; }
         public Nullable<int> UnitId { get; set; }
         public string Contact { get; set; }
@@ -38,6 +45,7 @@ namespace ILS.UserManagement.Models
         public Nullable<decimal> IsDeleted { get; set; }
         public string Status { get; set; }
         public string UserType { get; set; }
+
         public string Organization { get; set; }
         public Nullable<System.DateTime> PasswordChangeDateTime { get; set; }
         public string PasswordStatus { get; set; }

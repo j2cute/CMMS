@@ -11,10 +11,11 @@ using ClassLibrary.Models;
 using static ClassLibrary.Common.Enums;
 using ILS.UserManagement.Models;
 using CMMS.Web.Helper;
+using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
+    [Authorization]
     public class AdminController : BaseController
     {
         private ApplicationUserManager _userManager;

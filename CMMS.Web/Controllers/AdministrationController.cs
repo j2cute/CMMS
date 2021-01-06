@@ -17,7 +17,7 @@ using Microsoft.AspNet.Identity;
 
 namespace WebApplication.Controllers
 {
-    //[AuthorizationFilter]
+    [Authorization]
     public class AdministrationController : Controller
     {
         #region roles
@@ -310,7 +310,7 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
-        [CustomAuthorization]
+        [Authorization]
         public ActionResult CreateUser()
         {
             UserRoleViewModel vm = new UserRoleViewModel()

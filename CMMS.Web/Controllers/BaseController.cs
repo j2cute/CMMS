@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication.Helpers;
 using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class BaseController : Controller
     {
         private WebAppDbContext db = new WebAppDbContext();

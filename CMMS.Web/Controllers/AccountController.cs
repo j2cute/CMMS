@@ -12,10 +12,10 @@ using ClassLibrary.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Configuration;
 using CMMS.Web.Helper;
+using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;
@@ -107,6 +107,7 @@ namespace WebApplication.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
+        [Authorization]
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {

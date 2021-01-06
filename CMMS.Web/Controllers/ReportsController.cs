@@ -12,7 +12,7 @@ using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
-    [Authorize]
+    [Authorization]
     public class ReportsController : Controller
     {
         private ReportDocument _reportDocument;
