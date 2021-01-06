@@ -8,9 +8,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Collections;
+using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class ReportsController : Controller
     {
         private ReportDocument _reportDocument;

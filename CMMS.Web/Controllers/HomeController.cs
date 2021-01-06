@@ -6,9 +6,11 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class HomeController : Controller
     {
         // GET: Home

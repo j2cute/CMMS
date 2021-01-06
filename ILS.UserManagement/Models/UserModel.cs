@@ -9,7 +9,6 @@ namespace ILS.UserManagement.Models
     {
     public class UserModel
     {
-        [Required(ErrorMessage = "This field is required.")]
         public string UserId { get; set; }
      
         [Required(ErrorMessage = "This field is required.")]
@@ -36,7 +35,6 @@ namespace ILS.UserManagement.Models
     [MetadataType(typeof(UserModel))]
     public partial class tbl_User
     {
-        public string ConfirmPassword { get; set; }
-
+      public string ConfirmPassword { get; set; }
     }
 }

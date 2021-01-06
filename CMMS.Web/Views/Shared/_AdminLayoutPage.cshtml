@@ -1,6 +1,6 @@
 ﻿@using CMMS.Web.Helper
 @{
-    var permissions = (List<ClassLibrary.Models.PermissionViewModel>)Session[Constants.SessionPermission];
+    var permissions = (List<ClassLibrary.Models.PermissionViewModel>)Session[SessionKeys.RolePermissions];
 }
 
 <!DOCTYPE html>
@@ -81,13 +81,11 @@
                             {
 
                                 <li>
-                                    <a href="@item1.URL">
+                                    <a href="@item.URL">
                                         <i class="fa fa-circle-o"></i>
                                         <span>@item1.DisplayName</span>
                                     </a>
                                 </li>
-
-
                             }
                         </ul>
                         </li>

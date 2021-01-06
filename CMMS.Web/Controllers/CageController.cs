@@ -18,6 +18,7 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class CageController : BaseController
     {
         private WebAppDbContext db = new WebAppDbContext();
@@ -38,7 +39,7 @@ namespace WebApplication.Controllers
 
         // GET: Cage
 
-        [CustomAuthorizationAttribute]
+        [AuthorizationAttribute]
         public ActionResult Index()
         {
             var vm = new CageViewModels()

@@ -27,6 +27,8 @@ namespace WebApplication
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             Response.Cache.SetNoStore();
         }
+
+ 
     }
     public class CustomDateModelBinder : DefaultModelBinder
     {

@@ -5,14 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication.Helpers;
 using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class PMSController : BaseController
     {
- 
-        [Authorize(Roles = "Admin,DataEntry Operator")]
         public ActionResult Index()
         {
             using (WebAppDbContext db = new WebAppDbContext())

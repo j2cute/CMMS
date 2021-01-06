@@ -11,10 +11,12 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using WebApplication.Helpers;
 using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class ConfigController : BaseController
     {
         // GET: IndexConfig

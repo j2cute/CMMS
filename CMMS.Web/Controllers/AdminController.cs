@@ -10,10 +10,12 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using ClassLibrary.Models;
 using static ClassLibrary.Common.Enums;
 using ILS.UserManagement.Models;
-
+using CMMS.Web.Helper;
+using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
+    [Authorization]
     public class AdminController : BaseController
     {
         private ApplicationUserManager _userManager;
@@ -21,58 +23,60 @@ namespace WebApplication.Controllers
 
         // Controllers
 
-        [Authorize(Roles = "Admin")]
         #region Dashboard
+ 
         public ActionResult Dashboard()
         {
             using (WebAppDbContext db = new WebAppDbContext())
             {
                 DashboardViewModel dashboard = new DashboardViewModel();
-                var abc = db.AspNetRoles.Where(x => x.Name == "Admin").Select(X=>X.AspNetUsers);
-                foreach (var item in abc)
-                {
-                    dashboard.UsersAdmin_Count =  item.Count();
-                }
+               
 
                 List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-              
-                var cde = db.AspNetRoles.Where(x => x.Name == "DataEntry Operator").Select(X => X.AspNetUsers);
-                foreach (var item in cde)
-                {
-                    dashboard.UsersOther_Count = item.Count();
-                }
+
+               var loginUserId =  Session[SessionKeys.UserId]?.ToString();
+
                 DateTime dt = DateTime.Now;
                 dashboard.datetime = dt.ToString();
 
                 using (Entities _context = new Entities())
                 {
-                    var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == "Admin123").ToList();
+                    var defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
 
-                    foreach (var item in  permissions)
+                    if (!String.IsNullOrWhiteSpace(defaultRoleId))
                     {
-                        PermissionViewModel permissionViewModel = new PermissionViewModel()
-                        {
-                            PermissionId = item.PermissionId,
-                            DisplayName = item.tbl_Permission.DisplayName,
-                            Level = item.tbl_Permission.PermissionLevel.ToString(),
-                            ParentId = item.tbl_Permission.ParentId,
-                            URL = item.tbl_Permission.URL
-                        };
+                        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
 
-                        ListPermissionViewModel.Add(permissionViewModel);
+                        foreach (var item in permissions)
+                        {
+                            PermissionViewModel permissionViewModel = new PermissionViewModel()
+                            {
+                                PermissionId = item.PermissionId,
+                                DisplayName = item.tbl_Permission.DisplayName,
+                                Level = item.tbl_Permission.PermissionLevel.ToString(),
+                                ParentId = item.tbl_Permission.ParentId,
+                                URL = item.tbl_Permission.URL
+                            };
+
+                            ListPermissionViewModel.Add(permissionViewModel);
+                        }
+                    }
+                    else
+                    {
+                        // Show some error
                     }
                 }
 
 
-                Session[CMMS.Web.Helper.Constants.SessionPermission] = ListPermissionViewModel;
+                Session[SessionKeys.RolePermissions] = ListPermissionViewModel;
 
                 return View(dashboard);
             }          
         }
         #endregion
-        #region UserCheck
-        [Authorize(Roles = "Admin")]
 
+        #region UserCheck
+ 
         public JsonResult CheckUserName(string UserName)
         {
             using (WebAppDbContext db = new WebAppDbContext())
@@ -92,8 +96,7 @@ namespace WebApplication.Controllers
         }
         #endregion UserCheck
 
-        // GET: /Admin/ Index
-        [Authorize(Roles = "Admin")]
+
         #region public ActionResult Index(string searchStringUserNameOrEmail)
         public ActionResult Index()
         {
@@ -117,7 +120,7 @@ namespace WebApplication.Controllers
         // Users *****************************
 
         // GET: /Admin/Edit/Create 
-        [Authorize(Roles = "Admin")]
+
         #region public ActionResult Create()
         public ActionResult Create()
         {
@@ -130,7 +133,6 @@ namespace WebApplication.Controllers
         #endregion
 
         // PUT: /Admin/Create
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         #region public ActionResult Create(ExpandedUserDTO paramExpandedUserDTO)
@@ -199,7 +201,6 @@ namespace WebApplication.Controllers
         #endregion
 
         // GET: /Admin/Edit/TestUser 
-        [Authorize(Roles = "Admin")]
         #region public ActionResult EditUser(string UserName)
         public ActionResult EditUser(string UserName, string Email)
         {
@@ -217,7 +218,6 @@ namespace WebApplication.Controllers
         #endregion
 
         // PUT: /Admin/EditUser
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         #region public ActionResult EditUser(ExpandedUserDTO paramExpandedUserDTO)
@@ -251,7 +251,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // DELETE: /Admin/DeleteUser
-        [Authorize(Roles = "Admin")]
+
         #region public ActionResult DeleteUser(string UserName)
         public ActionResult DeleteUser(string UserName, string Email)
         {
@@ -294,7 +294,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // GET: /Admin/EditRoles/TestUser 
-        [Authorize(Roles = "Admin")]
+   
         #region ActionResult EditRoles(string UserName)
         public ActionResult EditRoles(string UserName, string Email)
         {
@@ -321,7 +321,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // PUT: /Admin/EditRoles/TestUser 
-        [Authorize(Roles = "Admin")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         #region public ActionResult EditRoles(UserAndRolesDTO paramUserAndRolesDTO)
@@ -362,7 +362,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // DELETE: /Admin/DeleteRole?UserName="TestUser&RoleName=Administrator
-        [Authorize(Roles = "Admin")]
+ 
         #region public ActionResult DeleteRole(string UserName, string RoleName)
         public ActionResult DeleteRole(string UserName, string RoleName, string Email)
         {
@@ -417,7 +417,7 @@ namespace WebApplication.Controllers
         // Roles *****************************
 
         // GET: /Admin/ViewAllRoles
-        [Authorize(Roles = "Admin")]
+       
         #region public ActionResult ViewAllRoles()
         public ActionResult ViewAllRoles()
         {
@@ -439,7 +439,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // GET: /Admin/AddRole
-        [Authorize(Roles = "Admin")]
+  
         #region public ActionResult AddRole()
         public ActionResult AddRole()
         {
@@ -450,7 +450,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // PUT: /Admin/AddRole
-        [Authorize(Roles = "Admin")]
+   
         [HttpPost]
         [ValidateAntiForgeryToken]
         #region public ActionResult AddRole(RoleDTO paramRoleDTO)
@@ -496,7 +496,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // DELETE: /Admin/DeleteUserRole?RoleName=TestRole
-        [Authorize(Roles = "Admin")]
+  
         #region public ActionResult DeleteUserRole(string RoleName)
         public ActionResult DeleteUserRole(string RoleName)
         {

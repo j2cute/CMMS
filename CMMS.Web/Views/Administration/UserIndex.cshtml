@@ -11,7 +11,7 @@
     var permissions;
         $(document).ready(function () {
 
-        permissions = @Html.Raw(Json.Encode((List<ClassLibrary.Models.PermissionViewModel>)Session[Constants.SessionPermission]));
+        permissions = @Html.Raw(Json.Encode((List<ClassLibrary.Models.PermissionViewModel>)Session[SessionKeys.RolePermissions]));
 
         if (permissions.filter(obj => obj.PermissionId == "UserAdd").length > 0) {
             $("#addUser").attr('disabled', false);
@@ -32,8 +32,7 @@
 
 </script>
 <section class="content-header">
-    @*@if (permissions.Any(x => x.PermissionId == "UserAdd"))*@
-
+ 
     <a class="btn btn-default" href="@Url.Action("UserIndex", "Administration")"><i class="fa fa-chevron-circle-left fa-lg"></i> Back </a>
     <a class="btn btn-success" id="addUser" data-modal='' href="@Url.Action("CreateUser", "Administration")"><i class="fa fa-plus"></i> Create new user</a>
 
