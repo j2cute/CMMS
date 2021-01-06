@@ -65,25 +65,25 @@
 
 
                 <ul class="sidebar-menu" data-widget="tree">
-                    @foreach (var item in permissions.Where(x => x.Level == "1"))
+                    @foreach (var parentPermission in permissions.Where(x => x.Level == "1"))
                     {
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-users"></i>
-                            <span>@item.DisplayName</span>
+                            <span>@parentPermission.DisplayName</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
 
                         <ul class="treeview-menu">
-                            @foreach (var item1 in permissions.Where(x => x.Level == "2" && x.ParentId == item.PermissionId))
+                            @foreach (var childPermission in permissions.Where(x => x.Level == "2" && x.ParentId == parentPermission.PermissionId))
                             {
 
                                 <li>
-                                    <a href="@item.URL">
+                                    <a href="@childPermission.URL">
                                         <i class="fa fa-circle-o"></i>
-                                        <span>@item1.DisplayName</span>
+                                        <span>@childPermission.DisplayName</span>
                                     </a>
                                 </li>
                             }
