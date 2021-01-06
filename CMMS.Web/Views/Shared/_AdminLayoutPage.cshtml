@@ -1,6 +1,6 @@
 ﻿@using CMMS.Web.Helper
 @{
-    var permissions = (List<ClassLibrary.Models.PermissionViewModel>)Session[SessionKeys.RolePermissions];
+    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions;
 }
 
 <!DOCTYPE html>
@@ -59,54 +59,54 @@
                 <!-- Sidebar user panel -->
                 <div class="user-panel">
                     @*<div class="pull-left info">
-                <p>ADMIN</p>
-            </div>*@
+                            <p>ADMIN</p>
+                        </div>*@
                 </div>
 
 
                 <ul class="sidebar-menu" data-widget="tree">
                     @foreach (var parentPermission in permissions.Where(x => x.Level == "1"))
                     {
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-users"></i>
-                            <span>@parentPermission.DisplayName</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-users"></i>
+                                <span>@parentPermission.DisplayName</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                            </a>
 
-                        <ul class="treeview-menu">
-                            @foreach (var childPermission in permissions.Where(x => x.Level == "2" && x.ParentId == parentPermission.PermissionId))
-                            {
+                            <ul class="treeview-menu">
+                                @foreach (var childPermission in permissions.Where(x => x.Level == "2" && x.ParentId == parentPermission.PermissionId))
+                                {
 
-                                <li>
-                                    <a href="@childPermission.URL">
-                                        <i class="fa fa-circle-o"></i>
-                                        <span>@childPermission.DisplayName</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
+                                    <li>
+                                        <a href="@childPermission.URL">
+                                            <i class="fa fa-circle-o"></i>
+                                            <span>@childPermission.DisplayName</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
                         </li>
                     }
                 </ul>
 
             </section>
-                <!-- /.sidebar -->
-            </aside>
-            <!-- =============================================== -->
-            <!-- Content Wrapper.Contains page content -->
-            <div class="content-wrapper">
-                @Html.Partial("_NotificationPanel")
-                @RenderBody()
-                <!-- Content Header(Page header) -->
+            <!-- /.sidebar -->
+        </aside>
+        <!-- =============================================== -->
+        <!-- Content Wrapper.Contains page content -->
+        <div class="content-wrapper">
+            @Html.Partial("_NotificationPanel")
+            @RenderBody()
+            <!-- Content Header(Page header) -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">
+                <b>Version</b> 1.0.0
             </div>
-            <!-- /.content-wrapper -->
-            <footer class="main-footer">
-                <div class="pull-right hidden-xs">
-                   <b>Version</b> 1.0.0
-</div>
             <p align="center"><strong>Designed & Developed by <a>PN Software Department</a>.</strong> All rights reserved.</p>
         </footer>
         <!-- Control Sidebar -->

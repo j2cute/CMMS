@@ -39,10 +39,10 @@ namespace WebApplication.Helpers
             bool result = false;
             try
             {
-                var rolePermission = (List<ClassLibrary.Models.PermissionViewModel>)httpContext.Session[SessionKeys.RolePermissions];
+                var rolePermission = ((SessionHelper)httpContext.Session[SessionKeys.SessionHelperInstance]).RolePermissions;
                 if (rolePermission != null)
                 {
-                    if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]))
+                    if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]));
                     {
                         result = true;
                     }

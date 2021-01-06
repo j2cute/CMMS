@@ -11,7 +11,7 @@
     var permissions;
         $(document).ready(function () {
 
-        permissions = @Html.Raw(Json.Encode((List<ClassLibrary.Models.PermissionViewModel>)Session[SessionKeys.RolePermissions]));
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
 
         if (permissions.filter(obj => obj.PermissionId == "UserAdd").length > 0) {
             $("#addUser").attr('disabled', false);

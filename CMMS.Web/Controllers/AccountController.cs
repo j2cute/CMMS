@@ -13,6 +13,8 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Configuration;
 using CMMS.Web.Helper;
 using WebApplication.Helpers;
+using ILS.UserManagement.Models;
+using System.Collections.Generic;
 
 namespace WebApplication.Controllers
 {
@@ -25,7 +27,7 @@ namespace WebApplication.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -37,9 +39,9 @@ namespace WebApplication.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -79,14 +81,14 @@ namespace WebApplication.Controllers
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-            
+
             switch (result)
             {
                 case SignInStatus.Success:
 
                     Session[SessionKeys.UserId] = model.UserName;
                     return RedirectToAction("Dashboard", "Admin");
-                   
+
                 case SignInStatus.LockedOut:
 
                     return View("Lockout");
@@ -94,7 +96,7 @@ namespace WebApplication.Controllers
                 case SignInStatus.RequiresVerification:
 
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-             
+
                 case SignInStatus.Failure:
 
                 default:
@@ -112,7 +114,7 @@ namespace WebApplication.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-           
+
             Session.Clear();
             Session.RemoveAll();
             Session.Abandon();
@@ -122,6 +124,24 @@ namespace WebApplication.Controllers
             Response.Cache.SetNoStore();
 
             return RedirectToAction("Login", "Account");
+        }
+
+      
+        [Authorization]
+        public ActionResult SwitchRole(string roleId = "")
+        {
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(roleId))
+                {
+                    LoadRole(roleId);
+                }
+            }
+            catch
+            {
+
+            }
+            return RedirectToAction("Dashboard", "Admin", new { inRoleId = roleId }) ;
         }
 
         protected override void Dispose(bool disposing)
@@ -221,6 +241,69 @@ namespace WebApplication.Controllers
         }
         #endregion
 
-      
+        public void LoadRole(string roleId)
+        {
+            try
+            {
+                List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+
+                using (Entities _context = new Entities())
+                {
+                    var loginId = Session[SessionKeys.UserId].ToString();
+                    var currentRole = _context.tbl_UserRole.Where(x => x.UserId == loginId && x.RoleId == roleId)?.FirstOrDefault().RoleId;
+
+                    if (!string.IsNullOrWhiteSpace(currentRole))
+                    {
+                        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == currentRole).ToList();
+
+                        foreach (var item in permissions)
+                        {
+                            PermissionViewModel permissionViewModel = new PermissionViewModel()
+                            {
+                                PermissionId = item.PermissionId,
+                                DisplayName = item.tbl_Permission.DisplayName,
+                                Level = item.tbl_Permission.PermissionLevel.ToString(),
+                                ParentId = item.tbl_Permission.ParentId,
+                                URL = item.tbl_Permission.URL
+                            };
+
+                            ListPermissionViewModel.Add(permissionViewModel);
+                        }
+                    }
+                    else
+                    {
+                        // Show some error
+                    }
+                }
+
+                Session[SessionKeys.SessionHelperInstance] = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UpdateFields(roleId, ListPermissionViewModel);
+            }
+            catch(Exception ex)
+            {
+
+            }
+        }
+
+        public void GetUserRole()
+        {
+            IEnumerable<tbl_Role> roles = new List<tbl_Role>();
+            try
+            {
+                using (Entities _context = new Entities())
+                {
+                    roles =  _context.tbl_User.FirstOrDefault(x => x.UserId == Session[SessionKeys.UserId].ToString() && x.IsActive != 0)
+                                               .tbl_UserRole.Select(x => x.tbl_Role).Where(x=>x.IsDeleted != 1);
+
+                    if(roles.Any())
+                    {
+
+                    }
+                }
+            }
+            catch 
+            {
+                
+            }
+        }
     }
 }

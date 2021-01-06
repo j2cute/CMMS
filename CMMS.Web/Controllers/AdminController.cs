@@ -24,59 +24,62 @@ namespace WebApplication.Controllers
         // Controllers
 
         #region Dashboard
- 
-        public ActionResult Dashboard()
+
+        public ActionResult Dashboard(string inRoleId = null)
         {
-            using (WebAppDbContext db = new WebAppDbContext())
+            DashboardViewModel dashboard = new DashboardViewModel();
+            List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+
+            string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
+            var loginUserId = Session[SessionKeys.UserId]?.ToString();
+            dashboard.datetime = DateTime.Now.ToString();
+
+  
+            using (Entities _context = new Entities())
             {
-                DashboardViewModel dashboard = new DashboardViewModel();
-               
-
-                List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-
-               var loginUserId =  Session[SessionKeys.UserId]?.ToString();
-
-                DateTime dt = DateTime.Now;
-                dashboard.datetime = dt.ToString();
-
-                using (Entities _context = new Entities())
+                if (string.IsNullOrWhiteSpace(defaultRoleId))
                 {
-                    var defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
-
-                    if (!String.IsNullOrWhiteSpace(defaultRoleId))
-                    {
-                        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
-
-                        foreach (var item in permissions)
-                        {
-                            PermissionViewModel permissionViewModel = new PermissionViewModel()
-                            {
-                                PermissionId = item.PermissionId,
-                                DisplayName = item.tbl_Permission.DisplayName,
-                                Level = item.tbl_Permission.PermissionLevel.ToString(),
-                                ParentId = item.tbl_Permission.ParentId,
-                                URL = item.tbl_Permission.URL
-                            };
-
-                            ListPermissionViewModel.Add(permissionViewModel);
-                        }
-                    }
-                    else
-                    {
-                        // Show some error
-                    }
+                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
+                }
+                else
+                {
+                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId)?.FirstOrDefault().RoleId;
                 }
 
+                if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                {
+                    var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
 
-                Session[SessionKeys.RolePermissions] = ListPermissionViewModel;
+                    foreach (var item in permissions)
+                    {
+                        PermissionViewModel permissionViewModel = new PermissionViewModel()
+                        {
+                            PermissionId = item.PermissionId,
+                            DisplayName = item.tbl_Permission.DisplayName,
+                            Level = item.tbl_Permission.PermissionLevel.ToString(),
+                            ParentId = item.tbl_Permission.ParentId,
+                            URL = item.tbl_Permission.URL
+                        };
 
-                return View(dashboard);
-            }          
+                        ListPermissionViewModel.Add(permissionViewModel);
+                    }
+                }
+                else
+                {
+                    // Show some error
+                }
+            }
+
+            Session[SessionKeys.SessionHelperInstance] = new SessionHelper(loginUserId, defaultRoleId, ListPermissionViewModel);
+
+            return View(dashboard);
+
         }
+
         #endregion
 
         #region UserCheck
- 
+
         public JsonResult CheckUserName(string UserName)
         {
             using (WebAppDbContext db = new WebAppDbContext())
@@ -106,7 +109,7 @@ namespace WebApplication.Controllers
                 {
                     var abc = db.AspNetUsers.ToList();
                     return View(abc);
-                }             
+                }
             }
             catch (Exception ex)
             {
@@ -145,7 +148,7 @@ namespace WebApplication.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
                 paramExpandedUserDTO.Email = "example@gmail.com";
-     
+
                 if (!ModelState.IsValid)
                 {
                     //var errors = ModelState.Keys.Where(k => ModelState[k].Errors.Count > 0).Select(k => new
@@ -165,23 +168,23 @@ namespace WebApplication.Controllers
 
 
                 var objNewAdminUser = new ApplicationUser { UserName = UserName, Email = UserName };
-                    var AdminUserCreateResult = UserManager.Create(objNewAdminUser, Password);
+                var AdminUserCreateResult = UserManager.Create(objNewAdminUser, Password);
 
-                    if (AdminUserCreateResult.Succeeded == true)
+                if (AdminUserCreateResult.Succeeded == true)
+                {
+                    string strNewRole = Convert.ToString(Request.Form["Roles"]);
+
+                    if (strNewRole != "0")
                     {
-                        string strNewRole = Convert.ToString(Request.Form["Roles"]);
+                        // Put user in role
+                        UserManager.AddToRole(objNewAdminUser.Id, strNewRole);
 
-                        if (strNewRole != "0")
-                        {
-                            // Put user in role
-                            UserManager.AddToRole(objNewAdminUser.Id, strNewRole);
-                           
                     }
                     Alert("User created successfully!!!", NotificationType.success);
                     return Redirect("~/Admin/Index");
                 }
-                 
-                
+
+
                 else
                 {
                     ViewBag.Roles = GetAllRolesAsSelectList();
@@ -294,7 +297,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // GET: /Admin/EditRoles/TestUser 
-   
+
         #region ActionResult EditRoles(string UserName)
         public ActionResult EditRoles(string UserName, string Email)
         {
@@ -362,7 +365,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // DELETE: /Admin/DeleteRole?UserName="TestUser&RoleName=Administrator
- 
+
         #region public ActionResult DeleteRole(string UserName, string RoleName)
         public ActionResult DeleteRole(string UserName, string RoleName, string Email)
         {
@@ -417,7 +420,7 @@ namespace WebApplication.Controllers
         // Roles *****************************
 
         // GET: /Admin/ViewAllRoles
-       
+
         #region public ActionResult ViewAllRoles()
         public ActionResult ViewAllRoles()
         {
@@ -439,7 +442,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // GET: /Admin/AddRole
-  
+
         #region public ActionResult AddRole()
         public ActionResult AddRole()
         {
@@ -450,7 +453,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // PUT: /Admin/AddRole
-   
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         #region public ActionResult AddRole(RoleDTO paramRoleDTO)
@@ -479,7 +482,7 @@ namespace WebApplication.Controllers
                     new RoleManager<IdentityRole>(
                         new RoleStore<IdentityRole>(new ApplicationDbContext())
                         );
-               
+
                 if (!roleManager.RoleExists(RoleName))
                 {
                     roleManager.Create(new IdentityRole(RoleName));
@@ -496,7 +499,7 @@ namespace WebApplication.Controllers
         #endregion
 
         // DELETE: /Admin/DeleteUserRole?RoleName=TestRole
-  
+
         #region public ActionResult DeleteUserRole(string RoleName)
         public ActionResult DeleteUserRole(string RoleName)
         {
@@ -524,7 +527,7 @@ namespace WebApplication.Controllers
                             "Canot delete {0} Role because it still has users.",
                             RoleName)
                             );
-                    
+
                 }
 
                 var objRoleToDelete = (from objRole in roleManager.Roles
@@ -786,6 +789,6 @@ namespace WebApplication.Controllers
         }
         #endregion
 
-   
+
     }
 }
