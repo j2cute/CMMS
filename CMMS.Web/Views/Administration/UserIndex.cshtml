@@ -5,13 +5,13 @@
     Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
 
 }
-@*<link href="~/Content/select.dataTables.min.css" rel="stylesheet" />
-<script src="~/Scripts/dataTables.select.min.js"></script>*@
+<link href="~/Content/select.dataTables.min.css" rel="stylesheet" />
+<script src="~/Scripts/dataTables.select.min.js"></script>
 <script>
     var permissions;
         $(document).ready(function () {
 
-        permissions = @Html.Raw(Json.Encode((List<ClassLibrary.Models.PermissionViewModel>)Session[SessionKeys.RolePermissions]));
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
 
         if (permissions.filter(obj => obj.PermissionId == "UserAdd").length > 0) {
             $("#addUser").attr('disabled', false);
@@ -39,56 +39,73 @@
 </section>
 
 <section class="content">
+
     <div class="row">
-        <!-- /.box -->
-        <div class="box">
-            <div class="box-header with-border">
-                <h3 class="box-title">Application Roles Information</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-
-                            <th>Actions</th>
-                            <th>User Name</th>
-
-                            @*<th>Operations</th>*@
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.tbl_User_list)
-                        {
+        <section class="col-lg-9 connectedSortable ui-sortable">
+            <!-- /.card -->
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title">Application Roles Information</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
                             <tr>
 
-                                <td>
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-prepend">
-                                            <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                                                <i class="fa fa-cog"></i> Actions
-                                                <span class="caret ng-tns-c275-7"></span>
-                                            </button>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item btn primary" id="editUser" data-modal='' href="@Url.Action("EditUser", "Administration", new { id = item.UserId })"><i class="fa fa-pencil fa-lg"></i> Edit</a><br />
-                                                <a class="dropdown-item btn danger" id="delUser" data-modal='' href="@Url.Action("DeleteUser", "Administration", new { id = item.UserId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
-                                            </div>
-                                        </div>
-                                        <!-- /btn-group -->
+                                <th>Actions</th>
+                                <th>User Name</th>
 
-                                    </div>
-                                </td>
-                                <td> @item.UserId</td>
-                          
-
-
+                                @*<th>Operations</th>*@
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.tbl_User_list)
+                            {
+                                <tr>
+
+                                    <td>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i> Actions
+                                                    <span class="caret ng-tns-c275-7"></span>
+                                                </button>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item btn primary" id="editUser" data-modal='' href="@Url.Action("EditUser", "Administration", new { id = item.UserId })"><i class="fa fa-pencil fa-lg"></i> Edit</a><br />
+                                                    <a class="dropdown-item btn danger" id="delUser" data-modal='' href="@Url.Action("DeleteUser", "Administration", new { id = item.UserId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
+                                                </div>
+                                            </div>
+                                            <!-- /btn-group -->
+
+                                        </div>
+                                    </td>
+                                    <td> @item.UserId</td>
+                                    @*<td>
+                                        @if (item.RoleName.ToLower() != "administrator")
+                                        {
+                                            @Html.ActionLink("Delete", "DeleteUserRole",
+                                           new { RoleName = item.RoleName },
+                                           new
+                                           {
+                                               onclick =
+                                           "return confirm('Are you sure you wish to delete this role?');"
+                                           })
+                                        }
+                                    </td>*@
+                                    @*<td>
+                                    </td>*@
+
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
+
+            </section>
     </div>
 </section>
 

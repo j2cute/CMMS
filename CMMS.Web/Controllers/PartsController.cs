@@ -42,7 +42,7 @@ namespace WebApplication.Controllers
 
             var vm = new PartsViewModels
             {
-                //  tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
+                tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
                 cageActiveCount = db.tbl_Cage.Where(x => x.Status == "Active").Count(),
                 partsCount = db.tbl_Parts.Count(),
                 partTypeCount = db.tbl_PartType.Count(),

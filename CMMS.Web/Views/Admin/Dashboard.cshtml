@@ -1,12 +1,13 @@
-﻿ @model ClassLibrary.Models.DashboardViewModel
-<link href = "~/Content/morris.css" rel = "stylesheet" />
+﻿@model ClassLibrary.Models.DashboardViewModel
+    <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
 <script src="~/Content/Digitalscript.js"></script>
 <script src="~/Scripts/moment.min.js"></script>
+
 <section class="content-header">
     <h1>
         Dashboard
-       
+
     </h1>
 
 </section>
@@ -55,7 +56,7 @@
                         <i class="ion ion-stats-bars"></i>
                     </div>
                 </div>
-            
+
             </div>
         </div>
         <!-- ./col -->
@@ -74,20 +75,18 @@
 
 
                 </div>
-                
+
+            </div>
+            <!-- ./col -->
+            <!-- ./col -->
         </div>
-        <!-- ./col -->
-        <!-- ./col -->
     </div>
-        </div>
     <!-- /.row -->
     <!-- Main row -->
     <div class="row">
         <!-- Left col -->
-     
         <!-- /.Left col -->
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
-
         <!-- right col -->
     </div>
     <!-- /.row (main row) -->
@@ -119,85 +118,85 @@
                         <div class="col-sm-6">
                             <!-- Progress bars -->
                             @*<div class="clearfix">
-                            <span class="pull-left">Criminal Records </span>
-                            <small class="pull-right">@Model.CriminalRecord_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.CriminalRecord_Count%; background-color:#ff0000"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Legal Assistance Records </span>
-                            <small class="pull-right">@Model.LA_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.LA_Count%; background-color:#f4a460"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Private Fire Arm Records </span>
-                            <small class="pull-right">@Model.PFA_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.PFA_Count%; background-color:#6a5acd"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Pets Records </span>
-                            <small class="pull-right">@Model.Pets_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.Pets_Count%; background-color:#54a460"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Naval Driving Permits Records </span>
-                            <small class="pull-right">@Model.NDP_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.NDP_Count%; background-color:#008b8b"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Verification of Houses Records </span>
-                            <small class="pull-right">@Model.VOH_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.VOH_Count%; background-color:#c0c0c0"></div>
-                        </div>*@
+                                    <span class="pull-left">Criminal Records </span>
+                                    <small class="pull-right">@Model.CriminalRecord_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.CriminalRecord_Count%; background-color:#ff0000"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Legal Assistance Records </span>
+                                    <small class="pull-right">@Model.LA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.LA_Count%; background-color:#f4a460"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Private Fire Arm Records </span>
+                                    <small class="pull-right">@Model.PFA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.PFA_Count%; background-color:#6a5acd"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Pets Records </span>
+                                    <small class="pull-right">@Model.Pets_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.Pets_Count%; background-color:#54a460"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Naval Driving Permits Records </span>
+                                    <small class="pull-right">@Model.NDP_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.NDP_Count%; background-color:#008b8b"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Verification of Houses Records </span>
+                                    <small class="pull-right">@Model.VOH_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.VOH_Count%; background-color:#c0c0c0"></div>
+                                </div>*@
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-6">
                             @*<div class="clearfix">
-                            <span class="pull-left">Warrant of Arrest Records </span>
-                            <small class="pull-right">@Model.WOA_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.WOA_Count%; background-color:#8b4513"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Road Traffic Accident Records </span>
-                            <small class="pull-right">@Model.RTA_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.RTA_Count%; background-color:#ff6347"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Civil MT Records </span>
-                            <small class="pull-right">@Model.CMT_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.CMT_Count%; background-color:#bdb76b"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Road Traffic Irregularities Records </span>
-                            <small class="pull-right">@Model.RTI_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.RTI_Count%; background-color:#000000"></div>
-                        </div>
-                        <div class="clearfix">
-                            <span class="pull-left">Delegation Protocol Records </span>
-                            <small class="pull-right">@Model.DP_Count</small>
-                        </div>
-                        <div class="progress xs">
-                            <div class="progress-bar" style="width: @Model.DP_Count%; background-color:#4169e1"></div>
-                        </div>*@
+                                    <span class="pull-left">Warrant of Arrest Records </span>
+                                    <small class="pull-right">@Model.WOA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.WOA_Count%; background-color:#8b4513"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Road Traffic Accident Records </span>
+                                    <small class="pull-right">@Model.RTA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.RTA_Count%; background-color:#ff6347"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Civil MT Records </span>
+                                    <small class="pull-right">@Model.CMT_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.CMT_Count%; background-color:#bdb76b"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Road Traffic Irregularities Records </span>
+                                    <small class="pull-right">@Model.RTI_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.RTI_Count%; background-color:#000000"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Delegation Protocol Records </span>
+                                    <small class="pull-right">@Model.DP_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.DP_Count%; background-color:#4169e1"></div>
+                                </div>*@
                             <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                         </div>
                         <!-- /.col -->
@@ -207,7 +206,6 @@
             </div>
             <!-- /.box -->
             <!-- DONUT CHART -->
-       
             <!-- /.box -->
         </div>
         <!-- /.col (LEFT) -->
@@ -221,8 +219,8 @@
                     <!-- tools box -->
                     <div class="pull-right box-tools">
                         <!-- button with a dropdown -->
-               
-                         
+
+
                     </div>
                     <!-- /. tools -->
                 </div>
@@ -238,86 +236,86 @@
                         <div class="col-sm-6">
                             <!-- Progress bars -->
                             @*<div class="clearfix">
-                                <span class="pull-left">Criminal Records </span>
-                                <small class="pull-right">@Model.CriminalRecord_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.CriminalRecord_Count%; background-color:#ff0000"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Legal Assistance Records </span>
-                                <small class="pull-right">@Model.LA_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.LA_Count%; background-color:#f4a460"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Private Fire Arm Records </span>
-                                <small class="pull-right">@Model.PFA_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.PFA_Count%; background-color:#6a5acd"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Pets Records </span>
-                                <small class="pull-right">@Model.Pets_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.Pets_Count%; background-color:#54a460"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Naval Driving Permits Records </span>
-                                <small class="pull-right">@Model.NDP_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.NDP_Count%; background-color:#008b8b"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Verification of Houses Records </span>
-                                <small class="pull-right">@Model.VOH_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.VOH_Count%; background-color:#c0c0c0"></div>
-                            </div>*@
+                                    <span class="pull-left">Criminal Records </span>
+                                    <small class="pull-right">@Model.CriminalRecord_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.CriminalRecord_Count%; background-color:#ff0000"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Legal Assistance Records </span>
+                                    <small class="pull-right">@Model.LA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.LA_Count%; background-color:#f4a460"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Private Fire Arm Records </span>
+                                    <small class="pull-right">@Model.PFA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.PFA_Count%; background-color:#6a5acd"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Pets Records </span>
+                                    <small class="pull-right">@Model.Pets_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.Pets_Count%; background-color:#54a460"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Naval Driving Permits Records </span>
+                                    <small class="pull-right">@Model.NDP_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.NDP_Count%; background-color:#008b8b"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Verification of Houses Records </span>
+                                    <small class="pull-right">@Model.VOH_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.VOH_Count%; background-color:#c0c0c0"></div>
+                                </div>*@
                         </div>
                         <!-- /.col -->
                         <div class="col-sm-6">
                             @*<div class="clearfix">
-                                <span class="pull-left">Warrant of Arrest Records </span>
-                                <small class="pull-right">@Model.WOA_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.WOA_Count%; background-color:#8b4513"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Road Traffic Accident Records </span>
-                                <small class="pull-right">@Model.RTA_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.RTA_Count%; background-color:#ff6347"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Civil MT Records </span>
-                                <small class="pull-right">@Model.CMT_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.CMT_Count%; background-color:#bdb76b"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Road Traffic Irregularities Records </span>
-                                <small class="pull-right">@Model.RTI_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.RTI_Count%; background-color:#000000"></div>
-                            </div>
-                            <div class="clearfix">
-                                <span class="pull-left">Delegation Protocol Records </span>
-                                <small class="pull-right">@Model.DP_Count</small>
-                            </div>
-                            <div class="progress xs">
-                                <div class="progress-bar" style="width: @Model.DP_Count%; background-color:#4169e1"></div>
-                            </div>*@
-                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                    <span class="pull-left">Warrant of Arrest Records </span>
+                                    <small class="pull-right">@Model.WOA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.WOA_Count%; background-color:#8b4513"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Road Traffic Accident Records </span>
+                                    <small class="pull-right">@Model.RTA_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.RTA_Count%; background-color:#ff6347"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Civil MT Records </span>
+                                    <small class="pull-right">@Model.CMT_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.CMT_Count%; background-color:#bdb76b"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Road Traffic Irregularities Records </span>
+                                    <small class="pull-right">@Model.RTI_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.RTI_Count%; background-color:#000000"></div>
+                                </div>
+                                <div class="clearfix">
+                                    <span class="pull-left">Delegation Protocol Records </span>
+                                    <small class="pull-right">@Model.DP_Count</small>
+                                </div>
+                                <div class="progress xs">
+                                    <div class="progress-bar" style="width: @Model.DP_Count%; background-color:#4169e1"></div>
+                                </div>*@
+                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                         </div>
                         <!-- /.col -->
                     </div>
@@ -438,18 +436,18 @@
     }
 </script>
 <script>
-      $(".date").datepicker.formatDate('yy/mm/dd', new Date()); 
+    $(".date").datepicker.formatDate('yy/mm/dd', new Date());
 </script>
 <script type="text/javascript">
 
-      function preventBack() {
-          window.history.forward();
-      }
-      setTimeout("preventBack()", 0);
-      window.onunload = function () { null };
+    function preventBack() {
+        window.history.forward();
+    }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
 
-      history.pushState(null, null, location.href);
-      window.onpopstate = function () {
-          history.go(1);
-      };
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
 </script>
