@@ -67,7 +67,6 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>CageCode</label>
-
                                     @Html.DropDownListFor(model => model.tbl_Parts.CageCode, new SelectList(Model._tbl_Cage, "CageCode", "CageName"), "Select", new { @class = "form-control",@id="CageCode"})
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.CageCode, "", new { @class = "text-danger" })
                                 </div>
@@ -76,7 +75,6 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Part No</label>
-
                                     @Html.EditorFor(model => model.tbl_Parts.Part_No, new { htmlAttributes = new { @class = "form-control", onchange = "PartNoCheck()", @id = "PartNo" } })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.Part_No, "", new { @class = "text-danger" })
                                     <div class="col-sm-10">
