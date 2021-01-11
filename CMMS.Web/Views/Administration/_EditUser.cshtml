@@ -50,7 +50,7 @@
 </script>
 
 <div class="modal-header">
-    <h4 class="modal-title">Create new role</h4>
+    <h4 class="modal-title">Edit User</h4>
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -73,58 +73,40 @@
 
                     <div class="tab-content">
                         <div id="User" class="tab-pane active">
-                            <div class="col-md-12">
-                                <div class="col-md-6">
-                                    <div class="form-group">
+
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label>P.No</label>
-                                            @Html.EditorFor(model => model.tbl_User.Pno, new { htmlAttributes = new { onchange = "UserCheck()", @class = "form-control", @placeholder = "P.No" } })
+                                            @Html.EditorFor(model => model.tbl_User.Pno, new { htmlAttributes = new { onchange = "UserCheck()", @class = "form-control", @placeholder = "P.No", @readonly = "true" } })
                                             @Html.ValidationMessageFor(model => model.tbl_User.Pno, "", new { @class = "text-danger" })
-                                            <p id="Status" />
+                                          
                                         </div>
-
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Contact No.</label>
-                                            @Html.EditorFor(model => model.tbl_User.Contact, new { htmlAttributes = new { onchange = "UserCheck()", @class = "form-control", @placeholder = "Contact No." } })
-                                            @Html.ValidationMessageFor(model => model.tbl_User.Contact, "", new { @class = "text-danger" })
-                                            <p id="Status" />
+                                            <label>Unit</label>
+                                            @Html.DropDownListFor(model => model.tbl_User.UnitId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
+                                            @Html.ValidationMessageFor(model => model.tbl_User.UnitId, "", new { @class = "text-danger" })
                                         </div>
-                                        <label>User Name</label>
-                                        @Html.EditorFor(model => model.tbl_User.Name, new { htmlAttributes = new { onchange = "UserCheck()", @class = "form-control", @placeholder = "User Name" } })
-                                        @Html.ValidationMessageFor(model => model.tbl_User.Name, "", new { @class = "text-danger" })
-                                        <p id="Status" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Password</label>
-                                        @Html.EditorFor(model => model.tbl_User.Password, new { htmlAttributes = new { @Class = "form-control", @placeholder = "Password" } })
-                                        @Html.ValidationMessageFor(model => model.tbl_User.Password, "", new { @class = "text-danger" })
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Confirm Password</label>
-                                        @Html.EditorFor(model => model.tbl_User.ConfirmPassword, new { htmlAttributes = new { @class = "form-control", @placeholder = "Confirm Password" } })
-                                        @Html.ValidationMessageFor(model => model.tbl_User.ConfirmPassword, "", new { @class = "text-danger" })
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Unit</label>
-                                        @Html.DropDownListFor(model => model.tbl_User.UnitId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
-                                        @Html.ValidationMessageFor(model => model.tbl_User.UnitId, "", new { @class = "text-danger" })
-                                    </div>
-
-
-                                </div>
-                                <div class="col-md-6">
-                                    <div id="diaglog">
-                                        <h4>Password Policy</h4>
-                                        . Password must be at least 6 Characters.<br />
-                                        . Password must have at least 1 uppercase (A-Z).<br />
-                                        . Password must have at least 1 lowercase (a-z).<br />
-                                        . Password must have at least 1 digit (0-9).<br />
-                                        . Password must have at least 1 non alphanumeric character.
                                     </div>
                                 </div>
                             </div>
+                   
 
+                            <div class="form-group">
+                                <label>User Name</label>
+                                @Html.EditorFor(model => model.tbl_User.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "User Name", @required = "true" } })
+                                @Html.ValidationMessageFor(model => model.tbl_User.Name, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                <label>Contact No.</label>
+                                @Html.EditorFor(model => model.tbl_User.Contact, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact No." } })
+                                @Html.ValidationMessageFor(model => model.tbl_User.Contact, "", new { @class = "text-danger" })
+
+                            </div>
 
 
                         </div>
@@ -148,38 +130,7 @@
                                         <div class="table table-responsive">
                                             <table id="userRoles" class="display" width="100%"></table>
 
-                                            @*<table class="table table-bordered table-responsive">
-                    <thead>
-                        <tr>
-                            <td>Role Name</td>
-                            <td>Action</td>
-
-                        </tr>
-                    </thead>
-
-
-                    <tbody id="ArmsInfoTable"></tbody>
-
-
-                    @if (Model != null && Model.tbl_User.tbl_UserRole != null && Model.resident_TBL.Arms_TBL.Count > 0)
-                    {
-                        var b = 0;
-                        foreach (var item in Model.resident_TBL.Arms_TBL)
-                        {
-
-                            <tr>
-                                <td>@(++b)</td>
-                                <td>@item.ArmsType_TBL.ArmsTypes</td>
-                                <td>@item.ArmsType</td>
-                                <td>@item.ArmsQuantity</td>
-                                <td>@item.LicenseNumber</td>
-                                <td>@item.IssueDate</td>
-                                <td>@item.ExpiryDate</td>
-                            </tr>
-                        }
-                    }
-
-                </table>*@
+                                          
                                         </div>
 
                                     </div>
@@ -214,26 +165,59 @@
         // Getting  All roles for RoleMaster Array
 
         data = @Html.Raw(Json.Encode(Model.RolesModel_list));
+        console.log("dddddddddddd", data);
         userRole = @Html.Raw(Json.Encode(Model.userRoleModel_list));
         roleMaster = data;
         //// get each role from User role table and push in Role added from Master role after id compare with user role's table
         userRole.forEach(function (o) {
-            data.forEach(function (p){ if (o.RoleId == p.RoleId) { roleAdded.push(p); } });
+            data.forEach(function (p) {
+                if (o.RoleId == p.RoleId) {
+                    p.IsDefault = o.IsDefault;
+                    roleAdded.push(p);
+                }
+            });
             roleMaster = roleMaster.filter(obj => obj.RoleId !== o.RoleId);
         });console.log("roleAdded", roleAdded);
         console.log("roleMaster", roleMaster);
          // console.log("roleAdded", roleAdded);
 
+        
+        var simple_checkbox = function (roleAdded, type, full, meta) {
+            var IsDefault = roleAdded == true ? "checked" : "";
+            return '<input type="checkbox" class="checkbox" ' +
+                IsDefault + ' />';
+            console.log(simple_checkbox);
+        }
+
+
+        //var simple_checkbox = function (data, type, full, meta) {
+        //     var is_checked = data == true ? "checked" : "";
+        //     return '<input type="checkbox" **class="checkbox disabled"** ' +
+        //         is_checked + ' />';
+        // }
+
+
+        //$(function () {
+        //    $(".checkbox").change(function (e) {
+        //        e.preventDefault();
+        //        if ($(this).is(":checked")) {
+        //            $("input").prop("checked", false);
+        //            $(this).prop("checked", true);
+        //        }
+        //    });
+        //});
+
         //initiate User Role Table
         userRoleTable = $('#userRoles').DataTable({
+
             data: roleAdded,
             columns: [
-                {
-                    'data': '<td></td>'
-
-                },
+              
                 { 'data': "RoleId", title: "RoleId" },
                 { 'data': "Name", title: "Name" },
+                {
+                    'data': "IsDefault", title: "IsDefault", "render": simple_checkbox
+                },                
                 {
                     'data': function (data, type, row, meta) {
                         return '<a data-toggle="modal"  data-target="#delRole"  class="btn-danger btn-sm select">' + 'Delete' + '</a>'
@@ -241,7 +225,7 @@
                 },
             ],
        'columnDefs': [{
-                targets: 0,
+                targets: 2,
                 //  data: null,
                 defaultContent: '',
                 orderable: false,
@@ -249,7 +233,7 @@
             }],
             select: {
                 style: 'os',
-                selector: 'td:first-child'
+                selector: 'td:not(:first-child, :nth-child(2))'
             },
             order: [[1, 'asc']],
         });
@@ -257,10 +241,87 @@
         loadTable(roleAdded);
         loadRoles();
 
+        //$('.checkbox').on('click', function () {
+        //    if ($(this).parent().parent().hasAttr('checked')) {
+        //        $(this).parent().parent().removeAttr('checked');
+        //    } else {
+        //        table.$('.checkbox').removeAttr('checked');
+        //        $(this).parent().parent().attr('checked');
+        //    }
+        //});
+
+
+        $('#userRoles tbody').on('click', '.checkbox', function () {
+            if ($(userRoleTable).rows().td().hasAttr('checked')) {
+                console.log("ifffff");
+                $(this).parent().parent().removeAttr('checked');
+            } else {
+                console.log("ifffff elseeee");
+                userRoleTable.$('.checkbox').removeAttr('checked');
+                $(this).parent().parent().attr('checked');
+            }
+        });
+
+
+        var simple_checkbox = function (roleAdded, type, full, meta) {
+            var IsDefault = roleAdded == true ? "checked" : "";
+            return '<input type="checkbox" class="checkbox" ' +
+                IsDefault + ' />';
+            console.log(simple_checkbox);
+        }
+
+        //$("#userRoles tbody").on('click', '.checkbox', function (data, type, row, meta) {
+        //    console.log("newwwwwww");
+        //    if (userRoleTable.$(".checkbox").length > 0) {
+         
+        //        userRoleTable.rows($(this).closest('tr').find("input[type='checkbox']"));
+        //        {
+        //            userRoleTable.$('.checkbox').removeAttr('checked');
+        //            userRoleTable.$("input[type='checkbox']").attr('checked');
+        //        }
+
+        //    }
+        //});
+        //$("#userRoles tbody tr").each(function (index, elem) {
+        //    console.log("newwwwwww");
+        //    if (userRoleTable.$(".checkbox").length > 0) {
+        //        //  console.log(userRoleTable.$(".checkbox").length);
+               
+        //        userRoleTable.$('checkbox').removeAttr('checked');
+        //        userRoleTable.rows($(this).closest('tr'));
+        //        {
+        //            userRoleTable.$('.checkbox').attr("checked");
+
+        //        }
+                
+
+        //    }
+        //});
+
+            //var oTable = $('#yourTableId').dataTable();
+            //$('#yourTableId tbody tr').each(function (index, elem) {
+            //    if ($(this).hasClass("selected")) {
+            //        var aData = oTable._('tr')[index];
+
+            //    }
+            //});
+
+
+            //if ($(userRoleTable).parent().parent().hasAttr('checked')) {
+            //   $(this).parent().parent().removeAttr('checked');
+            //} else {
+            //    table.$('.checkbox').removeAttr('checked');
+            //    $(this).parent().parent().attr('checked');
+            //}
+      
+
+
         //1.TO DELETE ROLES FROM TABLE----------------------------------------------------
+
+
         $('#userRoles tbody').on("click", '.select', function () {
 
-            var id = $(this).closest('tr').find("td:eq(1)").text();
+            var id = $(this).closest('tr').find("td:eq(0)").text();
             console.log(id);
 
             // First get all current roles loaded in dropdown -----------
@@ -279,12 +340,14 @@
         });
         //TO DELETE ROLES FROM TABLE----------------------------------------------------
         $('#userRoles tbody').on("click", '.select-checkbox', function () {
+
             var tableData = userRoleTable.rows($(this).closest('tr')).data();
-            var role = $(this).closest('tr').find("td:eq(1)").text();
+            var role = $(this).closest('tr').find("td:eq(0)").text();
             defaultRoleId = role;
             console.log("roleId", defaultRoleId);
             $("#defaultRoleId").val(defaultRoleId);
             console.log($("#defaultRoleId").val());
+
         });
     });
 
@@ -337,8 +400,8 @@
         var selectedData=[];
         tblData.find('tr').each(function (i) {
             var $tds = $(this).find('td');
-            roleId = $tds.eq(1).text(),
-                roleName = $tds.eq(2).text();
+            roleId = $tds.eq(0).text(),
+                roleName = $tds.eq(1).text();
             if (roleId == defaultRoleId) {
                 selectedData.push(
                     {

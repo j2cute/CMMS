@@ -20,8 +20,28 @@ namespace WebApplication.Controllers
     [Authorization]
     public class AdministrationController : Controller
     {
-        #region roles
         private Entities _context = new Entities();
+        #region UserCheck
+
+        public JsonResult CheckUserName(string Pno)
+        {
+                var SearchData = _context.tbl_User.Where(x => x.Pno == Pno).SingleOrDefault();
+                if (SearchData != null)
+                {
+                    return Json(1);
+                }
+                else
+                {
+                    return Json(0);
+                }
+ 
+        }
+        #endregion UserCheck
+
+
+
+        #region roles
+      
         // GET: Roles
         public ActionResult ViewRoles()
         {
@@ -315,12 +335,9 @@ namespace WebApplication.Controllers
         {
             UserRoleViewModel vm = new UserRoleViewModel()
             {
-                RolesModel_list = _context.tbl_Role.Select(x => new RolesModel
-                {
-                    RoleId = x.RoleId,
-                    Name = x.Name,
-                }).ToList(),
+               
                 _tbl_Unit = _context.tbl_Unit.ToList(),
+                _tbl_Role = _context.tbl_Role.ToList(),
             };
             return PartialView("_CreateUser", vm);
         }
@@ -340,60 +357,57 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateUser(tbl_User tbl_User, string selectedItems)
+        public ActionResult CreateUser(tbl_User tbl_User, tbl_Role tbl_Role)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    if (!ModelState.IsValid)
+                    string password = string.Empty;
+                    if (tbl_User.Pno != null)
+                    {
+                        password = "Abc@" + tbl_User.Pno.Trim();
+                       
+                    }
+                        if (!ModelState.IsValid)
                     {
                         UserRoleViewModel vm = new UserRoleViewModel()
                         {
-                            RolesModel_list = _context.tbl_Role.Select(x => new RolesModel
-                            {
-                                RoleId = x.RoleId,
-                                Name = x.Name,
-                            }).ToList(),
+                            _tbl_Role = _context.tbl_Role.ToList(),
                             _tbl_Unit = _context.tbl_Unit.ToList(),
                         };
                         return PartialView("_CreateUser", vm);
                     }
-                    List<UserRoleModel> items = (new JavaScriptSerializer()).Deserialize<List<UserRoleModel>>(selectedItems);
-
+                  
                     if (tbl_User.Pno != null)
                     {
                         tbl_User.UserId = tbl_User.Pno;
+                        tbl_User.Password = password;
 
                         _context.tbl_User.Add(tbl_User);
                         _context.SaveChanges();
 
-                        foreach (var data in items)
+                        if (tbl_Role.RoleId != null)
                         {
-                            if (data != null)
+                            var obj = new tbl_UserRole()
                             {
-                                if (!String.IsNullOrWhiteSpace(data.RoleId))
-                                {
-                                    var obj = new tbl_UserRole()
-                                    {
-
-                                        UserId = tbl_User.UserId,
-                                        RoleId = data.RoleId,
-                                        IsDefault = data.IsDefault
-
-                                    };
-                                    _context.tbl_UserRole.Add(obj);
-                                }
-                            }
-
+                                UserId = tbl_User.UserId,
+                                RoleId = tbl_Role.RoleId,
+                                IsDefault = 1,
+                                IsActive = 1,
+                            };
+                             _context.tbl_UserRole.Add(obj);
+                            _context.SaveChanges();
                         }
+
+                
                     }
-                    _context.SaveChanges();
+            
 
                     #region User Injection
 
                     var UserName = tbl_User.UserId;
-                    var Password = tbl_User.Password.Trim();
+                    var Password = password;
 
 
                     var objNewAdminUser = new ApplicationUser { UserName = tbl_User.UserId,Email = tbl_User.UserId };
@@ -432,6 +446,7 @@ namespace WebApplication.Controllers
             {
                 RoleId = x.RoleId,
                 Name = x.Name,
+                IsDefault = x.IsDefault,
             }).ToList();
 
             //  List<RolesModel> roles = new List<RolesModel>();
@@ -442,6 +457,7 @@ namespace WebApplication.Controllers
                 {
                     RoleId = x.RoleId,
                     UserId = x.UserId,
+                    IsDefault=x.IsDefault
                 }).ToList();
                 vm._tbl_Unit = unit;
                 vm.RolesModel_list = allRoles;
