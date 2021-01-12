@@ -16,13 +16,124 @@
     a {
         cursor: pointer;
     }
-    td {
+ /*   td {
         font-size: 12px !important;
     }
     table.dataTable tbody th, table.dataTable tbody td {
         padding: 4px 4px !important;
-    }
+    }*/
 </style>
+
+<script>
+    var permissions;
+        $(document).ready(function () {
+
+            permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
+            console.log(permissions);
+            if (permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
+            $("#addaCage").attr('disabled', false);
+        } else {
+            $("#addCage").attr('disabled', true);
+            }
+            if (permissions.filter(obj => obj.PermissionId == "ManEdit").length > 0) {
+                $("#editCager").attr('disabled', false);
+            } else {
+                $("#editCage").attr('disabled', true);
+            }
+            if (permissions.filter(obj => obj.PermissionId == "ManDel").length > 0) {
+                $("#delCage").attr('disabled', false);
+            } else {
+                $("#delCage").attr('disabled', true);
+            }
+
+                    var table;
+       // $('#example1').DataTable().destroy();
+       table= $('#example1').DataTable(
+            {
+                "bServerSide": true,
+                "processing": true,
+               // "searchable": true,
+                "scrollX": true,
+                "paging": true,
+                "filter": true,
+                "destroy": true,
+                "order": [[1, 'asc']],
+                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+
+
+                ajax: {
+                      //cache: 'false',
+                    type: 'POST',
+                    url: '@Url.Action("LoadData")',
+
+                    dataType: 'json',
+                    dataSrc: 'data',
+                   // contentType: "application/json; charset=utf-8",
+
+                },
+         // add this line
+
+
+                           @* <a class="btn-primary btn-sm" data-modal='' href="@Url.Action(" Edit", "Parts", new { id = item.Part_No, c_code =item.CageCode })" > <i class="fa fa-pencil"></i></a > |*@
+
+                columns: [
+                    {
+                        'data': function (data, type, row, meta) {
+                            return '<a id="editCage" class="btn-primary btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>' + " " + '|' + " " + '<a id="delCage" class="btn-danger btn-sm select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
+                         }
+                    },
+                    { 'data': 'CageCode', "name": "CageCode", },
+                    { 'data': 'CageName', "name": "CageName", },
+                    { 'data': 'Country', "name": "Country", },
+                    { 'data': 'Status', "name": "Status", },
+                    {
+                        'data': function (data, type, row, meta) {
+                            return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
+                        }
+                    },
+
+            //},
+
+            //'<a href="Delete/Cage/' + data.MOP_No + '">' + 'Delete' + '</a>';
+               ],
+               "rowCallback": function (row, data, dataIndex) {
+                   if (data["Status"] == "InActive") {
+                       $('td', row).css('background-color', 'red');
+                     //  $('td', row).addClass("warning");
+                   }
+
+
+               },
+            //   "createdRow": function (row, data, dataIndex) {
+                 //  if (data[1] = "12345") {
+                 //      $(row).css('background-color', '#F39B9B');
+                  // }
+                   //else if (data[5] <= 70) {
+                   //    $(row).css('background-color', '#A497E5');
+                   //}
+                   //else {
+                   //    $(row).css('background-color', '#9EF395');
+                   //}
+
+              // }
+        //   '<a data-modal="" class="btn-primary btn-sm"  href="Edit/' + data.MOP_No + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm" data-modal="" href="Delete/' + data.MOP_No + '">' + 'Delete' + '</a>';
+
+            });
+
+        $('#example1 tbody').on("click", '.select', function () {
+            var tblData = table.rows($(this).closest('tr')).data();
+            //var siteId = $(this).closest('tr').find("td:eq(0)").text();
+            var data = $('#myModalContent').load(this.href, function () {
+                $('#myModal').modal({
+                    keyboard: true
+                }, 'show');
+                bindForm(this);
+            });
+            return false;
+        });
+    });
+
+</script>
 <section class="content-header">
     <h1>
         Index
@@ -92,49 +203,52 @@
     <!-- /.row (main row) -->
 </section>
 <section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        @if (permissions.Any(x => x.PermissionId == "ManAdd"))
+                        {
+                            <a id="addCage" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>
+                        }
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="card-body">
+                        <table id="example1" class="display" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Actions</th>
+                                    <th>Cage Code</th>
+                                    <th>Cage Name</th>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-               @if (permissions.Any(x => x.PermissionId == "CAGE_ADD"))
-               {
-                    <a id="btnAdd" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>
-               }
+                                    <th>Country</th>
+                                    <th>Status</th>
+                                    <th></th>
+
+                                </tr>
+                            </thead>
+
+
+                        </table>
+
+
+                    </div>
+                    <!-- /.box-body -->
                 </div>
-                <!-- /.box-header -->
-                <div class="card-body">
-                    <table id="example1" class="display" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Actions</th>
-                                <th>Cage Code</th>
-                                <th>Cage Name</th>
 
-                                <th>Country</th>
-                                <th>Status</th>
-                              <th></th>
-
-                            </tr>
-                        </thead>
-             
-
-                    </table>
-
-
-                </div>
-                <!-- /.box-body -->
             </div>
-
-        </div>
-        <div class="col-md-4">
+            <div class="col-md-4">
 
 
                 <!-- /.box -->
                 <!-- DONUT CHART -->
                 <div class="box box-danger">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Manufacturer</h3>
+                        <h3 class="box-title"> </h3>
+                        <br />
+                        <br />
+                        <br />
                         <div class="box-tools pull-right">
 
                         </div>
@@ -145,101 +259,17 @@
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
+            </div>
         </div>
     </div>
-
 </section>
 
-<script>
+@*<script>
   
     $(document).ready(function () {
-        var table;
-       // $('#example1').DataTable().destroy();
-       table= $('#example1').DataTable(
-            {
-                "bServerSide": true,
-                "processing": true,
-               // "searchable": true, 
-                "scrollX": true,
-                "paging": true,
-                "filter": true,
-                "destroy": true,
-                "order": [[1, 'asc']],  
-                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
-              
 
-                ajax: {
-                      //cache: 'false', 
-                    type: 'POST',
-                    url: '@Url.Action("LoadData")',
-                   
-                    dataType: 'json', 
-                    dataSrc: 'data',
-                   // contentType: "application/json; charset=utf-8",
-                   
-                },
-         // add this line
-
-
-                           @* <a class="btn-primary btn-sm" data-modal='' href="@Url.Action(" Edit", "Parts", new { id = item.Part_No, c_code =item.CageCode })" > <i class="fa fa-pencil"></i></a > |*@
-
-                columns: [
-                    {
-                        'data': function (data, type, row, meta) {
-                            return '<a  class="btn-primary btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
-                         }
-                    }, 
-                    { 'data': 'CageCode', "name": "CageCode", },
-                    { 'data': 'CageName', "name": "CageName", },
-                    { 'data': 'Country', "name": "Country", },
-                    { 'data': 'Status', "name": "Status", },
-                    {
-                        'data': function (data, type, row, meta) {
-                            return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
-                        }                          
-                    }, 
-                 
-            //},
-
-            //'<a href="Delete/Cage/' + data.MOP_No + '">' + 'Delete' + '</a>';
-               ],
-               "rowCallback": function (row, data, dataIndex) {
-                   if (data["Status"] == "InActive") {
-                       $('td', row).css('background-color', 'red');
-                     //  $('td', row).addClass("warning");
-                   }
-                 
-                  
-               },
-            //   "createdRow": function (row, data, dataIndex) {
-                 //  if (data[1] = "12345") {
-                 //      $(row).css('background-color', '#F39B9B');
-                  // }
-                   //else if (data[5] <= 70) {
-                   //    $(row).css('background-color', '#A497E5');
-                   //}
-                   //else {
-                   //    $(row).css('background-color', '#9EF395');
-                   //}
-
-              // }
-        //   '<a data-modal="" class="btn-primary btn-sm"  href="Edit/' + data.MOP_No + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm" data-modal="" href="Delete/' + data.MOP_No + '">' + 'Delete' + '</a>';
-
-            });  
-
-        $('#example1 tbody').on("click", '.select', function () {
-            var tblData = table.rows($(this).closest('tr')).data();
-            //var siteId = $(this).closest('tr').find("td:eq(0)").text();
-            var data = $('#myModalContent').load(this.href, function () {
-                $('#myModal').modal({
-                    keyboard: true
-                }, 'show');
-                bindForm(this);
-            });
-            return false;
-        });
     });
-</script>
+</script>*@
 
 <div id='myModal' class='modal fade'>
     <div class="modal-dialog modal-lg">

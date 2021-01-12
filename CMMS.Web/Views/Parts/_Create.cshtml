@@ -2,8 +2,8 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <style>
-    .modal-dialog {
-        width: 80% !important;
+    .modal-lg {
+        max-width: 80% !important;
     }
     .avatar-preview {
         width: 192px;
@@ -52,15 +52,13 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title"><b>Parts</b></h3>
-            </div>
+        <div class="card card-primary">
+   
             <br />
 
             <!-- /.card-header -->
             <!-- form start -->
-            <div class="box-body" id="InputFields">
+            <div class="card-body" id="InputFields">
                 <div class="row">
                     <div class="col-md-9">
                         <div class="row">
@@ -254,7 +252,7 @@
 
         </div>
 
-        <div class="box-footer" id="footer">
+        <div class="card-footer" id="footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             <input type="submit" value="Submit" class="btn btn-primary pull-right" />
         </div>
