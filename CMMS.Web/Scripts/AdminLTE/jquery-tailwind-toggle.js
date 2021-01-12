@@ -37,15 +37,9 @@ function Toggle(el,isChecked) {
         .addClass('w-px h-px opacity-0 absolute')
         .attr('tabindex', '-1')
         .on('change', function () {
-            debugger;
+         
             var isCheckedThis = ($(el).find('input[type="checkbox"]')).prop('checked');
 
-            //$('input:checkbox').each(function () {
-            //    $(el).prop('checked', false);
-            //    $(el).closest('label').removeClass(chBoxOnColor).addClass(chBoxOffColor).find('b').css('transform', '');
-
-            //});
-           
             if (isCheckedThis === true) {
 
                 $(el).find('input[type="checkbox"]').prop('checked', true);
@@ -56,10 +50,21 @@ function Toggle(el,isChecked) {
                 $(el).closest('label').removeClass(chBoxOnColor).addClass(chBoxOffColor).find('b').css('transform', '');
             }
 
-            //if ($(el).is(':disabled')) {
-            //    $(el).closest('label').addClass('opacity-25 pointer-events-none');
-            //} else {
-            //    $(el).closest('label').removeClass('opacity-25 pointer-events-none');
-            //}
+
         }).trigger('change');
+}
+
+
+function ChangeColor(el)
+{
+
+    var chBoxHandleSize = $('[data-toggle="checkbox-toggle"]:not(.checkbox-toggle-tw)').data('handle-size');
+    chBoxHandleSize = (chBoxHandleSize !== undefined) ? chBoxHandleSize : '20';
+    var chBoxOffColor = $('[data-toggle="checkbox-toggle"]:not(.checkbox-toggle-tw)').data('off-color');
+    chBoxOffColor = (chBoxOffColor !== undefined) ? chBoxOffColor : 'bg-red-700';
+    var chBoxOnColor = $('[data-toggle="checkbox-toggle"]:not(.checkbox-toggle-tw)').data('on-color');
+    chBoxOnColor = (chBoxOnColor !== undefined) ? chBoxOnColor : 'bg-green-700';
+
+    $(el).closest('label').removeClass(chBoxOffColor).addClass(chBoxOnColor).find('b').css('transform', 'translate(' + chBoxHandleSize * 1.5 + 'px, 0)');
+
 }

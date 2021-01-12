@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\Hp\Desktop\CMMS First\Solution\ClassLibrary\Models\CMMS_Model.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\Source\Repos\Solution\CMMS.Data\Models\CMMS_Model.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

@@ -151,6 +151,9 @@
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_MOP_ItemsModel.cs" />
+    <Compile Include="Models\M_MOP_PLAN.cs">
+      <DependentUpon>CMMS_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_PMS.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>

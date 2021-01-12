@@ -3,8 +3,6 @@
     var userRoles = (List<CMMS.Web.Helper.RolesVM>)Model;
 }
 
-
-@*<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>*@
 <link href="~/Content/AdminLTE/tailwind.min.css" rel="stylesheet" />
 <script src="@Url.Content("~/Scripts/AdminLTE/jquery-tailwind-toggle.js")"></script>
 
@@ -65,29 +63,15 @@
 </nav>
 
 <script>
-    //$("input:checkbox").click(function () {
-    //    var group = "input:checkbox[name='" + $(this).attr("name") + "']";
-    //    $(group).attr("checked", false);
-    //    $(this).attr("checked", true);
-    //});
 
-    //$("input:checkbox").change(function () {
-    //    $("input:checkbox").not(this).prop('checked', false);
-    //});
-
-
-    function CheckBoxToRadio(selectorOfCheckBox, isUncheckable) {
+    function SwitchRoles(selectorOfCheckBox) {
 
         $(selectorOfCheckBox).each(function () {
-            
             currentRoleId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRoleId));
-
             if (currentRoleId === $(this).prop('value')) {
-             
                 $(this).prop('checked', true);
-                //Toggle(this,true);
+                ChangeColor(this)
             }
-
             $(this).change(function () {
                 $.ajax({
                 url: '@Url.Action("SwitchRole", "Account")',
@@ -97,9 +81,7 @@
                 },
                 success: function (response) {
                     alert('Role has been switched successfully.');
-
                     window.location.href = response.Url
-                 
                     },
                 error: function () {
                         alert('Some error occured.');
@@ -110,7 +92,6 @@
     }
 
     $(function () {
-
-        CheckBoxToRadio("input:checkbox", true);
+        SwitchRoles("input:checkbox", true);
     });
 </script>

@@ -127,6 +127,21 @@
           <Property Name="UR_Qty" Type="int" />
           <Property Name="Part_No" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="M_MOP_PLAN">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="MOP_No" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="ESWBS" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="DoneDate" Type="datetime" />
+          <Property Name="NextDueDate" Type="datetime" />
+          <Property Name="DoneBy" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="M_PMS">
           <Key>
             <PropertyRef Name="PMS_NO" />
@@ -476,6 +491,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySet Name="C_Site_Config" EntityType="Self.C_Site_Config" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_MOP" EntityType="Self.M_MOP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_MOP_ITEMS" EntityType="Self.M_MOP_ITEMS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="M_MOP_PLAN" EntityType="Self.M_MOP_PLAN" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_PMS" EntityType="Self.M_PMS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Cage" EntityType="Self.tbl_Cage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ChildParts" EntityType="Self.tbl_ChildParts" Schema="dbo" store:Type="Tables" />
@@ -715,6 +731,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           </AssociationSet>
           <EntitySet Name="V_MMS5" EntityType="db_CMMSModel.V_MMS5" />
           <EntitySet Name="V_MSD" EntityType="db_CMMSModel.V_MSD" />
+          <EntitySet Name="M_MOP_PLAN" EntityType="db_CMMSModel.M_MOP_PLAN" />
  
           </EntityContainer>
         <EntityType Name="tbl_ErrorLogs">
@@ -1063,6 +1080,21 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="UR_Qty" Type="Int32" />
           <Property Name="PMS_ID" Type="String" MaxLength="22" FixedLength="false" Unicode="true" />
           <Property Name="PartTypeID" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="M_MOP_PLAN">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="MOP_No" />
+            <PropertyRef Name="PMS_No" />
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="MOP_No" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="PMS_No" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="ESWBS" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="DoneDate" Type="DateTime" Precision="3" />
+          <Property Name="NextDueDate" Type="DateTime" Precision="3" />
+          <Property Name="DoneBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
 
 
@@ -1418,6 +1450,19 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
                 <ScalarProperty Name="MOP_No" ColumnName="MOP_No" />
                 <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_MOP_PLAN">
+            <EntityTypeMapping TypeName="db_CMMSModel.M_MOP_PLAN">
+              <MappingFragment StoreEntitySet="M_MOP_PLAN">
+                <ScalarProperty Name="DoneBy" ColumnName="DoneBy" />
+                <ScalarProperty Name="NextDueDate" ColumnName="NextDueDate" />
+                <ScalarProperty Name="DoneDate" ColumnName="DoneDate" />
+                <ScalarProperty Name="ESWBS" ColumnName="ESWBS" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="MOP_No" ColumnName="MOP_No" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
