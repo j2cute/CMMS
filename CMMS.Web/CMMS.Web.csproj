@@ -260,6 +260,8 @@
     <Content Include="Content\AdminLTE\adminlte.min.css" />
     <Content Include="Content\AdminLTE\adminlte.min.js" />
     <Content Include="Content\AdminLTE\adminlte.min.map.css" />
+    <Content Include="Content\AdminLTE\jquerysctipttop.css" />
+    <Content Include="Content\AdminLTE\tailwind.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\buttons.dataTables.min.css" />
@@ -347,6 +349,7 @@
     <Content Include="Content\Img\moto.jpg" />
     <Content Include="Content\Img\navbar.png" />
     <Content Include="Content\Img\part.png" />
+    <Content Include="Content\Img\swap.svg" />
     <Content Include="Content\ionicons.min.css" />
     <Content Include="Content\jquery-ui-timepicker-addon.css" />
     <Content Include="Content\jquery-ui-timepicker-addon.min.css" />
@@ -1368,6 +1371,7 @@
     <Content Include="Plugins\toastr\toastr.min.js" />
     <Content Include="Scripts\AdminLTE\adminlte.js" />
     <Content Include="Scripts\AdminLTE\adminlte.min.js" />
+    <Content Include="Scripts\AdminLTE\jquery-tailwind-toggle.js" />
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.select.min.js" />
     <Content Include="Scripts\index.js" />

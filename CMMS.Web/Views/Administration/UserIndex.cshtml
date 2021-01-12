@@ -2,7 +2,7 @@
 @using CMMS.Web.Helper
 @{
     ViewBag.Title = "ViewARoles";
-    Layout = "~/Views/Shared/_AdminLayoutPage.cshtml";
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
 
 }
 <link href="~/Content/select.dataTables.min.css" rel="stylesheet" />
@@ -11,7 +11,7 @@
     var permissions;
         $(document).ready(function () {
 
-        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
 
         if (permissions.filter(obj => obj.PermissionId == "UserAdd").length > 0) {
             $("#addUser").attr('disabled', false);

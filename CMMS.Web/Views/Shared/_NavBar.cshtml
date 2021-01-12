@@ -1,4 +1,13 @@
-﻿ 
+﻿@using CMMS.Web.Helper
+@{
+    var userRoles = (List<CMMS.Web.Helper.RolesVM>)Model;
+}
+
+
+@*<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>*@
+<link href="~/Content/AdminLTE/tailwind.min.css" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/AdminLTE/jquery-tailwind-toggle.js")"></script>
+
 
 <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background: #4276a4">
     <!-- Left navbar links -->
@@ -15,30 +24,34 @@
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-comments"></i>
+                @*<i class="far fa-comments">Swicth role</i>*@
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-toggles" viewBox="0 0 16 16">
+                    <path d="M4.5 9a3.5 3.5 0 1 0 0 7h7a3.5 3.5 0 1 0 0-7h-7zm7 6a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5zm-7-14a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zm2.45 0A3.49 3.49 0 0 1 8 3.5 3.49 3.49 0 0 1 6.95 6h4.55a2.5 2.5 0 0 0 0-5H6.95zM4.5 0h7a3.5 3.5 0 1 1 0 7h-7a3.5 3.5 0 1 1 0-7z" />
+                </svg>
                 <span class="badge badge-danger navbar-badge"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                 
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                    <div class="media">
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                Role Name
-                                <span class="float-right text-sm text-danger">
-
-                                    @*<i class="fas fa-star"></i>*@
-                                </span>
-                            </h3>
-                            <p class="text-sm">Call me whenever you can...</p>
-                        </div>
-                    </div>
-                    <!-- Message End -->
-                </a>
-
-                <div class="dropdown-divider"></div>
-
+                @{
+                    foreach (var role in userRoles)
+                    {
+                        <a href="#" class="dropdown-item">
+                            <div class="media">
+                                <div class="media-body">
+                                    <h3 class="dropdown-item-title">
+                                        @role.RoleName
+                                        <span class="float-right text-sm text-danger">
+                                            <label data-toggle="checkbox-toggle" data-handle-size="10">
+                                                <input value="@role.RoleId" name='@role.RoleName' type="checkbox" />
+                                            </label>
+                                        </span>
+                                    </h3>
+                                    <p class="text-sm"> @role.RoleDescription</p>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                    }
+                }
             </div>
         </li>
 
@@ -51,3 +64,53 @@
     </ul>
 </nav>
 
+<script>
+    //$("input:checkbox").click(function () {
+    //    var group = "input:checkbox[name='" + $(this).attr("name") + "']";
+    //    $(group).attr("checked", false);
+    //    $(this).attr("checked", true);
+    //});
+
+    //$("input:checkbox").change(function () {
+    //    $("input:checkbox").not(this).prop('checked', false);
+    //});
+
+
+    function CheckBoxToRadio(selectorOfCheckBox, isUncheckable) {
+
+        $(selectorOfCheckBox).each(function () {
+            
+            currentRoleId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRoleId));
+
+            if (currentRoleId === $(this).prop('value')) {
+             
+                $(this).prop('checked', true);
+                //Toggle(this,true);
+            }
+
+            $(this).change(function () {
+                $.ajax({
+                url: '@Url.Action("SwitchRole", "Account")',
+                type: 'POST',
+                data: {
+                    roleId:  $(this).prop('value')
+                },
+                success: function (response) {
+                    alert('Role has been switched successfully.');
+
+                    window.location.href = response.Url
+                 
+                    },
+                error: function () {
+                        alert('Some error occured.');
+                    }
+                });
+            });
+        });
+    }
+
+    $(function () {
+
+        CheckBoxToRadio("input:checkbox", true);
+    });
+</script>

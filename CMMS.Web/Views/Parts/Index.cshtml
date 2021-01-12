@@ -5,14 +5,16 @@
 <script src="~/Scripts/moment.min.js"></script>
 <script src="~/Scripts/raphael.min.js"></script>
 <script src="~/Scripts/morris.min.js"></script>
+
 <style>
     a {
         cursor: pointer;
     }
+
     td {
         font-size: 12px !important;
-        
     }
+
     table.dataTable tbody th, table.dataTable tbody td {
         padding: 4px 4px !important;
     }
@@ -32,13 +34,12 @@
             <!-- small box -->
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3>@Model.partsCount</h3>
+                    <h3 id="hPartsCount"></h3>
                     <p>Total Parts</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-
             </div>
         </div>
         <!-- ./col -->
@@ -140,6 +141,25 @@
 
 <script>
     $(document).ready(function () {
+
+
+        ///
+          $.ajax({
+                url: '@Url.Action("LoadPartsCount", "Parts")',
+                type: 'GET',
+                data: {},
+                success: function (response) {
+                    $("#hPartsCount").text(response);
+                    },
+                error: function () {
+                        alert('Some error occured.');
+                    }
+                });
+
+        ///
+
+
+
         var table;
         // $('#example1').DataTable().destroy();
         table=  $('#example1').DataTable(
@@ -186,7 +206,7 @@
                         'data': function (data, type, row, meta) {
                             return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Parts/Details/' + data.PartId + '">' + 'Details' + '</a>';
                         }
-                    }, 
+                    },
             //},
 
             //'<a href="Delete/Cage/' + data.MOP_No + '">' + 'Delete' + '</a>';
