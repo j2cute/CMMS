@@ -25,15 +25,13 @@
         @Html.HiddenFor(model => model.tbl_Cage.CageId)
         @Html.HiddenFor(model => model.tbl_Cage.CreatedOnDate)
         @Html.HiddenFor(model => model.tbl_Cage.CreatedByUser)
-        <div class="box box-primary">
-            <div class="box-header with-border">
-                <h3 class="box-title"><b>Cage</b></h3>
-            </div>
+        <div class="card card-primary">
+   
             <br />
 
             <!-- /.card-header -->
             <!-- form start -->
-            <div class="box-body" id="InputFields">
+            <div class="card-body" id="InputFields">
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">Cage Code</label>
                     <div class="col-md-10">
@@ -97,9 +95,9 @@
 
         </div>
 
-        <div class="box-footer" id="footer">
+        <div class="card-footer justify-content-between" id="footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <input type="submit" value="Save Changes" class="btn btn-primary pull-right" />
+            <button type="submit" class="btn btn-primary pull-right">Save Changes</button>
         </div>
     }
 

@@ -1,4 +1,5 @@
 ﻿@model ClassLibrary.ViewModels.PartsViewModels
+@using CMMS.Web.Helper
 <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
 <script src="~/Content/Digitalscript.js"></script>
@@ -90,12 +91,12 @@
 
     <div class="row">
         <div class="col-md-8">
-            <div class="box">
-                <div class="box-header">
-                    <a class="btn btn-success" data-modal='' href="@Url.Action("Create","Parts")"><i class="fa fa-plus"></i> Add New Record</a>
+            <div class="card">
+                <div class="card-header">
+                    <a id="addPart" class="btn btn-success" data-modal='' href="@Url.Action("Create","Parts")"><i class="fa fa-plus"></i> Add New Record</a>
                 </div>
                 <!-- /.box-header -->
-                <div class="box-body">
+                <div class="card-body">
                     <table id="example1" class="display" style="width:100%">
                         <thead>
                             <tr>
@@ -122,7 +123,10 @@
             <!-- DONUT CHART -->
             <div class="box box-danger">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Details</h3>
+                    <h3 class="box-title"> </h3>
+                    <br />
+                    <br />
+                    <br />
                     <div class="box-tools pull-right">
 
                     </div>
@@ -160,7 +164,25 @@
 
 
 
-        var table;
+        
+     permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
+            console.log(permissions);
+            if (permissions.filter(obj => obj.PermissionId == "PartAdd").length > 0) {
+            $("#addPart").attr('disabled', false);
+        } else {
+            $("#addPart").attr('disabled', true);
+            }
+            if (permissions.filter(obj => obj.PermissionId == "PartEdit").length > 0) {
+                $("#editPart").attr('disabled', false);
+            } else {
+                $("#editPart").attr('disabled', true);
+            }
+            if (permissions.filter(obj => obj.PermissionId == "PartDel").length > 0) {
+                $("#delPart").attr('disabled', false);
+            } else {
+                $("#delPart").attr('disabled', true);
+            }
+    var table;
         // $('#example1').DataTable().destroy();
         table=  $('#example1').DataTable(
             {
@@ -194,7 +216,7 @@
                     {
                         'data': function (data, type, row, meta) {
                            // var url = '@Url.Action("Edit", "Parts")/' + data.PartId;
-                            return '<a class="btn-primary btn-sm select" data-modal=""  href="/Parts/Edit/' + data.PartId + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm select"  data-modal="" href="/Parts/Delete/' + data.PartId + '">' + 'Delete' + '</a>';
+                            return '<a id="editPart" class="btn-primary btn-sm select" data-modal=""  href="/Parts/Edit/' + data.PartId + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a id="delPart"  class="btn-danger btn-sm select"  data-modal="" href="/Parts/Delete/' + data.PartId + '">' + 'Delete' + '</a>';
                         }
                     },
                     { 'data': 'CageCode', "name": "CageCode", },

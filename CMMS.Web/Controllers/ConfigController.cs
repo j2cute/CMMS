@@ -530,7 +530,6 @@ namespace WebApplication.Controllers
             return View("Inbox", vm);
         }
 
-
         #endregion EquipmentRequest
 
 
@@ -611,6 +610,8 @@ namespace WebApplication.Controllers
                     if (result != null)
                     {
                         result.Status = 3;
+                        db.Entry(result).Property(x => x.Status).IsModified = true;
+                        //db.Entry(result).State = EntityState.Modified;
                         db.SaveChanges();
 
                     }
@@ -652,6 +653,7 @@ namespace WebApplication.Controllers
                         if (result != null)
                         {
                             result.Status = 2;
+                            db.Entry(result).State = EntityState.Modified;
                             db.SaveChanges();
 
                         }

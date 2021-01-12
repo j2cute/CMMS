@@ -9,6 +9,7 @@ namespace ILS.UserManagement.Models
     {
     public class UserRoleModel
     {
+        [Required]
         public string RoleId { get; set; }
         public string UserId { get; set; }
         public Nullable<decimal> IsDefault { get; set; }

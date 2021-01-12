@@ -13,7 +13,10 @@ namespace ClassLibrary.Models
         [MaxLength(50, ErrorMessage = "Maximum Length Should be Equal to 50 Characters")]
         public string Part_No { get; set; }
         //[RegularExpression("^[a-zA-Z0-9]{5}$", ErrorMessage = "Max length should be 5, Alphanumeric Characters")]
+        [Required(ErrorMessage = "This field is required.")]
+
         public string CageCode { get; set; }
+        [Required(ErrorMessage = "This field is required.")]
         [MaxLength(100, ErrorMessage = "Maximum Length Should be Equal to 100 Characters")]
         public string PART_NAME { get; set; }
         [RegularExpression("^[a-zA-Z0-9]{11}$", ErrorMessage = "Max length should be 11, Alphanumeric Characters")]
@@ -21,6 +24,7 @@ namespace ClassLibrary.Models
         public Nullable<decimal> UNIT_PRICE { get; set; }
         public string CurrencyID { get; set; }
         public string MCAT_ID { get; set; }
+        [Required(ErrorMessage = "This field is required.")]
         public string PartTypeID { get; set; }
         public Nullable<decimal> LENGTH { get; set; }
         public Nullable<decimal> WIDTH { get; set; }
@@ -30,7 +34,7 @@ namespace ClassLibrary.Models
         public Nullable<int> PART_MEC { get; set; }
         public Nullable<decimal> MTBF { get; set; }
         public Nullable<decimal> MTTR { get; set; }
-        [MaxLength(6, ErrorMessage = "Alphabets only"), MinLength(5, ErrorMessage = "Alphabets only")]
+        [MaxLength(6, ErrorMessage = "Maximum Length Should be Equal to 6"), MinLength(5, ErrorMessage = " Minimum Length Should be Equal to 5")]
         [RegularExpression("^[a-zA-Z]*$", ErrorMessage = "Please Enter Alphabets only")]
         public string SMR { get; set; }
         public Nullable<decimal> BRF { get; set; }

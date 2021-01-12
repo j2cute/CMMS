@@ -13,6 +13,7 @@ namespace ClassLibrary.Models
         [Required(ErrorMessage = "This field is required.")]
         [RegularExpression("^[a-zA-Z0-9]{5}$", ErrorMessage = "Max length should be 5, Alphanumeric Characters")]
         public string CageCode { get; set; }
+        [Required(ErrorMessage = "This field is required.")]
         [MaxLength(50, ErrorMessage = "Maximum Length Should be Equal to 50 Characters")]
         public string CageName { get; set; }
         [MaxLength(50, ErrorMessage = "Maximum Length Should be Equal to 50 Characters")]

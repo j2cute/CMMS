@@ -37,6 +37,7 @@ namespace WebApplication.Controllers
                 return Json(0);
             }
         }
+        
         public ActionResult Index()
         {
             var vm = new PartsViewModels
