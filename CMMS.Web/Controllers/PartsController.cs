@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication.Helpers;
@@ -17,16 +18,16 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    //[Authorization]
     public class PartsController : BaseController
     {
         private WebAppDbContext db = new WebAppDbContext();
         // GET: Parts
-       
+
         [HttpPost]
         public JsonResult PartNoCheck(string CageCode, string PartNo)
         {
-            var SearchData = db.tbl_Parts.Where(x => x.Part_No == PartNo && x.CageCode==CageCode).SingleOrDefault();
+            var SearchData = db.tbl_Parts.Where(x => x.Part_No == PartNo && x.CageCode == CageCode).SingleOrDefault();
             if (SearchData != null)
             {
                 return Json(1);
@@ -39,10 +40,9 @@ namespace WebApplication.Controllers
         
         public ActionResult Index()
         {
-
             var vm = new PartsViewModels
             {
-                tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
+                //tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
                 cageActiveCount = db.tbl_Cage.Where(x => x.Status == "Active").Count(),
                 partsCount = db.tbl_Parts.Count(),
                 partTypeCount = db.tbl_PartType.Count(),
@@ -60,6 +60,15 @@ namespace WebApplication.Controllers
             vm.dataList = data;
             return View(vm);
         }
+
+
+        public ActionResult LoadPartsCount()
+        {
+            var output =  db.tbl_Parts.Count();
+            return Json(output, JsonRequestBehavior.AllowGet);
+        }
+
+
         [HttpPost]
         public JsonResult LoadData(int length, int start)
         {
@@ -97,22 +106,22 @@ namespace WebApplication.Controllers
             List<PartsModel> Partdata = null;
             if (sortColumnDir == "asc")
             {
-             Partdata = db.tbl_Parts.Where(x => x.Status == "Active" && (x.CageCode.Contains(searchvalue)
-             || x.Part_No.Contains(searchvalue)
-             || x.PART_NAME.Contains(searchvalue)
-             || x.NSN.Contains(searchvalue)
-             || x.tbl_PartType.PartName.Contains(searchvalue))
-             )  
-             .OrderBy(sortExpression).Skip(start).Take(length)
-             .Select(x => new PartsModel
-             {
-                 PartId = x.PartId,
-                 CageCode = x.CageCode,
-                 Part_No = x.Part_No,
-                 PART_NAME = x.PART_NAME,
-                 NSN=x.NSN,
-                 PartTypeName = x.tbl_PartType.PartName
-             }).ToList();
+                Partdata = db.tbl_Parts.Where(x => x.Status == "Active" && (x.CageCode.Contains(searchvalue)
+                || x.Part_No.Contains(searchvalue)
+                || x.PART_NAME.Contains(searchvalue)
+                || x.NSN.Contains(searchvalue)
+                || x.tbl_PartType.PartName.Contains(searchvalue))
+                )
+                .OrderBy(sortExpression).Skip(start).Take(length)
+                .Select(x => new PartsModel
+                {
+                    PartId = x.PartId,
+                    CageCode = x.CageCode,
+                    Part_No = x.Part_No,
+                    PART_NAME = x.PART_NAME,
+                    NSN = x.NSN,
+                    PartTypeName = x.tbl_PartType.PartName
+                }).ToList();
             }
             else
             {
@@ -220,7 +229,7 @@ namespace WebApplication.Controllers
                         tbl_Parts.File_Path = savaPath;
                         FileHelper.File.SaveAs(savaPath + image);
                     }
-                    
+
                     var cage = db.tbl_Cage.Where(x => x.CageCode == tbl_Parts.CageCode).FirstOrDefault();
                     tbl_Parts.CageId = cage.CageId;
                     // Get Current user Id
@@ -484,7 +493,7 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
- 
+
         [HttpPost]
         public ActionResult GetSelectedData(int parentPartId)
         {
@@ -511,7 +520,7 @@ namespace WebApplication.Controllers
                 return Json(vm, JsonRequestBehavior.AllowGet);
             }
         }
-     
+
         public PartsViewModels GetData(int? parentPartId)
         {
             var vm = new PartsViewModels();
@@ -519,9 +528,9 @@ namespace WebApplication.Controllers
             {
                 var result = db.tbl_ChildParts.Where(x => x.ParentPartId == parentPartId).Select(x => new ChildPartsModel
                 {
-                    ParentPartId=x.ParentPartId,
-                    ChildPartId=x.ChildPartId,
-                    ChildPartName=x.tbl_Parts.PART_NAME,
+                    ParentPartId = x.ParentPartId,
+                    ChildPartId = x.ChildPartId,
+                    ChildPartName = x.tbl_Parts.PART_NAME,
                     ChildPartNo = x.tbl_Parts.Part_No,
                     Qty = x.Qty
                 }).ToList();
@@ -546,7 +555,7 @@ namespace WebApplication.Controllers
                         Alert("Their is something went wrong!!!", NotificationType.error);
                         return Json(model, JsonRequestBehavior.AllowGet);
                     }
-                    if (model.ParentPartId != 0 && model.ChildPartId != 0) 
+                    if (model.ParentPartId != 0 && model.ChildPartId != 0)
                     {
                         db.tbl_ChildParts.Add(model);
                         db.SaveChanges();

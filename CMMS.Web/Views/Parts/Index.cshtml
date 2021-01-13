@@ -35,13 +35,12 @@
             <!-- small box -->
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3>@Model.partsCount</h3>
+                    <h3 id="hPartsCount"></h3>
                     <p>Total Parts</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-
             </div>
         </div>
         <!-- ./col -->
@@ -145,10 +144,28 @@
 </section>
 
 <script>
-   var permissions;
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
+
+        ///
+          $.ajax({
+                url: '@Url.Action("LoadPartsCount", "Parts")',
+                type: 'GET',
+                data: {},
+                success: function (response) {
+                    $("#hPartsCount").text(response);
+                    },
+                error: function () {
+                        alert('Some error occured.');
+                    }
+                });
+
+        ///
+
+
+
+        
+     permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
             console.log(permissions);
             if (permissions.filter(obj => obj.PermissionId == "PartAdd").length > 0) {
             $("#addPart").attr('disabled', false);
@@ -165,7 +182,7 @@
             } else {
                 $("#delPart").attr('disabled', true);
             }
-        var table;
+    var table;
         // $('#example1').DataTable().destroy();
         table=  $('#example1').DataTable(
             {

@@ -1,6 +1,6 @@
 ﻿@using CMMS.Web.Helper
 @{
-    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions;
+    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
 }
 
 <!DOCTYPE html>

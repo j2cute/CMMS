@@ -127,6 +127,7 @@ namespace WebApplication.Controllers
         }
 
       
+        [HttpPost]
         [Authorization]
         public ActionResult SwitchRole(string roleId = "")
         {
@@ -141,7 +142,9 @@ namespace WebApplication.Controllers
             {
 
             }
-            return RedirectToAction("Dashboard", "Admin", new { inRoleId = roleId }) ;
+
+            var redirectUrl = new UrlHelper(Request.RequestContext).Action("Dashboard", "Admin", new { inRoleId = roleId });
+            return Json(new { Url = redirectUrl });
         }
 
         protected override void Dispose(bool disposing)
@@ -241,7 +244,7 @@ namespace WebApplication.Controllers
         }
         #endregion
 
-        public void LoadRole(string roleId)
+        private void LoadRole(string roleId)
         {
             try
             {
@@ -291,7 +294,7 @@ namespace WebApplication.Controllers
             {
                 using (Entities _context = new Entities())
                 {
-                    roles =  _context.tbl_User.FirstOrDefault(x => x.UserId == Session[SessionKeys.UserId].ToString() && x.IsActive != 0)
+                    roles =  _context.tbl_User.FirstOrDefault(x => x.UserId == Session[SessionKeys.UserId].ToString() && x.IsActive != 0)?
                                                .tbl_UserRole.Select(x => x.tbl_Role).Where(x=>x.IsDeleted != 1);
 
                     if(roles.Any())

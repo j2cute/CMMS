@@ -48,5 +48,6 @@ namespace ClassLibrary.Models
         public virtual DbSet<tbl_ChildParts> tbl_ChildParts { get; set; }
         public virtual DbSet<V_MMS5> V_MMS5 { get; set; }
         public virtual DbSet<V_MSD> V_MSD { get; set; }
+        public virtual DbSet<M_MOP_PLAN> M_MOP_PLAN { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿@using CMMS.Web.Helper
 @{
-    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions;
+    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
+    var userRoles = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UserRoles;
 }
 
 <!DOCTYPE html>
@@ -10,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
 
-    <title>@ViewBag.Title  | AdminLTE Starter</title>
+    <title>@ViewBag.Title </title>
     <link href="@Url.Content("~/Plugins/fontawesome-free/css/all.min.css")" rel="stylesheet" />
     <link href="~/Plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet" />
     <link href="~/Plugins/boostrap4/css/bootstrap-4.min.css" rel="stylesheet" />
@@ -21,25 +22,27 @@
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
-    <script src="~/Scripts/moment.js"></script>
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="@Url.Content("~/Scripts/moment.js")"></script>
+
+ 
+    <script src="@Url.Content("~/Scripts/jquery-3.3.1.min.js")"></script>
     <script src="@Url.Content("~/Plugins/bootstrap/js/bootstrap.bundle.min.js")"></script>
-    <script src="~/Plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-    <script src="~/Plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/Plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="~/Plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="~/Plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="@Url.Content("~/Plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables-bs4/js/dataTables.bootstrap4.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables-responsive/js/dataTables.responsive.min.js")"></script>
+    <script src="@Url.Content("~/Plugins/datatables-responsive/js/responsive.bootstrap4.min.js")"></script>
     @* <script src="@Url.Content("~/Scripts/AdminLTE/adminlte.min.js")"></script>*@
 
     <script src="~/Scripts/AdminLTE/adminlte.min.js"></script>
-    @*@Styles.Render("~/Content/DevExtremeBundle")
-    @Scripts.Render("~/Scripts/DevExtremeBundle")*@
+    @Styles.Render("~/Content/DevExtremeBundle")
+    @Scripts.Render("~/Scripts/DevExtremeBundle")
 
 </head>
 <body class="hold-transition layout-fixed text-sm sidebar-mini sidebar-collapse">
     <div class="wrapper">
         @*@Html.Partial("_LoginPartial")*@
-        @Html.Partial("_NavBar")
+        @Html.Partial("_NavBar", userRoles)
         @Html.Partial("_SideBar",permissions)
         <div class="content-wrapper">
             @RenderBody()

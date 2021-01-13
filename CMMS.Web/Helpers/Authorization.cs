@@ -39,7 +39,7 @@ namespace WebApplication.Helpers
             bool result = false;
             try
             {
-                var rolePermission = ((SessionHelper)httpContext.Session[SessionKeys.SessionHelperInstance]).RolePermissions;
+                var rolePermission = ((SessionHelper)httpContext.Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
                 if (rolePermission != null)
                 {
                     if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]));

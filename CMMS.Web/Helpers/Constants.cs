@@ -24,10 +24,23 @@ namespace CMMS.Web.Helper
         {
             UserId = userId;
             CurrentRoleId = roleId;
-            RolePermissions = permissions;
+            CurrentRolePermissions = permissions;
+
+            using (Entities _context = new Entities())
+            {
+                var roles = _context.tbl_User.FirstOrDefault(x => x.UserId == userId && x.IsActive != 0)?.tbl_UserRole.Select(x => x.tbl_Role).Where(x => x.IsDeleted != 1);
+
+                if (roles.Any())
+                {
+                    UserRoles = roles?.Select(x => new RolesVM() { RoleId = x.RoleId,RoleName = x.Name, RoleDescription = x.Description }).ToList();
+                }
+            }
         }
+
         public string CurrentRoleId { get; set; }
-        public List<PermissionViewModel> RolePermissions { get; set; }
+        public List<PermissionViewModel> CurrentRolePermissions { get; set; }
+
+        public List<RolesVM> UserRoles { get; set; }
         private string UserId { get; set; }
 
         public SessionHelper UpdateFields(string roleId, List<PermissionViewModel> permissionViewModels)
@@ -39,11 +52,18 @@ namespace CMMS.Web.Helper
 
             if (permissionViewModels != null)
             {
-                RolePermissions = permissionViewModels;
+                CurrentRolePermissions = permissionViewModels;
             }
 
             return this;
         }
+    }
+
+    public class RolesVM
+    {
+        public string RoleId { get; set; }
+        public string RoleName { get; set; }
+        public string RoleDescription { get; set; }
     }
 
 }

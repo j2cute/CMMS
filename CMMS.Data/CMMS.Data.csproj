@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ClassLibrary</RootNamespace>
     <AssemblyName>ClassLibrary</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
@@ -151,6 +151,9 @@
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_MOP_ItemsModel.cs" />
+    <Compile Include="Models\M_MOP_PLAN.cs">
+      <DependentUpon>CMMS_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_PMS.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
