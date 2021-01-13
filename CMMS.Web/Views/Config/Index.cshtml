@@ -21,98 +21,106 @@
 
 </script>
 
+<section class="content-header">
+    <h1>
+        Configure Systems 
+    </h1>
 
+</section>
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
-    <!-- Small boxes (Stat box) -->
-    <div class="row">
-        <div class="box">
-            <div class="box-header">
-                <h4>  SITE CONFIGURATION  </h4>  <br />
-                <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-2 col-form-label">Select Unit</label>
-                        <div class="col-md-4">
-                            @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
-                            @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="col-md-2">
-                            <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br />
-            <div class="row" id="ConfigBox">
-                <div class="col-md-1"></div>
-                <div class="col-md-12">
-                    <div class="box box-primary box-solid">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">CONFIGURATION SELECTION</h3>
-                            <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="box-body chat">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="col-md-5">
-                                        <div class="table-bordered" style="overflow-x: scroll; width: 100%;">
-
-                                            <h4>Master Configuration</h4>
-
-                                            <div id="jstree">
-                                            </div>
-                                        </div>
-                                        <br />
-                                        <div>
-                                           <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
-
-                                        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                       
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <label class="col-sm-1 col-form-label">Select Unit</label>
+                                    <div class="col-sm-4">
+                                        @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
+                                        @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
-                                        <div class="col-md-2">
-                                            @*@using (Html.BeginForm("Index", "Config", FormMethod.Post))
-            {*@
-                                            <input type="hidden" name="selectedItems" id="selectedItems" />
-                                            &nbsp;   &nbsp;  &nbsp; &nbsp;  &nbsp;  &nbsp; <input type="submit" id="items" value=">>" class="btn btn-success" onclick="GetSiteConfig()" style="margin-top:50px;width:50px;height:30px" />
-                                            @*}*@
-                                        </div>
-                                        <div class="col-md-5">
-                                            <div class="table-bordered" style="overflow-x: scroll; width: 100%;">
+                                    <div class="col-sm-7">
+                                        <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                   
+                   
+                </div>
+            </div>
+        </div>
+        <!-- /.row (main row) -->
+        </div>
+</section>
 
-                                                <h4>Site Configuration</h4>
+<section class="content" >
+    <div class="container-fluid">
+     
+            
+            <div class="row" id="ConfigBox">
+        
+                    <div class="col-md-6" >
+                        <div class="card" >
+                            <div class="card-body">
+                                <div class="scroll" style="overflow-x: auto;  width: 100%;">
 
-                                                <div id="jstreeSiteConfig">
+                                    <h4>Master Configuration</h4>
 
-                                                </div>
-                                            </div>
-                                            </div>
-                                        </div>
+                                    <div id="jstree" style="min-height:495px">
+                                    </div>
+                                </div>
+                                <br />
+                                <div>
+                                    <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
+                                    <input type="submit" id="items" value="Add Systems >>" class="btn btn-success" onclick="GetSiteConfig()" />
+                                    <input type="hidden" name="selectedItems" id="selectedItems" />
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="card">
+                            <div class="card-body">
+
+                                <div class="scroll" style="overflow-x: auto;  width: 100%;">
+
+                                    <h4>Site Configuration</h4>
+
+                                    <div id="jstreeSiteConfig" style="min-height:550px">
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
+      
             </div>
-
-        </div>
 
     </div>
-    <!-- /.row (main row) -->
 </section>
 
 
-<script>
-    $(function () {
-        $('#example1').DataTable({
-            "scrollX": true,
-        })
-    });
-</script>
 
-<script>
+
+            <script>
+                $(function () {
+                    $('#example1').DataTable({
+                        "scrollX": true,
+                    })
+                });
+            </script>
+
+            <script>
     function GetConfig() {
         var unitId = $('#C_Site_Config_SiteId').val();
         $.ajax({
@@ -206,9 +214,9 @@
         });
     }
 
-   
-</script>
-<script>
+
+            </script>
+            <script>
        function GetSiteConfig() {
             var abc = $('#selectedItems').val();
            var unitId = $('#C_Site_Config_SiteId').val();
@@ -262,17 +270,17 @@
             $("#jstree").jstree("open_node", [selectedNode, node_info.children_d]);
         }
     }
-</script>
+            </script>
 
 
-<div id='myModal' class='modal fade'>
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id='myModalContent'></div>
-        </div>
-    </div>
-</div>
+            <div id='myModal' class='modal fade'>
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div id='myModalContent'></div>
+                    </div>
+                </div>
+            </div>
 
-@section scripts{
-    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
-}
+            @section scripts{
+                @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+            }

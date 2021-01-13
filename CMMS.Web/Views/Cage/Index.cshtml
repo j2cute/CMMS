@@ -31,12 +31,12 @@
             permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
             console.log(permissions);
             if (permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
-            $("#addaCage").attr('disabled', false);
+            $("#addCage").attr('disabled', false);
         } else {
             $("#addCage").attr('disabled', true);
             }
             if (permissions.filter(obj => obj.PermissionId == "ManEdit").length > 0) {
-                $("#editCager").attr('disabled', false);
+                $("#editCage").attr('disabled', false);
             } else {
                 $("#editCage").attr('disabled', true);
             }
