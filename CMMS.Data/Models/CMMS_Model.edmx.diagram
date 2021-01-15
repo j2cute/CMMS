@@ -37,6 +37,7 @@
         <EntityTypeShape EntityType="db_CMMSModel.V_MMS5" Width="1.5" PointX="6.125" PointY="16.125" />
         <EntityTypeShape EntityType="db_CMMSModel.V_MSD" Width="1.5" PointX="0.75" PointY="13.75" />
         <EntityTypeShape EntityType="db_CMMSModel.M_MOP_PLAN" Width="1.5" PointX="14.375" PointY="0.75" />
+        <EntityTypeShape EntityType="db_CMMSModel.M_MOP_PLAN_HISTORY" Width="1.5" PointX="13.375" PointY="14.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

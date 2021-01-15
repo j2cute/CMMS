@@ -154,6 +154,9 @@
     <Compile Include="Models\M_MOP_PLAN.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_MOP_PLAN_HISTORY.cs">
+      <DependentUpon>CMMS_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_PMS.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
@@ -205,6 +208,7 @@
     <Compile Include="ViewModels\CageViewModels.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
+    <Compile Include="ViewModels\MopSchedulerFilterViewModel.cs" />
     <Compile Include="ViewModels\MopViewModels.cs" />
     <Compile Include="ViewModels\PartsViewModels.cs" />
   </ItemGroup>

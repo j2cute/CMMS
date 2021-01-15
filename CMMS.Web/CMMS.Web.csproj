@@ -228,6 +228,7 @@
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MopPlan.cs" />
     <Compile Include="Controllers\PMSController.cs" />
     <Compile Include="Controllers\PartTypeController.cs" />
     <Compile Include="Controllers\MCATController.cs" />
@@ -1716,6 +1717,8 @@
     <Content Include="Views\Shared\_LayoutPageNew.cshtml" />
     <Content Include="Views\Shared\_SideBar.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
+    <Content Include="Views\Mop\LoadMopPlan.cshtml" />
+    <Content Include="Views\Mop\MopPlanFilter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Images\Parts\" />
