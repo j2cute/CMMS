@@ -1,9 +1,9 @@
 ﻿@model ClassLibrary.ViewModels.CageViewModels
 @using CMMS.Web.Helper
-@{ 
+@*@{ 
     var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
 
-}
+}*@
 <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
 <script src="~/Content/Digitalscript.js"></script>
@@ -28,7 +28,7 @@
     var permissions;
         $(document).ready(function () {
 
-            permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).RolePermissions));
+            permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
             console.log(permissions);
             if (permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
             $("#addCage").attr('disabled', false);
@@ -208,10 +208,9 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        @if (permissions.Any(x => x.PermissionId == "ManAdd"))
-                        {
+                     
                             <a id="addCage" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>
-                        }
+                      
                     </div>
                     <!-- /.box-header -->
                     <div class="card-body">

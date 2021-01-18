@@ -81,7 +81,7 @@ namespace WebApplication.Controllers
                     Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(SiteId, JsonRequestBehavior.AllowGet);
                 }
-                return Json(vm.M_MOPModel_List, JsonRequestBehavior.AllowGet);
+                return Json(new { model = vm.M_MOPModel_List ,pmsNo = vm.pmsNo}, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -131,6 +131,7 @@ namespace WebApplication.Controllers
 
         }
         #region AddChild   
+        [ValidateAjax]
         [HttpPost]
         public ActionResult AddMOP(M_MOP model, int? SiteId, string eswbs)
         {
@@ -156,7 +157,7 @@ namespace WebApplication.Controllers
                         vm = GetMopData(SiteId, eswbs);
                     }
                     //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(vm.M_MOPModel_List, JsonRequestBehavior.AllowGet);
+                    return Json(new { msg = "Data Saved Sucessfully!!!", model = vm.M_MOPModel_List}, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
@@ -171,7 +172,8 @@ namespace WebApplication.Controllers
         #endregion EditChild
 
 
-        #region EditChild   
+        #region EditChild  
+        [ValidateAjax]
         [HttpPost]
         public ActionResult EditMOP(M_MOPModel model, int? SiteId, string eswbs)
         {
@@ -211,7 +213,9 @@ namespace WebApplication.Controllers
                         vm = GetMopData(SiteId, eswbs);
                     }
                     //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(vm.M_MOPModel_List, JsonRequestBehavior.AllowGet);
+                    // return Json(vm.M_MOPModel_List, JsonRequestBehavior.AllowGet);
+                    return Json(new { msg = "Data Updated Sucessfully!!!", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
+
                 }
                 catch (Exception ex)
                 {
@@ -250,7 +254,7 @@ namespace WebApplication.Controllers
                         vm = GetMopData(SiteId, eswbs);
                     }
                     // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                    return Json(vm.M_MOPModel_List, JsonRequestBehavior.AllowGet);
+                    return Json(new { msg = "Record Deleted Sucessfully!!!", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
@@ -294,7 +298,7 @@ namespace WebApplication.Controllers
                 {
                     vm = GetMopItemData(siteId, pmsNo, mopNo);
                 }
-                return Json(vm.M_MOP_ItemsModelList, JsonRequestBehavior.AllowGet);
+                return Json(  new { model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
@@ -350,6 +354,7 @@ namespace WebApplication.Controllers
         #endregion GetSeleectedMopItemData
 
         #region AddMOPItem  
+        [ValidateAjax]
         [HttpPost]
         public ActionResult AddMOPItem(M_MOP_ITEMS model, int? siteId, string pmsNo, string mopNo)
         {
@@ -376,13 +381,13 @@ namespace WebApplication.Controllers
                     }
 
                     //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(vm.M_MOP_ItemsModelList, JsonRequestBehavior.AllowGet);
+                    return Json(new { msg = "Data Saved Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
                     Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
+                    //Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(vm);
                 }
             }
@@ -392,6 +397,7 @@ namespace WebApplication.Controllers
 
 
         #region EditChild   
+        [ValidateAjax]
         [HttpPost]
         public ActionResult EditMOPItem(M_MOP_ItemsModel model, int? siteId, string pmsNo, string mopNo)
         {
@@ -431,13 +437,13 @@ namespace WebApplication.Controllers
                     }
 
                     //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(vm.M_MOP_ItemsModelList, JsonRequestBehavior.AllowGet);
+                    return Json(new { msg = "Record Updated Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
                     Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
+                    //Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(vm);
                 }
             }
@@ -470,13 +476,13 @@ namespace WebApplication.Controllers
                         vm = GetMopItemData(siteId, pmsNo, mopNo);
                     }
                     // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                    return Json(vm.M_MOP_ItemsModelList, JsonRequestBehavior.AllowGet);
+                    return Json(new { msg = "Record Deleted Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
                     Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
+                    //Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(vm);
                 }
             }
@@ -493,6 +499,8 @@ namespace WebApplication.Controllers
             if (SiteId != null && eswbs != null)
             {
                 var data = db.C_Site_Config.Where(x => x.SiteId == SiteId && x.ESWBS == eswbs).FirstOrDefault();
+                
+
                 if (data.PMS_No != null)
                 {
                     var result = db.M_MOP.Where(x => x.PMS_No == data.PMS_No).ToList().Select(x => new M_MOPModel
@@ -506,8 +514,9 @@ namespace WebApplication.Controllers
                         mmsDoc = "MMS " + x.Doc,
                     });
                     vm.M_MOPModel_List = result.ToList();
-
+                    vm.pmsNo = data.PMS_No;
                 }
+
             }
             return vm;
         }

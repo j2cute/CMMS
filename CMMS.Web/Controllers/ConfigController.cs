@@ -168,7 +168,7 @@ namespace WebApplication.Controllers
             {
                 _tbl_Unit = db.tbl_Unit.ToList(),
                 selectedData = "0",
-                tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
+                tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A") ).ToList(),
                 _M_PMS = db.M_PMS.ToList(),
             };
 
@@ -275,7 +275,7 @@ namespace WebApplication.Controllers
 
         #region AddCHILD
 
-
+        [ValidateAjax]
         [HttpPost]
         public ActionResult AddChild(C_SiteConfigModel model)
         {
@@ -315,13 +315,15 @@ namespace WebApplication.Controllers
                         { vm = GetSiteConfigTree(model.SiteId); }
                     }
                     //   Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(vm, JsonRequestBehavior.AllowGet);
+                    return Json(new
+                    { msg = "Data Saved Sucessfully!!!", vm = vm 
+                    }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
                     Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
+                    //Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(vm);
                 }
             }
@@ -331,6 +333,7 @@ namespace WebApplication.Controllers
         #endregion AddChild 
 
         #region EditChild   
+        [ValidateAjax]
         [HttpPost]
         public ActionResult EditChild(C_SiteConfigModel model)
         {
@@ -375,7 +378,11 @@ namespace WebApplication.Controllers
                         }
                     }
                     //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(vm, JsonRequestBehavior.AllowGet);
+                    return Json(new
+                    {
+                        msg = "Record Updated Sucessfully!!!",
+                        vm = vm
+                    }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
@@ -414,7 +421,10 @@ namespace WebApplication.Controllers
                     }
 
                     // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                    return Json(vm, JsonRequestBehavior.AllowGet);
+                    return Json(new {
+                        msg = "Record Deleted Sucessfully!!!",
+                        vm= vm
+                    },  JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
@@ -583,7 +593,6 @@ namespace WebApplication.Controllers
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm);
             }
-
 
         }
 
