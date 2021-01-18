@@ -19,9 +19,10 @@ namespace WebApplication.Controllers
 {
     //7796 7566
 
-    [Authorization]
-    public class MopController : BaseController
+    //[Authorization]
+    public partial class MopController : BaseController
     {
+
         private WebAppDbContext db = new WebAppDbContext();
         // GET: Mop
         public ActionResult Index()

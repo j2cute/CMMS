@@ -1,0 +1,23 @@
+﻿@model IEnumerable<WebApplication.Controllers.DataModel>
+@{
+    ViewBag.Title = "LoadMopPlan";
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+@(Html.DevExtreme().Scheduler()
+    .ID("scheduler")
+    .DataSource(Model)
+    .TimeZone("America/Los_Angeles")
+    .TextExpr("Text")
+    .StartDateExpr("StartDate")
+    .EndDateExpr("EndDate")
+    .AllDayExpr("AllDay")
+    .Views(new[] {
+        SchedulerViewType.Week,
+        SchedulerViewType.Month
+    })
+    .CurrentView(SchedulerViewType.Week)
+    .CurrentDate(new DateTime(2021, 5, 25))
+    .StartDayHour(9)
+    .Height(600)
+)
