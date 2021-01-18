@@ -33,5 +33,6 @@ namespace ClassLibrary.ViewModels
         public M_MOP_ItemsModel M_MOP_ItemsModel { get; set; }
 
         public List<M_MOP_ItemsModel> M_MOP_ItemsModelList { get; set; }
+        public string pmsNo { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿@model ClassLibrary.ViewModels.MopViewModels
+@using CMMS.Web.Helper
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <link href="~/Content/morris.css" rel="stylesheet" />
@@ -41,7 +42,25 @@
     var table;
     var editTable;
     var mopItemTable;
+    var permissions;
     $(document).ready(function () {
+      permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+        if (permissions.filter(obj => obj.PermissionId == "TMLAdd").length > 0) {
+            $("#addNewMOPItem").attr('disabled', false);
+        } else {
+            $("#addNewMOPItem").attr('disabled', true);
+        }
+        if (permissions.filter(obj => obj.PermissionId == "TMLEdit").length > 0) {
+            $("#editNewMOPItem").attr('disabled', false);
+        } else {
+            $("#editNewMOPItem").attr('disabled', true);
+        }
+        if (permissions.filter(obj => obj.PermissionId == "TMLDel").length > 0) {
+            $("#delNewMOPItem").attr('disabled', false);
+        } else {
+            $("#delNewMOPItem").attr('disabled', true);
+        }
+
         $("#gridMopItemsDiv").hide();
         $("#Proceed").click(function () {
 
@@ -185,9 +204,12 @@
             },
         });
     };
-  
+
     function OnSuccess(response) {
             $("#addMOPItem").modal('hide'); $("#editMOPItem").modal('hide'); $("#delMOPItem").modal('hide');
+
+        if (response.model != null) {
+
             $("#gridMopItems").DataTable().destroy();
             mopItemTable = $("#gridMopItems").DataTable(
                 {
@@ -197,7 +219,7 @@
                     bFilter: true,
                     bSort: true,
                     bPaginate: true,
-                    data: response,
+                    data: response.model,
 
                     columns: [
                         { 'data': 'MOP_ItemsId', "visible": true },
@@ -210,21 +232,32 @@
 
                         {
                             'data': function (data, type, row, meta) {
-                                return '<a data-toggle="modal" data-target="#editMOPItem"  class="btn-primary btn-sm select">' + 'Edit' + '</a>' + '|' + '<a data-toggle="modal"  data-target="#delMOPItem"  class="btn-danger btn-sm select">' + 'Delete' + '</a>'
+                                return '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn-primary btn-sm select">' + 'Edit' + '</a>' + '|' + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn-danger btn-sm select">' + 'Delete' + '</a>'
                             }
 
                         },
                     ]
                 });
-            if (!$.trim(response)) {
-                swal({
-                    title: "Oops...", text: "No Data Found!", type: "error",
-                });
-            }
-            else {
-                swal({ title: "¡Success!",  type: "success",  timer: 1500,  showConfirmButton: false,
-                });
-            }
+            swal({
+                title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
+            });
+            //if (!$.trim(response)) {
+            //    swal({
+            //        title: "Oops...", text: "No Data Found!", type: "error",
+            //    });
+            //}
+            //else {
+            //    swal({
+            //        title: "¡Success!", type: "success", timer: 1500, showConfirmButton: false,
+            //    });
+            //}
+        }
+        else {
+            $("#gridMopItems").DataTable().destroy();
+            $('#gridMopItems').DataTable({ scrollX: true, }).clear().draw();
+        }
+
+
          $('#gridMopItems tbody').on("click", '.select', function () {
             var tblData = mopItemTable.rows($(this).closest('tr')).data();
             console.log(tblData);
@@ -266,7 +299,6 @@
                 siteId : $("#M_MOP_ITEMS_SiteId").val(),
                 pmsNo : $("#PMS_No").val(),
                 mopNo : $("#M_MOP_ITEMS_MOP_No").val(),
-
                 SiteId: $("#AddSiteId").val(),
                 PMS_No: $("#AddPMSNo").val(),
                 MOP_No: $("#AddMOPNo").val(),
@@ -278,11 +310,13 @@
                 swal({    title: "ERROR",  text: "Their is something went wrong!!!",   type: "error",  });
             },
             error: function (response) {
-                swal({
-                    title: "ERROR",
-                    text: "Their is something went wrong!!!",
-                    type: "error",
-                });
+                var finalError = ''
+                for (i = 0; i < response.responseJSON.length; i++) {
+                    finalError += response.responseJSON[i].key + " : " + response.responseJSON[i].errors[0] + "\n";
+                }
+
+                swal({ title: "ERROR", text: finalError, type: "error", });
+
             }
         });
     };
@@ -312,7 +346,12 @@
                 swal({   title: "ERROR",  text: "Their is something went wrong!!!",  type: "error", });
             },
             error: function (response) {
-                  swal({    title: "ERROR",  text: "Their is something went wrong!!!",   type: "error",  });
+                var finalError = ''
+                for (i = 0; i < response.responseJSON.length; i++) {
+                    finalError += response.responseJSON[i].key + " : " + response.responseJSON[i].errors[0] + "\n";
+                }
+
+                swal({ title: "ERROR", text: finalError, type: "error", });
             }
         });
     };
@@ -342,93 +381,122 @@
             },
         });
     };
+
 </script>
 
-<!-- Main content -->
-<section class="content" style="min-height:0px !important">
-    <!-- Small boxes (Stat box) -->
-    <div class="row">
-        <div class="box">
-            <div class="box-header">
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-md-1"></div>
-                        <div class="col-md-3">
-                            @Html.DropDownListFor(model => model.M_MOP_ITEMS.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select Site", new { @class = "form-control", @required = "true" })
-                            @Html.ValidationMessageFor(model => model.M_MOP_ITEMS.SiteId, "", new { @class = "text-danger" })
-                        </div>
-                        <div class="col-md-3">
-                            @Html.DropDownListFor(model => model.M_MOP_ITEMS.PMS_No, new SelectList(Model._M_PMS, "PMS_NO", "PMS_NO"), "Select", new { @class = "form-control", @id = "PMS_No", @required = "true" })
-                            @Html.ValidationMessageFor(model => model.M_MOP_ITEMS.PMS_No, "", new { @class = "text-danger" })
-
-                        </div>
-
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                @Html.DropDownListFor(model => model.M_MOP_ITEMS.MOP_No, new SelectList(""), "", new { @class = "form-control", @required = "required" })
-                                @Html.ValidationMessageFor(model => model.M_MOP_ITEMS.MOP_No, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-
-                            <input type="button" id="Proceed" onclick="GetMaterialListData()" value="Proceed" class="btn btn-primary" />
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-md-12" id="gridMopItemsDiv">
-        <div class="row">
-            <div class="box box-danger box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">MOP Items Detail</h3>
-                    <div class="box-tools pull-right">
-
-                        <a data-toggle="modal" data-target="#addMOPItem" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add MOP Item</a>
-
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-
-
-                <div class="box-body">
-                    <table id="gridMopItems" class="display" cellspacing="0" width="100%">
-                        <thead>
-                            <tr>
-                                <th>MOP Item</th>
-                                <th>Site</th>
-                                <th>PMS No</th>
-                                <th>MOP NO</th>
-                                <th>SR Qty</th>
-                                <th>PartNo</th>
-                                <th>Actions</th>
-
-                            </tr>
-                        </thead>
-                    </table>
-
-                </div>
-            </div>
-        </div>
-
-
-
-    </div>
+<section class="content-header">
+    <h1>
+        Task Material List
+    </h1>
 
 </section>
+
+
+<section class="content" style="min-height:0px !important">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                   
+                                    <div class="col-md-3">
+                                        @Html.DropDownListFor(model => model.M_MOP_ITEMS.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select Site", new { @class = "form-control", @required = "true" })
+                                        @Html.ValidationMessageFor(model => model.M_MOP_ITEMS.SiteId, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.DropDownListFor(model => model.M_MOP_ITEMS.PMS_No, new SelectList(Model._M_PMS, "PMS_NO", "PMS_NO"), "Select", new { @class = "form-control", @id = "PMS_No", @required = "true" })
+                                        @Html.ValidationMessageFor(model => model.M_MOP_ITEMS.PMS_No, "", new { @class = "text-danger" })
+
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            @Html.DropDownListFor(model => model.M_MOP_ITEMS.MOP_No, new SelectList(""), "", new { @class = "form-control", @required = "required" })
+                                            @Html.ValidationMessageFor(model => model.M_MOP_ITEMS.MOP_No, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+
+                                        <input type="button" id="Proceed" onclick="GetMaterialListData()" value="Proceed" class="btn btn-primary" />
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- /.row (main row) -->
+    </div>
+</section>
+
+
+
+
+
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div class="container-fluid">
+
+      
+        <div class="row">
+            <div class="col-md-12" id="gridMopItemsDiv">
+                <div class="card card-default">
+                    <div class="card-header">
+                        <h3 class="card-title">MOP Items Detail</h3>
+
+
+                        <div class="card-tools">
+                           <input data-toggle="modal" data-target="#addMOPItem" id="addNewMOPItem" type="button" value="Add MOP Item" class="btn btn-success btn-sm" />
+                
+
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <table id="gridMopItems" class="display" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>MOP Item</th>
+                                    <th>Site</th>
+                                    <th>PMS No</th>
+                                    <th>MOP NO</th>
+                                    <th>SR Qty</th>
+                                    <th>PartNo</th>
+                                    <th>Actions</th>
+
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        </div>
+</section>
+
 <input type="hidden" name="mopItemId" id="mopItemId" />
 <input type="hidden" name="pmsNo" id="pmsNo" />
 <input type="hidden" name="mopNo" id="mopNo" />
 <input type="hidden" name="partNo" id="partNo" />
 <input type="hidden" name="editNewPartNo" id="editNewPartNo" />
-
 @Html.HiddenFor(model => model.M_MOP_ITEMS.Part_No)
+
 <div id='addMOPItem' class='modal fade'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -446,15 +514,11 @@
                 <div class="modal-body">
                     @*@Html.HiddenFor(model => model.C_Site_Config.Part_No)
                         @Html.HiddenFor(model => model.C_Site_Config.CageCode)*@
-                    <div class="box box-primary box-solid">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><b>Add MOP Item</b></h3>
-                        </div>
-                        <br />
-
+                    <div class="card card-default">
+                       
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <div class="box-body" id="InputFields">
+                        <div class="card-body" id="InputFields">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -536,9 +600,9 @@
 
                     </div>
 
-                    <div class="box-footer" id="footer">
+                    <div class="card-footer" id="footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="button" onclick="AddMOPItemData()" value="Submit" class="btn btn-primary pull-right" />
+                        <input type="button" onclick="AddMOPItemData()" value="Submit" class="btn btn-primary float-right" />
                     </div>
 
 
@@ -567,15 +631,12 @@
                 <div class="modal-body">
                     @*@Html.HiddenFor(model => model.C_Site_Config.Part_No)
                         @Html.HiddenFor(model => model.C_Site_Config.CageCode)*@
-                    <div class="box box-primary box-solid">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><b>Edit MOP</b></h3>
-                        </div>
-                        <br />
+                    <div class="card card-default">
+               
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <div class="box-body" id="InputFields">
+                        <div class="card-body" id="InputFields">
                             <div class="row">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -649,9 +710,9 @@
 
                     </div>
 
-                    <div class="box-footer" id="footer">
+                    <div class="card-footer" id="footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="button" onclick="EditMOPItemData()" value="Submit" class="btn btn-primary pull-right" />
+                        <input type="button" onclick="EditMOPItemData()" value="Submit" class="btn btn-primary float-right" />
                     </div>
 
 
@@ -669,7 +730,7 @@
             <div id='myModalContent'>
 
                 <div class="modal-header">
-                    <h4 class="modal-title"><b>Confirm Delete</b></h4>
+                    <h4 class="modal-title"  style="color:red"><b>Confirm Delete</b></h4>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -678,7 +739,7 @@
 
 
                 <div class="modal-body">
-                    <h3 style="color:red">Are you sure you want to delete this?</h3>
+                    <h3>Are you sure you want to delete this?</h3>
                 </div>
                 <div class="modal-footer">
                     <div class="form-actions no-color">

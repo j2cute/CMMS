@@ -242,6 +242,7 @@
     <Compile Include="Helpers\AuthenticationFilter.cs" />
     <Compile Include="Helpers\Authorization.cs" />
     <Compile Include="Helpers\Constants.cs" />
+    <Compile Include="Helpers\FIlterAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\ReportsDataset.Designer.cs">
       <AutoGen>True</AutoGen>
