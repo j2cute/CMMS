@@ -11,12 +11,26 @@ namespace WebApplication.Controllers
     public partial class MopController : BaseController
     {
         private DateTime SlidingWindow = DateTime.Now.AddMonths(Convert.ToInt32(ConfigurationManager.AppSettings["SlidingWindowForRoutine"].ToString()));
-        public ActionResult Scheduler()
+
+        public ActionResult MopPlans()
         {
-            return View("MopPlanFilter");
+            List<M_MOP_PLAN> model = new List<M_MOP_PLAN>();
+            try
+            {
+                using (var context = new WebAppDbContext())
+                {
+                    model = context.M_MOP_PLAN.ToList();
+                }
+            }
+            catch
+            {
+
+            }
+            return View("MopPlanList", model);
         }
         public ActionResult LoadSchedule()
         {
+
             IEnumerable<DataModel> result = LoadDataForScheduler();
             return View("LoadMopPlan", result);
         }
@@ -51,16 +65,18 @@ namespace WebApplication.Controllers
                         {
                             double totalDaysTillNextDueDate = GetDaysViaPeriod(item.MOP?.Period, Convert.ToInt32(item.MOP?.Periodicity));
                             CalculateRoutineSchedule(queue, item.MOP, item.Plan.FirstOrDefault().NextDueDate.Value, totalDaysTillNextDueDate);
-                            
-                            foreach(var history in item.History)
+
+                            foreach (var history in item.History)
                             {
                                 var model = new DataModel()
                                 {
+                                    Id = "[1]",
                                     Period = item.MOP?.Period,
                                     Text = item.MOP?.MOP_Desc,
                                     IsPastDate = true,
                                     StartDate = history.DoneDate.ToString(),
-                                    EndDate = history.DoneDate.ToString()
+                                    EndDate = history.DoneDate.ToString(),
+                                    Color = "#cb6bb2"
                                 };
 
                                 queue.Enqueue(model);
@@ -84,12 +100,13 @@ namespace WebApplication.Controllers
             {
                 model = new DataModel()
                 {
+                    Id = "[1]",
                     Period = mop.Period,
                     Text = mop.MOP_Desc,
                     StartDate = nextDueDate.ToString(),
                     EndDate = nextDueDate.AddHours(8).ToString(),
                     IsPastDate = true,
-                    Color = "#808080"
+                    Color = "#cb6bb2"
                 };
             }
             else
@@ -101,10 +118,12 @@ namespace WebApplication.Controllers
 
                 model = new DataModel()
                 {
+                    Id = "[1]",
                     Period = mop.Period,
                     Text = mop.MOP_Desc,
                     StartDate = nextDueDate.ToString(),
-                    EndDate = nextDueDate.AddHours(8).ToString()
+                    EndDate = nextDueDate.AddHours(8).ToString(),
+                    Color = "#cb6bb2"
                 };
             }
 
@@ -143,6 +162,7 @@ namespace WebApplication.Controllers
 
     public class DataModel
     {
+        public string Id { get; set; }
         public string Period { get; set; }
         public string Text { get; set; }
         public string StartDate { get; set; }

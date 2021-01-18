@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+<h2>Plans</h2>
+
+@(Html.DevExtreme().DataGrid<ClassLibrary.Models.M_MOP_PLAN>()
+    .Columns(columns => {
+
+        columns.AddFor(m => m.SiteId);
+
+        columns.AddFor(m => m.MOP_No);
+
+        columns.AddFor(m => m.PMS_No);
+
+        columns.AddFor(m => m.ESWBS);
+
+        columns.AddFor(m => m.DoneDate);
+
+        columns.AddFor(m => m.NextDueDate);
+
+        columns.AddFor(m => m.DoneBy);
+    })
+    .Editing(e => e
+        .AllowUpdating(true)
+    )
+)
