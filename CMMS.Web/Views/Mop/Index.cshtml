@@ -42,17 +42,6 @@
 
         var mopTable;
         $("#addNewMOP").attr('disabled', true);
-        if (permissions.filter(obj => obj.PermissionId == "MOPEdit").length > 0) {
-            $("#editMOP").attr('disabled', false);
-        } else {
-            $("#editMOP").attr('disabled', true);
-        }
-        if (permissions.filter(obj => obj.PermissionId == "MOPDel").length > 0) {
-            $("#delMOP").attr('disabled', false);
-        } else {
-            $("#delMOP").attr('disabled', true);
-        }
-
         $("#ConfigEquipment").hide();
         $("#Proceed").click(function () {
 
@@ -145,7 +134,29 @@
                 { 'data': 'mmsDoc' },
                 {
                     'data': function (data, type, row, meta) {
-                        return '<a data-toggle="modal" data-target="#editMOP" id="editMOP"  class="btn-primary btn-sm select">' + 'Edit' + '</a>' + '|' + '<a data-toggle="modal"  data-target="#delMOP"  id="delMOP"   class="btn-danger btn-sm select">' + 'Delete' + '</a>'
+
+                        var actions = '';
+
+                        if (permissions.filter(obj => obj.PermissionId == "MOPEdit").length > 0) {
+                            actions = '<a data-toggle="modal" data-target="#editMOP" id="editMOP"  class="btn btn-primary btn-xs select">' + 'Edit' + '</a>';
+                        }
+
+                        else {
+                            actions = '<a data-toggle="modal" data-target="#editMOP" id="editMOP"  class="btn btn-primary btn-xs select disabled">' + 'Edit' + '</a>';
+                        }
+
+
+                        actions = actions + " " + '|' + " ";
+
+                        if (permissions.filter(obj => obj.PermissionId == "MOPDel").length > 0) {
+                            actions = actions + '<a data-toggle="modal"  data-target="#delMOP"  id="delMOP"   class="btn btn-danger btn-xs select">' + 'Delete' + '</a>';
+                        }
+                        else {
+                            actions = actions + '<a data-toggle="modal"  data-target="#delMOP"  id="delMOP"   class="btn btn-danger btn-xs select disabled">' + 'Delete' + '</a>';
+                        }
+
+                        return actions;
+         
                     }
 
                 },

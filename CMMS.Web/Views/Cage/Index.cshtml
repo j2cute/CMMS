@@ -30,22 +30,9 @@
 
             permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
             console.log(permissions);
-            if (permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
-            $("#addCage").attr('disabled', false);
-        } else {
-            $("#addCage").attr('disabled', true);
+            if (!permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
+                $("#addCage").addClass('disabled')
             }
-            if (permissions.filter(obj => obj.PermissionId == "ManEdit").length > 0) {
-                $("#editCage").attr('disabled', false);
-            } else {
-                $("#editCage").attr('disabled', true);
-            }
-            if (permissions.filter(obj => obj.PermissionId == "ManDel").length > 0) {
-                $("#delCage").attr('disabled', false);
-            } else {
-                $("#delCage").attr('disabled', true);
-            }
-
                     var table;
        // $('#example1').DataTable().destroy();
        table= $('#example1').DataTable(
@@ -79,8 +66,26 @@
                 columns: [
                     {
                         'data': function (data, type, row, meta) {
-                            return '<a id="editCage" class="btn-primary btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>' + " " + '|' + " " + '<a id="delCage" class="btn-danger btn-sm select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
-                         }
+                            var actions = '';
+
+                            if (permissions.filter(obj => obj.PermissionId == "ManEdit").length > 0) {
+                                actions = '<a id="editCage" class="btn btn-primary btn-xs select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            }
+                            else {
+                                actions = '<a id="editCage" class="btn btn-primary btn-xs select disabled" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            }
+
+                            actions = actions + " " + '|' + " ";
+
+                            if (permissions.filter(obj => obj.PermissionId == "ManDel").length > 0) {
+                                actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
+                            }
+                            else {
+                                actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select disabled" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
+                            }
+
+                            return actions;
+                        }
                     },
                     { 'data': 'CageCode', "name": "CageCode", },
                     { 'data': 'CageName', "name": "CageName", },

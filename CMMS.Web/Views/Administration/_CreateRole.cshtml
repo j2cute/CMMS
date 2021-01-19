@@ -58,35 +58,43 @@
 
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#Roles" data-toggle="tab">Role name</a></li>
-                        <li><a href="#Permissions" data-toggle="tab">Permissions</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="#Roles" data-toggle="tab">Role name</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#Permissions" data-toggle="tab">Permissions</a></li>
                     </ul>
-                    <div class="tab-content">
-                        <div id="Roles" class="tab-pane active">
-                            <div class="form-group">
-                                <label>Role Id<span style="color:red">*</span></label>
-                                @Html.EditorFor(model => model.tbl_Role.RoleId, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                                @Html.ValidationMessageFor(model => model.tbl_Role.RoleId, "", new { @class = "text-danger" })
+                        <div class="tab-content">
+                            <div id="Roles" class="tab-pane active">
+                                <div class="col-md-12">
+                                    <br />
+                                    <div class="form-group">
+                                        <label>Role Id<span style="color:red">*</span></label>
+                                        @Html.EditorFor(model => model.tbl_Role.RoleId, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                                        @Html.ValidationMessageFor(model => model.tbl_Role.RoleId, "", new { @class = "text-danger" })
 
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Role name<span style="color:red">*</span></label>
+                                        @Html.EditorFor(model => model.tbl_Role.Name, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                                        @Html.ValidationMessageFor(model => model.tbl_Role.Name, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                                </div>
+                                <div id="Permissions" class="tab-pane">
+                                    <div class="col-md-12">
+                                        <br />
+                                        <div id="jstree">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label>Role name<span style="color:red">*</span></label>
-                                @Html.EditorFor(model => model.tbl_Role.Name, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                                @Html.ValidationMessageFor(model => model.tbl_Role.Name, "", new { @class = "text-danger" })
-                            </div>
-
-                        </div>
-                        <div id="Permissions" class="tab-pane">
-                            <div id="jstree">
-                            </div>
-                        </div>
                     </div>
-                </div>
-            </div>
 
-        </div>
+                </div>
+
+            </div>
     </div>
 
     <div class="modal-footer justify-content-between">

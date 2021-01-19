@@ -50,16 +50,7 @@
         } else {
             $("#addNewMOPItem").attr('disabled', true);
         }
-        if (permissions.filter(obj => obj.PermissionId == "TMLEdit").length > 0) {
-            $("#editNewMOPItem").attr('disabled', false);
-        } else {
-            $("#editNewMOPItem").attr('disabled', true);
-        }
-        if (permissions.filter(obj => obj.PermissionId == "TMLDel").length > 0) {
-            $("#delNewMOPItem").attr('disabled', false);
-        } else {
-            $("#delNewMOPItem").attr('disabled', true);
-        }
+      
 
         $("#gridMopItemsDiv").hide();
         $("#Proceed").click(function () {
@@ -232,9 +223,31 @@
 
                         {
                             'data': function (data, type, row, meta) {
-                                return '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn-primary btn-sm select">' + 'Edit' + '</a>' + '|' + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn-danger btn-sm select">' + 'Delete' + '</a>'
-                            }
 
+                                var actions = '';
+
+                                if (permissions.filter(obj => obj.PermissionId == "TMLEddit").length > 0) {
+                                    actions = '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn btn-primary btn-xs select">' + 'Edit' + '</a>';
+                                }
+                                else {
+                                    actions = '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn btn-primary btn-xs select disabled">' + 'Edit' + '</a>';
+                                }
+
+                                actions = actions + " " + '|' + " ";
+
+                                if (permissions.filter(obj => obj.PermissionId == "TMLDel").length > 0) {
+                                    actions = actions + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn btn-danger btn-xs select">' + 'Delete' + '</a>';
+                                }
+                                else {
+                                    actions = actions + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn btn-danger btn-xs select disabled">' + 'Delete' + '</a>';
+                                }
+                                return actions;
+
+
+                                //+ '|' + 
+
+
+                            }              
                         },
                     ]
                 });
@@ -454,7 +467,7 @@
 
 
                         <div class="card-tools">
-                           <input data-toggle="modal" data-target="#addMOPItem" id="addNewMOPItem" type="button" value="Add MOP Item" class="btn btn-success btn-sm" />
+                           <input data-toggle="modal" data-target="#addMOPItem" id="addNewMOPItem" type="button" value="+ Add MOP Item" class="btn btn-success btn-sm" />
                 
 
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
