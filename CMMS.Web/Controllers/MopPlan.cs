@@ -1,39 +1,246 @@
 ﻿using ClassLibrary.Models;
 using ClassLibrary.ViewModels;
+using CMMS.Web.Helper;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Linq.Expressions;
+
 using System.Web.Mvc;
 
 namespace WebApplication.Controllers
 {
     public partial class MopController : BaseController
     {
+        private Dictionary<string, string> PlanActions = new Dictionary<string, string>()
+        {
+            {"Deferred","Deferred"},
+            {"Done","Done"}
+        };
         private DateTime SlidingWindow = DateTime.Now.AddMonths(Convert.ToInt32(ConfigurationManager.AppSettings["SlidingWindowForRoutine"].ToString()));
 
         public ActionResult MopPlans()
         {
+            return View("MopPlanList");
+        }
+
+        [HttpPost]
+        public JsonResult LoadPlans(int length, int start)
+        {
+            int recordCount = 0, filterrecord = 0;
+
             List<M_MOP_PLAN> model = new List<M_MOP_PLAN>();
             try
             {
                 using (var context = new WebAppDbContext())
                 {
-                    model = context.M_MOP_PLAN.ToList();
+                    //search value
+                    string searchvalue = Request.Form["search[value]"];
+                    //Find Order Column
+                    var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+                    var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+                    Expression<Func<M_MOP_PLAN, object>> sortExpression;
+                    switch (sortColumn)
+                    {
+                        case "SiteId":
+                            sortExpression = (x => x.SiteId);
+                            break;
+                        case "MOP_No":
+                            sortExpression = (x => x.MOP_No);
+                            break;
+                        case "PMS_No":
+                            sortExpression = (x => x.PMS_No);
+                            break;
+                        case "ESWBS":
+                            sortExpression = (x => x.ESWBS);
+                            break;
+                        case "DoneDate":
+                            sortExpression = (x => x.DoneDate);
+                            break;
+                        case "NextDueDate":
+                            sortExpression = (x => x.NextDueDate);
+                            break;
+                        case "DoneBy":
+                            sortExpression = (x => x.DoneBy);
+                            break;
+                        default:
+                            sortExpression = (x => x.MOP_No);
+                            break;
+                    }
+
+                    List<M_MOP_PLAN> mopPlans = null;
+                    if (sortColumnDir == "asc")
+                    {
+                        mopPlans = db.M_MOP_PLAN.Where
+                        (x => x.MOP_No.Contains(searchvalue)
+                                || x.PMS_No.Contains(searchvalue)
+                                || x.ESWBS.Contains(searchvalue)
+                                || x.DoneBy.Contains(searchvalue)
+                        )
+                        .OrderBy(sortExpression).Skip(start).Take(length)
+                        .ToList();
+                    }
+                    else
+                    {
+                        mopPlans = db.M_MOP_PLAN.Where
+                        (x => x.MOP_No.Contains(searchvalue)
+                                || x.PMS_No.Contains(searchvalue)
+                                || x.ESWBS.Contains(searchvalue)
+                                || x.DoneBy.Contains(searchvalue))
+                        .OrderByDescending(sortExpression).Skip(start).Take(length)
+                        .ToList();
+                    }
+
+                    recordCount = db.M_MOP.Count();
+
+                    if (searchvalue != "")
+                    {
+                        filterrecord = mopPlans.Count();
+                    }
+                    else
+                    {
+                        filterrecord = recordCount;
+                    }
+
+
+                    foreach (var item in mopPlans)
+                    {
+                        model.Add(item);
+                    }
+
                 }
             }
             catch
             {
 
             }
-            return View("MopPlanList", model);
+
+            var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = model };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
         public ActionResult LoadSchedule()
         {
-
             IEnumerable<DataModel> result = LoadDataForScheduler();
             return View("LoadMopPlan", result);
         }
+
+
+        [HttpPost]
+        public ActionResult MopPlanData(M_MOP_PLAN data)
+        {
+            M_MOP_PLAN model = new M_MOP_PLAN();
+            try
+            {
+                if (data.SiteId == 0 || string.IsNullOrWhiteSpace(data.PMS_No)
+                   || string.IsNullOrWhiteSpace(data.MOP_No) || string.IsNullOrWhiteSpace(data.ESWBS))
+                {
+
+                }
+                else
+                {
+                    using (var context = new WebAppDbContext())
+                    {
+                        var result = context.M_MOP_PLAN.Where(x => x.SiteId == data.SiteId && x.PMS_No == data.PMS_No
+                                                     && x.MOP_No == data.MOP_No && x.ESWBS == data.ESWBS).FirstOrDefault();
+
+                        if (result != null)
+                        {
+                            result.Actions = PlanActions;
+                            model = result;
+                        }
+                        else
+                        {
+
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return PartialView("_MopPlan", model);
+        }
+
+
+        [HttpPost]
+        public JsonResult EditPlan(M_MOP_PLAN plan)
+        {
+            var type = "success";
+            var msg = "Plan edited successfully.";
+
+            if (ModelState.IsValid)
+            {
+                using (var transaction = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        using (var context = new WebAppDbContext())
+                        {
+                            var data = context.M_MOP_PLAN.Where(x => x.SiteId == plan.SiteId && x.PMS_No == plan.PMS_No
+                                                            && x.MOP_No == plan.MOP_No && x.ESWBS == plan.ESWBS).FirstOrDefault();
+
+                            if (data.NextDueDate == null && data.DoneDate == null)
+                            {
+                                data.NextDueDate = plan.SelectedDate;
+                            }
+                            else
+                            {
+                                if (plan.Status == "Deferred")
+                                {
+                                    data.NextDueDate = plan.SelectedDate;
+                                }
+                                else if (plan.Status == "Done")
+                                {
+                                    var mop = context.M_MOP.Where(x => x.MOP_No == plan.MOP_No && x.PMS_No == plan.PMS_No && x.SiteId == plan.SiteId).FirstOrDefault();
+
+                                    data.DoneDate = plan.SelectedDate;
+                                    data.NextDueDate = DateTime.Now.AddDays(GetDaysViaPeriod(mop.Period, Convert.ToInt32(mop.Periodicity)));
+
+                                    db.M_MOP_PLAN_HISTORY.Add(new M_MOP_PLAN_HISTORY()
+                                    {
+                                        SiteId = plan.SiteId,
+                                        PMS_No = plan.PMS_No,
+                                        MOP_No = plan.MOP_No,
+                                        ESWBS = plan.ESWBS,
+                                        DoneBy = Session[SessionKeys.UserId]?.ToString(),
+                                        DoneDate = plan.SelectedDate,
+                                        NextDueDate = data.NextDueDate
+                                    });
+                                }
+                            }
+
+                            db.Entry(data).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+
+                            transaction.Commit();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        type = "failure";
+                        msg = "Internal server error.";
+                        transaction.Rollback();
+                    }
+                }
+            }
+            else
+            {
+                type = "error";
+                msg = "Please fill complete data.";
+            }
+
+            return Json(new
+            {
+                msg = msg,
+                type = type
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+
         public IEnumerable<DataModel> LoadDataForScheduler()
         {
             Queue<DataModel> queue = new Queue<DataModel>();

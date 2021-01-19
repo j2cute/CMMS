@@ -1,27 +1,140 @@
-﻿@{
+﻿@using CMMS.Web.Helper
+@{
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
 }
 
-<h2>Plans</h2>
+<link href="~/Content/morris.css" rel="stylesheet" />
+<link href="~/Content/Digtalstyle.css" rel="stylesheet" />
+<script src="~/Content/Digitalscript.js"></script>
+<script src="~/Scripts/moment.min.js"></script>
+<script src="~/Scripts/raphael.min.js"></script>
 
-@(Html.DevExtreme().DataGrid<ClassLibrary.Models.M_MOP_PLAN>()
-    .Columns(columns => {
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+<script>
+    var permissions;
+    $(document).ready(function () {
 
-        columns.AddFor(m => m.SiteId);
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
 
-        columns.AddFor(m => m.MOP_No);
+        if (permissions.filter(obj => obj.PermissionId == "MopPlanActions").length > 0) {
+           // $("#btnAction").attr('disabled', false);
+        } else {
 
-        columns.AddFor(m => m.PMS_No);
+            $("#btnAction").attr('disabled', true);
+        }
 
-        columns.AddFor(m => m.ESWBS);
+        var table;
+        table = $('#tblMopPlan').DataTable(
+        {
+            "bServerSide": true,
+            "processing": true,
+            "searchable": true,
+            "scrollX": true,
+            "paging": true,
+            "filter": true,
+            "destroy": true,
+            "order": [[1, 'asc']],
+            "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
 
-        columns.AddFor(m => m.DoneDate);
+                ajax:
+                {
+                    type: 'POST',
+                    url: '@Url.Action("LoadPlans")',
+                    dataType: 'json',
+                    dataSrc: 'data',
+                },
 
-        columns.AddFor(m => m.NextDueDate);
+                columns: [
+                    { 'data': 'SiteId', "name": "Site Id", },
+                    { 'data': 'MOP_No', "name": "MOP No.", },
+                    { 'data': 'PMS_No', "name": "PMS No.", },
+                    { 'data': 'ESWBS', "name": "ESWBS", },
+                    { 'data': 'DoneDate', "name": "Done Date", },
+                    { 'data': 'NextDueDate', "name": "Due Date", },
+                    { 'data': 'DoneBy', "name": "Done By", },
+                    {
+                        'data': function (data, type, row, meta) {
+                            return '<a   id="btnAction" class="btn-primary btn-sm select" data-toggle="modal" data-target="divMopPlanModal" href="/Mop/MopPlanData">Plan</a>';
+                        }
+                    }
+                ],
 
-        columns.AddFor(m => m.DoneBy);
-    })
-    .Editing(e => e
-        .AllowUpdating(true)
-    )
-)
+                //"rowCallback": function (row, data, dataIndex) {
+                //    if (data["Status"] == "InActive") {
+                //        $('td', row).css('background-color', 'red');
+                //    }
+                //},
+            });
+
+        $('#tblMopPlan tbody').on("click", '.select', function () {
+             var tblData = table.rows($(this).closest('tr')).data();
+
+            $.post(this.href,
+                {
+                    data: tblData[0],
+                },
+                function (data, status) {
+
+                    $('#modalMopPlanContent').html(data);
+
+                    $('#divMopPlanModal').modal({
+                        keyboard: true
+                    },
+                    );
+                    return false;
+
+                });
+
+
+        });
+    });
+
+</script>
+
+<br />
+<section class="content">
+    <div class="row">
+        <section class="col-lg connectedSortable ui-sortable">
+
+            <div class="card">
+                <div class="card-header with-border">
+                    <h3 class="card-title">MOP Plans</h3>
+                </div>
+
+                <div class="card-body">
+                    <table id="tblMopPlan" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Site Id</th>
+                                <th>MOP No.</th>
+                                <th>PMS No.</th>
+                                <th>ESWBS</th>
+                                <th>Done Date</th>
+                                <th>Due Date</th>
+                                <th>Done By</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+
+
+<div id='divMopPlanModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='modalMopPlanContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}
+
