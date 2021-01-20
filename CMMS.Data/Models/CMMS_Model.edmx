@@ -150,14 +150,14 @@
             <PropertyRef Name="ESWBS" />
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="SiteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SiteId" Type="int" Nullable="false" />
           <Property Name="MOP_No" Type="nvarchar" MaxLength="3" Nullable="false" />
           <Property Name="PMS_No" Type="nvarchar" MaxLength="11" Nullable="false" />
           <Property Name="ESWBS" Type="nvarchar" MaxLength="25" Nullable="false" />
           <Property Name="DoneDate" Type="datetime" />
           <Property Name="NextDueDate" Type="datetime" />
           <Property Name="DoneBy" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Id" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="M_PMS">
           <Key>
@@ -1130,7 +1130,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="DoneDate" Type="DateTime" Precision="3" />
           <Property Name="NextDueDate" Type="DateTime" Precision="3" />
           <Property Name="DoneBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
         </EntityType>
 
 

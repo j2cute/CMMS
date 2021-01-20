@@ -21,6 +21,6 @@ namespace ClassLibrary.Models
         public Nullable<System.DateTime> DoneDate { get; set; }
         public Nullable<System.DateTime> NextDueDate { get; set; }
         public string DoneBy { get; set; }
-        public string Id { get; set; }
+        public int Id { get; set; }
     }
 }

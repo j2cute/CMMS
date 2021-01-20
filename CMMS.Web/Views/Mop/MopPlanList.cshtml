@@ -46,7 +46,12 @@
                     dataType: 'json',
                     dataSrc: 'data',
                 },
-
+                columnDefs: [
+                        {
+                            "targets": [0],
+                            "visible": false,
+                        },
+                    ],
                 columns: [
                     { 'data': 'SiteId', "name": "Site Id", },
                     { 'data': 'MOP_No', "name": "MOP No.", },

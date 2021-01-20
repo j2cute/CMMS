@@ -14,7 +14,7 @@
                     url: "@Url.Action("EditPlan")",
                     dataType: 'json',
                     data: {
-                        SiteId: $('#SiteId').val(),
+                        SiteId: $('#hdnSiteId').val(),
                         MOP_No: $('#MOP_No').val(),
                         PMS_No: $('#PMS_No').val(),
                         ESWBS: $('#ESWBS').val(),
@@ -98,7 +98,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.SiteId)
+        @Html.HiddenFor(model => model.SiteId,new { @id="hdnSiteId" })
  
 
         <div class="card card-primary">
@@ -106,12 +106,12 @@
             <div class="card-body" id="InputFields">
                 <div class="form-group row">
 
-                    <div class="col-md-6">
+                    @*<div class="col-md-6">
                         <label class="col-md col-form-label">Site Id</label>
                         <div class="col-md-12">
                             @Html.EditorFor(model => model.SiteId, new { htmlAttributes = new { @class = "form-control", @id = "siteId", @disabled = true, @readonly = true } })
                         </div>
-                    </div>
+                    </div>*@
 
                     <div class="col-md-6">
                         <label class="col-md col-form-label">PMS No.</label>
@@ -120,9 +120,6 @@
                         </div>
 
                     </div>
-                </div>
-
-                <div class="form-group row">
 
                     <div class="col-md-6">
                         <label class="col-md col-form-label">MOP No.</label>
@@ -130,6 +127,11 @@
                             @Html.EditorFor(model => model.MOP_No, new { htmlAttributes = new { @class = "form-control", @disabled = true, @readonly = true } })
                         </div>
                     </div>
+
+
+                </div>
+
+                <div class="form-group row">
 
                     <div class="col-md-6">
                         <label class="col-md col-form-label">ESWBS</label>
