@@ -111,7 +111,7 @@ namespace WebApplication.Controllers
 
                 }
             }
-            catch
+            catch(Exception ex)
             {
 
             }
@@ -119,12 +119,6 @@ namespace WebApplication.Controllers
             var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = model };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult LoadSchedule()
-        {
-            IEnumerable<DataModel> result = LoadDataForScheduler();
-            return View("LoadMopPlan", result);
-        }
-
 
         [HttpPost]
         public ActionResult MopPlanData(M_MOP_PLAN data)
@@ -165,14 +159,13 @@ namespace WebApplication.Controllers
             return PartialView("_MopPlan", model);
         }
 
-
         [HttpPost]
         public JsonResult EditPlan(M_MOP_PLAN plan)
         {
             var type = "success";
             var msg = "Plan edited successfully.";
 
-            if (ModelState.IsValid)
+            if (plan.SelectedDate != null)
             {
                 using (var transaction = db.Database.BeginTransaction())
                 {
@@ -189,27 +182,40 @@ namespace WebApplication.Controllers
                             }
                             else
                             {
-                                if (plan.Status == "Deferred")
+                                if (!String.IsNullOrWhiteSpace(plan.Status))
                                 {
-                                    data.NextDueDate = plan.SelectedDate;
-                                }
-                                else if (plan.Status == "Done")
-                                {
-                                    var mop = context.M_MOP.Where(x => x.MOP_No == plan.MOP_No && x.PMS_No == plan.PMS_No && x.SiteId == plan.SiteId).FirstOrDefault();
-
-                                    data.DoneDate = plan.SelectedDate;
-                                    data.NextDueDate = DateTime.Now.AddDays(GetDaysViaPeriod(mop.Period, Convert.ToInt32(mop.Periodicity)));
-
-                                    db.M_MOP_PLAN_HISTORY.Add(new M_MOP_PLAN_HISTORY()
+                                    if (plan.Status == "Deferred")
                                     {
-                                        SiteId = plan.SiteId,
-                                        PMS_No = plan.PMS_No,
-                                        MOP_No = plan.MOP_No,
-                                        ESWBS = plan.ESWBS,
-                                        DoneBy = Session[SessionKeys.UserId]?.ToString(),
-                                        DoneDate = plan.SelectedDate,
-                                        NextDueDate = data.NextDueDate
-                                    });
+                                        data.NextDueDate = plan.SelectedDate;
+                                    }
+                                    else if (plan.Status == "Done")
+                                    {
+                                        var mop = context.M_MOP.Where(x => x.MOP_No == plan.MOP_No && x.PMS_No == plan.PMS_No && x.SiteId == plan.SiteId).FirstOrDefault();
+
+                                        data.DoneDate = plan.SelectedDate;
+                                        data.NextDueDate = DateTime.Now.AddDays(GetDaysViaPeriod(mop.Period, Convert.ToInt32(mop.Periodicity)));
+
+                                        db.M_MOP_PLAN_HISTORY.Add(new M_MOP_PLAN_HISTORY()
+                                        {
+                                            SiteId = plan.SiteId,
+                                            PMS_No = plan.PMS_No,
+                                            MOP_No = plan.MOP_No,
+                                            ESWBS = plan.ESWBS,
+                                            DoneBy = Session[SessionKeys.UserId]?.ToString(),
+                                            DoneDate = plan.SelectedDate,
+                                            NextDueDate = data.NextDueDate
+                                        });
+                                    }
+                                    else
+                                    {
+                                        type = "error";
+                                        msg = "Invalid data entered.";
+                                    }
+                                }
+                                else
+                                {
+                                    type = "error";
+                                    msg = "Please fill complete data.";
                                 }
                             }
 
@@ -217,6 +223,7 @@ namespace WebApplication.Controllers
                             db.SaveChanges();
 
                             transaction.Commit();
+
                         }
                     }
                     catch (Exception ex)
@@ -240,7 +247,11 @@ namespace WebApplication.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-
+        public ActionResult LoadSchedule()
+        {
+            IEnumerable<DataModel> result = LoadDataForScheduler();
+            return View("LoadMopPlan", result);
+        }
         public IEnumerable<DataModel> LoadDataForScheduler()
         {
             Queue<DataModel> queue = new Queue<DataModel>();

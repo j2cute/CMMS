@@ -1394,6 +1394,7 @@
     <Content Include="Scripts\cldr.min.js" />
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.select.min.js" />
+    <Content Include="Scripts\datetime-moment.js" />
     <Content Include="Scripts\dx-diagram.js" />
     <Content Include="Scripts\dx-diagram.min.js" />
     <Content Include="Scripts\dx-gantt.js" />

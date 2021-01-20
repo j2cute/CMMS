@@ -27,6 +27,9 @@
                         {
                             $("#divMopPlanModal").modal('hide');
                             swal({ title: "Success", text: data.msg, type: "success", });
+
+                     
+                            $('#tblMopPlan').DataTable().ajax.reload();
                         }
                         else if (data.type == "error" || data.type == "failure")
                         {
@@ -43,9 +46,23 @@
     {
         var isValid = true;
         var msg;
-        if ($('#SelectedDate').val().length <= 0) {
+
+        if ($('#SelectedDate').val().length <= 0)
+        {
+
             msg = "Please select date";
             isValid = false;
+        }
+        else if($("#Actions").length > 0)
+        {
+            if ($("#Actions").val() == "") {
+
+                addRemoveClass("#Actions", false);
+                msg = "Please select status";
+                isValid = false;
+            } else {
+                addRemoveClass("#Actions", true);
+            }
         }
 
         if (!isValid) {
@@ -53,6 +70,15 @@
         }
 
         return isValid;
+    }
+
+    function addRemoveClass(controlId,isSuccess )
+    {
+        if (isSuccess) {
+            $(controlId).removeClass('text-danger');
+        } else {
+            $(controlId).addClass('text-danger');
+        }
     }
 </script>
 

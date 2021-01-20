@@ -5,20 +5,22 @@
 
 <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
-<script src="~/Content/Digitalscript.js"></script>
-<script src="~/Scripts/moment.min.js"></script>
-<script src="~/Scripts/raphael.min.js"></script>
-
 <link href="~/Content/sweetalert.css" rel="stylesheet" />
+
+<script src="~/Content/Digitalscript.js"></script>
+
+<script src="~/Scripts/raphael.min.js"></script>
 <script src="~/Scripts/sweetalert.min.js"></script>
+
 <script>
     var permissions;
-    $(document).ready(function () {
+    var dtFormat = 'DD/MM/YYYY';
 
+    $(document).ready(function () {
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
 
         if (permissions.filter(obj => obj.PermissionId == "MopPlanActions").length > 0) {
-           // $("#btnAction").attr('disabled', false);
+            $("#btnAction").attr('disabled', false);
         } else {
 
             $("#btnAction").attr('disabled', true);
@@ -50,21 +52,28 @@
                     { 'data': 'MOP_No', "name": "MOP No.", },
                     { 'data': 'PMS_No', "name": "PMS No.", },
                     { 'data': 'ESWBS', "name": "ESWBS", },
-                    { 'data': 'DoneDate', "name": "Done Date", },
-                    { 'data': 'NextDueDate', "name": "Due Date", },
+                    {
+                        'data': 'DoneDate',
+                        "name": "Done Date",
+                        "render": function (value) {
+                            if (value === null) return "N/A";
+                            return moment(value).format(dtFormat);
+                        }
+                    },
+                    {
+                        'data': 'NextDueDate', "name": "Due Date",
+                        "render": function (value) {
+                            if (value === null) return "N/A";
+                            return moment(value).format(dtFormat);
+                        }
+                    },
                     { 'data': 'DoneBy', "name": "Done By", },
                     {
                         'data': function (data, type, row, meta) {
                             return '<a   id="btnAction" class="btn-primary btn-sm select" data-toggle="modal" data-target="divMopPlanModal" href="/Mop/MopPlanData">Plan</a>';
                         }
                     }
-                ],
-
-                //"rowCallback": function (row, data, dataIndex) {
-                //    if (data["Status"] == "InActive") {
-                //        $('td', row).css('background-color', 'red');
-                //    }
-                //},
+                ]
             });
 
         $('#tblMopPlan tbody').on("click", '.select', function () {
