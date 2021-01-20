@@ -1,5 +1,7 @@
-﻿@model IEnumerable<WebApplication.Controllers.DataModel>
+﻿@using System.Configuration;
+@model IEnumerable<WebApplication.Controllers.DataModel>
 @{
+    int slidingWindow = Convert.ToInt32(ConfigurationManager.AppSettings["SlidingWindowForRoutine"].ToString());
     ViewBag.Title = "LoadMopPlan";
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
 }
@@ -10,14 +12,19 @@
     .TimeZone("America/Los_Angeles")
     .TextExpr("Text")
     .StartDateExpr("StartDate")
+    .ShowAllDayPanel(false)
     .EndDateExpr("EndDate")
-    .AllDayExpr("AllDay")
-    .Views(new[] {
-        SchedulerViewType.Week,
-        SchedulerViewType.Month
+    .Views(views=> {
+        views.Add()
+        .Name("2 Months")
+        .Type(SchedulerViewType.Month)
+        .IntervalCount(2);
+        views.Add().Name("Week").Type(SchedulerViewType.Week);
     })
-    .CurrentView(SchedulerViewType.Week)
-    .CurrentDate(new DateTime(2021, 5, 25))
-    .StartDayHour(9)
-    .Height(600)
+
+    .Min(DateTime.Now.AddMonths(-slidingWindow))
+    .Max(DateTime.Now.AddMonths(slidingWindow))
+    .CurrentView(SchedulerViewType.Month)
+    .CurrentDate(DateTime.Now)
+    .StartDayHour(7.40)
 )

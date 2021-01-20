@@ -143,6 +143,7 @@
     </Compile>
     <Compile Include="Models\DashboardViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\MopPlanModel.cs" />
     <Compile Include="Models\M_MOP.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>

@@ -18,10 +18,11 @@ namespace CMMS_Web {
             // Uncomment to use the Diagram control
             //styleBundle.Include("~/Content/dx-diagram.css");
 
+        
             styleBundle.Include("~/Content/dx.common.css");
 
             // Predefined themes: https://js.devexpress.com/DevExtreme/Guide/Themes_and_Styles/Predefined_Themes/
-            styleBundle.Include("~/Content/dx.light.css");
+            styleBundle.Include("~/Content/dx.material.blue.light.css");
 
             // Uncomment to use the Gantt control
             //scriptBundle.Include("~/Scripts/dx-gantt.js");

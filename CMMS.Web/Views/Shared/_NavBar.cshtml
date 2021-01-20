@@ -63,9 +63,7 @@
 </nav>
 
 <script>
-
     function SwitchRoles(selectorOfCheckBox) {
-
         $(selectorOfCheckBox).each(function () {
             currentRoleId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRoleId));
             if (currentRoleId === $(this).prop('value')) {

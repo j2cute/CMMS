@@ -1394,6 +1394,7 @@
     <Content Include="Scripts\cldr.min.js" />
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.select.min.js" />
+    <Content Include="Scripts\datetime-moment.js" />
     <Content Include="Scripts\dx-diagram.js" />
     <Content Include="Scripts\dx-diagram.min.js" />
     <Content Include="Scripts\dx-gantt.js" />
@@ -1719,7 +1720,8 @@
     <Content Include="Views\Shared\_SideBar.cshtml" />
     <Content Include="Views\Shared\_NavBar.cshtml" />
     <Content Include="Views\Mop\LoadMopPlan.cshtml" />
-    <Content Include="Views\Mop\MopPlanFilter.cshtml" />
+    <Content Include="Views\Mop\MopPlanList.cshtml" />
+    <Content Include="Views\Mop\_MopPlan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Images\Parts\" />
