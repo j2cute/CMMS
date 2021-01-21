@@ -1,0 +1,13 @@
+﻿@using System.Web.UI.WebControls;
+
+
+<div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
+    @Html.DevExpress().Dashboard(settings =>
+{
+    settings.Name = "Dashboard";
+    settings.Width = Unit.Percentage(100);
+    settings.Height = Unit.Percentage(100);
+    settings.EnableSqlDataSource = true;
+
+}).GetHtml()
+</div>

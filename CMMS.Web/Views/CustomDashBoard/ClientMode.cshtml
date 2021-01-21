@@ -1,0 +1,50 @@
+﻿@using System.Web.UI.WebControls;
+
+<div id="#Button1 " style="position: absolute; left: 80px; right: 0; top:0; bottom:40px;">
+
+</div>
+
+<div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
+
+    @Html.DevExpress().Button(settings =>
+{
+    settings.Name = "SwitchWorkingModesButton";
+    settings.Text = "Switch to Viewer";
+    settings.UseSubmitBehavior = true;
+    settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
+}).GetHtml()
+
+    @Html.DevExpress().Dashboard(settings =>
+{
+    settings.Name = "Dashboard";
+    settings.Width = Unit.Percentage(100);
+    settings.Height = Unit.Percentage(100);
+    settings.EnableSqlDataSource = true;
+    settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
+    settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Viewer;
+    settings.ClientSideEvents.CustomizeMenuItems= "function(s, e) { customizeMenu(s, e); }";
+}).GetHtml()
+</div>
+
+<script>
+    function customizeMenu(s, e)
+    {
+        s.GetDashboardControl().unregisterExtension("create-dashboard");
+        s.GetDashboardControl().unregisterExtension("available-data-sources");
+        s.GetDashboardControl().unregisterExtension("data-source-wizard");
+        s.GetDashboardControl().unregisterExtension("open-dashboard");
+    }
+
+    function switchWorkingModes(s, e) {
+        var workingMode = Dashboard.GetWorkingMode();
+        if (workingMode == 'designer') {
+            Dashboard.SwitchToViewer();
+            SwitchWorkingModesButton.SetText('Switch to Designer');
+        }
+        else {
+            Dashboard.SwitchToDesigner();
+            SwitchWorkingModesButton.SetText('Switch to Viewer');
+        }
+    }
+</script>
+
