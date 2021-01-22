@@ -1,6 +1,15 @@
 ﻿@using System.Web.UI.WebControls;
 
 <div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
+@Html.DevExpress().Button(settings =>
+{
+   settings.Name = "SwitchWorkingModesButton";
+   settings.Text = "Switch to Viewer";
+   settings.UseSubmitBehavior = true;
+   settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
+}).GetHtml()
+
+
     @Html.DevExpress().Dashboard(settings =>
 {
     settings.Name = "Dashboard";
@@ -9,6 +18,19 @@
     settings.EnableSqlDataSource = true;
     settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Designer;
     settings.MobileLayoutEnabled = DevExpress.DashboardWeb.MobileLayoutMode.Auto;
-    settings.DataRequestOptions=new DevExpress.DashboardWeb.DataRequestOptions() { ItemDataRequestMode=}
 }).GetHtml()
 </div>
+
+<script>
+    function switchWorkingModes(s, e) {
+        var workingMode = Dashboard.GetWorkingMode();
+        if (workingMode == 'designer') {
+            Dashboard.SwitchToViewer();
+            SwitchWorkingModesButton.SetText('Switch to Designer');
+        }
+        else {
+            Dashboard.SwitchToDesigner();
+            SwitchWorkingModesButton.SetText('Switch to Viewer');
+        }
+    }
+</script>

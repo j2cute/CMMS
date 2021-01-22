@@ -18,17 +18,16 @@ namespace WebApplication
             routes.MapDashboardRoute();
 
             // Uncomment this line to save dashboards to the App_Data folder.
- 
+
             var dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
 
-            MyDashBoardStorage newDashboardStorage = new MyDashBoardStorage(dashboardPath);
+            CustomDashboardStorage newDashboardStorage = new CustomDashboardStorage(dashboardPath);
             DashboardConfigurator.Default.SetDashboardStorage(newDashboardStorage);
             DashboardConfigurator.Default.SetConnectionStringsProvider(new DevExpress.DataAccess.Web.ConfigFileConnectionStringsProvider());
         }
     }
 
-
-    public class MyDashBoardStorage : IEditableDashboardStorage
+    public class CustomDashboardStorage : IEditableDashboardStorage
     {
         public string WorkingDirectory { get; set; }
         protected virtual DirectoryInfo Directory
@@ -40,7 +39,7 @@ namespace WebApplication
             }
         }
 
-        public MyDashBoardStorage(string workingDirectory)
+        public CustomDashboardStorage(string workingDirectory)
         {
             WorkingDirectory = workingDirectory;
         }
@@ -73,7 +72,8 @@ namespace WebApplication
         public IEnumerable<DashboardInfo> GetAvailableDashboardsInfo()
         {
             IEnumerable<string> dashboardsID = Directory.GetFiles().Select(file => Path.GetFileNameWithoutExtension(file.Name)).ToList();
-            return dashboardsID.Select(id => {
+            return dashboardsID.Select(id =>
+            {
                 string name = null;
                 using (Dashboard instance = CreateIntance(LoadDashboard(id)))
                 {
@@ -113,6 +113,14 @@ namespace WebApplication
                 }
             }
             return dashboardName;
+        }
+
+        public void DeleteDashboard(string dashboardID)
+        {
+            if (File.Exists(dashboardID))
+            {
+                File.Delete(dashboardID);
+            }
         }
     }
 }

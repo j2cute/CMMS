@@ -1426,6 +1426,8 @@
     <Content Include="Scripts\aspnet\dx.aspnet.mvc.js" />
     <Content Include="Scripts\cldr.js" />
     <Content Include="Scripts\cldr.min.js" />
+    <Content Include="Scripts\CustomDashboard\DeleteExtension.js" />
+    <Content Include="Scripts\CustomDashboard\SaveAsExtension.js" />
     <Content Include="Scripts\dataTables.fixedColumns.min.js" />
     <Content Include="Scripts\dataTables.select.min.js" />
     <Content Include="Scripts\datetime-moment.js" />
