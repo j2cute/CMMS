@@ -18,6 +18,7 @@ namespace ClassLibrary.Models
         public WebAppDbContext()
             : base("name=WebAppDbContext")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

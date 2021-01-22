@@ -1,0 +1,43 @@
+﻿@using System.Web.UI.WebControls;
+
+
+<script src="~/Scripts/CustomDashboard/DeleteExtension.js"></script>
+<script src="~/Scripts/CustomDashboard/SaveAsExtension.js"></script>
+
+
+<script type="text/html" id="dx-save-as-form">
+    <div>Dashboard Name:</div>
+    <div style="margin: 10px 0" data-bind="dxTextBox: { value: newName }"></div>
+    <div data-bind="dxButton: { text: 'Save', onClick: saveAs }"></div>
+</script>
+
+<div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
+
+    @Html.DevExpress().Dashboard(settings =>
+    {
+        settings.Name = "Dashboard";
+        settings.Width = Unit.Percentage(100);
+        settings.Height = Unit.Percentage(100);
+        settings.EnableSqlDataSource = true;
+        settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
+        settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Designer;
+
+    }).GetHtml()
+</div>
+
+<script>
+    function customizeMenu(s, e) {
+        var control = s.GetDashboardControl();
+
+        control.registerExtension(new SaveAsDashboardExtension(control));
+        control.registerExtension(new DeleteDashboardExtension(s));
+
+        control.unregisterExtension("create-dashboard");
+        control.unregisterExtension("available-data-sources");
+        control.unregisterExtension("data-source-wizard");
+        control.unregisterExtension("open-dashboard");
+    }
+
+
+</script>
+
