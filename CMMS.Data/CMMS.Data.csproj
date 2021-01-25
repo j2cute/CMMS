@@ -182,6 +182,9 @@
     <Compile Include="Models\tbl_MCAT.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_Mop_Images.cs">
+      <DependentUpon>CMMS_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_Parts.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
@@ -195,6 +198,9 @@
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tbl_Unit.cs">
+      <DependentUpon>CMMS_Model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tbl_UnitType.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\UserRolesDTO.cs" />

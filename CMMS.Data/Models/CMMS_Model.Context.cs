@@ -21,8 +21,8 @@ namespace ClassLibrary.Models
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            throw new UnintentionalCodeFirstException();
+        {         
+            throw new UnintentionalCodeFirstException();    
         }
     
         public virtual DbSet<C__MigrationHistory> C__MigrationHistory { get; set; }
@@ -48,6 +48,8 @@ namespace ClassLibrary.Models
         public virtual DbSet<tbl_ChildParts> tbl_ChildParts { get; set; }
         public virtual DbSet<V_MMS5> V_MMS5 { get; set; }
         public virtual DbSet<V_MSD> V_MSD { get; set; }
+        public virtual DbSet<tbl_UnitType> tbl_UnitType { get; set; }
+        public virtual DbSet<tbl_Mop_Images> tbl_Mop_Images { get; set; }
         public virtual DbSet<M_MOP_PLAN> M_MOP_PLAN { get; set; }
         public virtual DbSet<M_MOP_PLAN_HISTORY> M_MOP_PLAN_HISTORY { get; set; }
     }

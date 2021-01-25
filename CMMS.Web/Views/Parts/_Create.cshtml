@@ -64,7 +64,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>CageCode</label>
+                                    <label>CageCode<span style="color:red">*</span></label>
                                     @Html.DropDownListFor(model => model.tbl_Parts.CageCode, new SelectList(Model._tbl_Cage, "CageCode", "CageName"), "Select", new { @class = "form-control",@id="CageCode"})
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.CageCode, "", new { @class = "text-danger" })
                                 </div>
@@ -83,7 +83,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Part Name</label>
+                                    <label>Part Name<span style="color:red">*</span></label>
 
                                     @Html.EditorFor(model => model.tbl_Parts.PART_NAME, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.PART_NAME, "", new { @class = "text-danger" })
@@ -105,7 +105,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Part Type</label>
+                                    <label>Part Type<span style="color:red">*</span></label>
 
                                     @Html.DropDownListFor(model => model.tbl_Parts.PartTypeID, new SelectList(Model._tbl_PartType, "PartTypeID", "PartName"), "Select", new { @class = "form-control"})
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.PartTypeID, "", new { @class = "text-danger" })

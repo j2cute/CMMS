@@ -23,6 +23,8 @@ namespace ClassLibrary.Models
         public int RTI_Count { get; set; }
         public int DP_Count { get; set; }
         public string datetime { get; set; }
+        public tbl_Unit tbl_Unit { get; set; }
+        public IEnumerable<tbl_Unit> _tbl_Unit { get; set; }
     }
 
 
@@ -36,6 +38,11 @@ namespace ClassLibrary.Models
         public string DisplayName { get; set; }
 
 
+    }
+    public class UnitSelectionViewModel
+    {
+        public tbl_Unit tbl_Unit { get; set; }
+        public IEnumerable<tbl_Unit> _tbl_Unit { get; set; }
     }
 }
 

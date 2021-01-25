@@ -11,6 +11,7 @@ namespace CMMS.Web.Helper
     {
         public static string SessionHelperInstance = "SessionHelperInstance";
         public static string UserId = "UserId";
+        public static string UnitId = "UnitId";
     }
 
     public class SessionHelper
@@ -20,9 +21,10 @@ namespace CMMS.Web.Helper
 
         }
 
-        public SessionHelper(string userId,string roleId, List<PermissionViewModel> permissions)
+        public SessionHelper(string siteId, string userId,string roleId, List<PermissionViewModel> permissions)
         {
             UserId = userId;
+            SiteId = siteId;
             CurrentRoleId = roleId;
             CurrentRolePermissions = permissions;
 
@@ -42,6 +44,7 @@ namespace CMMS.Web.Helper
 
         public List<RolesVM> UserRoles { get; set; }
         private string UserId { get; set; }
+        public string SiteId { get; set; }
 
         public SessionHelper UpdateFields(string roleId, List<PermissionViewModel> permissionViewModels)
         {

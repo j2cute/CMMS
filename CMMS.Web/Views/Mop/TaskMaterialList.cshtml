@@ -30,6 +30,13 @@
     a {
         cursor: pointer;
     }
+    td {
+        font-size: 12px !important;
+    }
+
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 4px !important;
+    }
 </style>
 
 
@@ -155,7 +162,7 @@
              });
              console.log(selectedData);
              var partNo = selectedData[1];
-             alert(partNo);
+ 
              $('#editNewPartNo').val(partNo);
          });
     });
@@ -200,7 +207,9 @@
             $("#addMOPItem").modal('hide'); $("#editMOPItem").modal('hide'); $("#delMOPItem").modal('hide');
 
         if (response.model != null) {
-
+            swal({
+                title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
+            });
             $("#gridMopItems").DataTable().destroy();
             mopItemTable = $("#gridMopItems").DataTable(
                 {
@@ -226,7 +235,7 @@
 
                                 var actions = '';
 
-                                if (permissions.filter(obj => obj.PermissionId == "TMLEddit").length > 0) {
+                                if (permissions.filter(obj => obj.PermissionId == "TMLEdit").length > 0) {
                                     actions = '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn btn-primary btn-xs select">' + 'Edit' + '</a>';
                                 }
                                 else {
@@ -251,9 +260,7 @@
                         },
                     ]
                 });
-            swal({
-                title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
-            });
+          
             //if (!$.trim(response)) {
             //    swal({
             //        title: "Oops...", text: "No Data Found!", type: "error",
@@ -373,7 +380,6 @@
     function DeleteMOPItemData() {
 
         var mopItemId = $('#mopItemId').val();
-        alert(mopItemId);
         $.ajax({
             cache: 'false',
             type: "Post",
@@ -478,7 +484,7 @@
                     </div>
 
                     <div class="card-body">
-                        <table id="gridMopItems" class="display" cellspacing="0" width="100%">
+                        <table id="gridMopItems" class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>MOP Item</th>
@@ -573,7 +579,7 @@
                             </div>
 
                             <br />
-                            <table id="AddMOPItemTable" class="display" style="width:100%">
+                            <table id="AddMOPItemTable" class="table table-bordered table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -689,7 +695,7 @@
                                 </div>
                             </div>
                             <br />
-                            <table id="EditMOPItemTable" class="display" style="width:100%">
+                            <table id="EditMOPItemTable" class="table table-bordered table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th></th>

@@ -850,7 +850,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>ESWBS No.</label>
+                                                <label>ESWBS No.<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.ESWBS, new { htmlAttributes = new { @class = "form-control", @required = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.PESWBS, "", new { @class = "text-danger" })
@@ -859,7 +859,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>ESWBS Name</label>
+                                                <label>ESWBS Name<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.Nomanclature, new { htmlAttributes = new { @class = "form-control", @required = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.Nomanclature, "", new { @class = "text-danger" })
@@ -870,7 +870,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Qty</label>
+                                                <label>Qty<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.Qty, new { htmlAttributes = new { @class = "form-control", @required = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.Qty, "", new { @class = "text-danger" })
@@ -900,16 +900,16 @@
                                     </div>
 
                                     <br />
-                                    <table id="example1" class="display" style="width:100%">
+                                    <table id="example1" class="table table-bordered table-striped" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <td>PartId</td>
+                                                <th>PartId</th>
                                                 <th>Part No</th>
                                                 <th>Part Name</th>
                                                 <th>Part Type</th>
                                                 <th>Cage Code</th>
-                                                <td>CageId</td>
+                                                <th>CageId</th>
 
                                             </tr>
                                         </thead>
@@ -927,9 +927,6 @@
                                                     <td> @item.tbl_PartType.PartName</td>
                                                     <td> @item.CageCode</td>
                                                     <td>@item.CageId</td>
-
-
-
                                                 </tr>
                                             }
 
@@ -1009,7 +1006,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>ESWBS No.</label>
+                                            <label>ESWBS No.<span style="color:red">*</span></label>
 
                                             @Html.EditorFor(model => model.C_SiteConfigModel.ESWBS, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.C_SiteConfigModel.PESWBS, "", new { @class = "text-danger" })
@@ -1018,7 +1015,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>ESWBS Name</label>
+                                            <label>ESWBS Name<span style="color:red">*</span></label>
 
                                             @Html.EditorFor(model => model.C_SiteConfigModel.Nomanclature, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Nomanclature, "", new { @class = "text-danger" })
@@ -1029,7 +1026,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Qty</label>
+                                            <label>Qty<span style="color:red">*</span></label>
 
                                             @Html.EditorFor(model => model.C_SiteConfigModel.Qty, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Qty, "", new { @class = "text-danger" })
@@ -1060,7 +1057,7 @@
                                 </div>
 
                                 <br />
-                                <table id="editChildTable" class="display" style="width:100%">
+                                <table id="editChildTable" class="table table-bordered table-striped" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th></th>

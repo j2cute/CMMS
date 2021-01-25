@@ -1722,6 +1722,7 @@
     <Content Include="Views\Mop\LoadMopPlan.cshtml" />
     <Content Include="Views\Mop\MopPlanList.cshtml" />
     <Content Include="Views\Mop\_MopPlan.cshtml" />
+    <Content Include="Views\Admin\_UnitSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Images\Parts\" />

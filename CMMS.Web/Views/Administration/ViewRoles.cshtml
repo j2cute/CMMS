@@ -3,6 +3,15 @@
     ViewBag.Title = "ViewARoles";
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
 }
+    <style>
+        td {
+            font-size: 12px !important;
+        }
+
+        table.dataTable tbody th, table.dataTable tbody td {
+            padding: 4px 4px !important;
+        }
+    </style>
 <section class="content-header">
     <h1>
         Role Management
@@ -19,7 +28,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="card-body">
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="example1" class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>Actions</th>
@@ -50,7 +59,7 @@
                                             </div>
                                         </td>
                                         <td> @item.Name</td>
-                                
+
 
                                     </tr>
                                 }

@@ -1,12 +1,21 @@
 ﻿@model ILS.UserManagement.ViewModels.UserRoleViewModel
 @using CMMS.Web.Helper
 @{
-    ViewBag.Title = "ViewARoles";
+    ViewBag.Title = "   User Management";
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
 
 }
 @*<link href="~/Content/select.dataTables.min.css" rel="stylesheet" />
 <script src="~/Scripts/dataTables.select.min.js"></script>*@
+<style>
+    td {
+        font-size: 12px !important;
+    }
+
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 4px !important;
+    }
+</style>
 <script>
     var permissions;
         $(document).ready(function () {
@@ -51,7 +60,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <table id="example1" class="display">
+                        <table id="example1" class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
 

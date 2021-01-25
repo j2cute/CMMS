@@ -82,7 +82,7 @@ namespace WebApplication.Controllers
                     Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(SiteId, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { model = vm.M_MOPModel_List ,pmsNo = vm.pmsNo}, JsonRequestBehavior.AllowGet);
+                return Json(new { msg = "", model = vm.M_MOPModel_List ,pmsNo = vm.pmsNo}, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

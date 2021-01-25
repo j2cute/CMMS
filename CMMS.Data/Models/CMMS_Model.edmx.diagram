@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c5817cc4e88f40779fbf3371995bc3fc" Name="Diagram1" ZoomLevel="68">
+      <Diagram DiagramId="c5817cc4e88f40779fbf3371995bc3fc" Name="Diagram1" ZoomLevel="48">
         <EntityTypeShape EntityType="db_CMMSModel.C__MigrationHistory" Width="1.5" PointX="5.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="db_CMMSModel.AspNetRole" Width="1.5" PointX="0.75" PointY="2.5" IsExpanded="true" />
         <EntityTypeShape EntityType="db_CMMSModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
@@ -36,6 +36,8 @@
         <AssociationConnector Association="db_CMMSModel.FK_tbl_ChildParts_tbl_Parts" />
         <EntityTypeShape EntityType="db_CMMSModel.V_MMS5" Width="1.5" PointX="6.125" PointY="16.125" />
         <EntityTypeShape EntityType="db_CMMSModel.V_MSD" Width="1.5" PointX="0.75" PointY="13.75" />
+        <EntityTypeShape EntityType="db_CMMSModel.tbl_UnitType" Width="1.5" PointX="10.375" PointY="11.75" />
+        <EntityTypeShape EntityType="db_CMMSModel.tbl_Mop_Images" Width="1.5" PointX="16.375" PointY="4.75" />
         <EntityTypeShape EntityType="db_CMMSModel.M_MOP_PLAN" Width="1.5" PointX="14.375" PointY="0.75" />
         <EntityTypeShape EntityType="db_CMMSModel.M_MOP_PLAN_HISTORY" Width="1.5" PointX="13.375" PointY="14.75" />
         </Diagram>

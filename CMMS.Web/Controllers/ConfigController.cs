@@ -304,8 +304,6 @@ namespace WebApplication.Controllers
                             CageId = model.CageId,
                             PartId = model.PartId,
                             Title = model.ESWBS + " - " + model.Nomanclature,
-
-
                         };
                         db.C_Site_Config.Add(obj);
                         db.SaveChanges();
@@ -647,7 +645,6 @@ namespace WebApplication.Controllers
                 return RedirectToAction("Inbox");
             }
         }
-
 
         [HttpPost]
         public ActionResult RegisterRequest(int? reqId)
