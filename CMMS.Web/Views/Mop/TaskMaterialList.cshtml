@@ -50,14 +50,19 @@
     var editTable;
     var mopItemTable;
     var permissions;
+    var siteId;
     $(document).ready(function () {
+
       permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+         siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+        $("#M_MOP_ITEMS_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
+
         if (permissions.filter(obj => obj.PermissionId == "TMLAdd").length > 0) {
             $("#addNewMOPItem").attr('disabled', false);
         } else {
             $("#addNewMOPItem").attr('disabled', true);
         }
-      
+
 
         $("#gridMopItemsDiv").hide();
         $("#Proceed").click(function () {
@@ -162,7 +167,7 @@
              });
              console.log(selectedData);
              var partNo = selectedData[1];
- 
+
              $('#editNewPartNo').val(partNo);
          });
     });
@@ -253,14 +258,14 @@
                                 return actions;
 
 
-                                //+ '|' + 
+                                //+ '|' +
 
 
-                            }              
+                            }
                         },
                     ]
                 });
-          
+
             //if (!$.trim(response)) {
             //    swal({
             //        title: "Oops...", text: "No Data Found!", type: "error",
@@ -301,13 +306,9 @@
             $('#partNo').val(partNo);
             $('#M_MOP_ItemsModel_SR_Qty').val(srQty);
 
-
-
-
           //  GetSelectedData();
         });
     };
-
       function AddMOPItemData() {
         $.ajax({
             cache: 'false',
@@ -340,7 +341,6 @@
             }
         });
     };
-
       function EditMOPItemData() {
         $.ajax({
             cache: 'false',
@@ -375,9 +375,7 @@
             }
         });
     };
-
-
-    function DeleteMOPItemData() {
+      function DeleteMOPItemData() {
 
         var mopItemId = $('#mopItemId').val();
         $.ajax({
@@ -420,7 +418,7 @@
 
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group row">
+                                <div class="form-group row" style="margin-bottom: 0.1rem">
                    
                                     <div class="col-md-3">
                                         @Html.DropDownListFor(model => model.M_MOP_ITEMS.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select Site", new { @class = "form-control", @required = "true" })

@@ -44,18 +44,21 @@
 
 <script>
     var permissions;
+    var siteId;
     $(document).ready(function () {
     permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-
+        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+        $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
+        GetSiteConfig();
         var mopTable;
         $("#addNewMOP").attr('disabled', true);
-        $("#ConfigEquipment").hide();
-        $("#Proceed").click(function () {
+        //$("#ConfigEquipment").hide();
+       // $("#Proceed").click(function () {
 
-            resetFormInputs();
-            $("#ConfigEquipment").show();
+         //resetFormInputs();
+         //   $("#ConfigEquipment").show();
             $("#M_MOP_SiteId").val($('#C_Site_Config_SiteId').val());
-        });
+      //  });
 
         function resetFormInputs(context) {
             var siteId = $('#C_Site_Config_SiteId').val();
@@ -163,7 +166,7 @@
                         }
 
                         return actions;
-         
+
                     }
 
                 },
@@ -177,12 +180,12 @@
                     title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
                 });
             }
-               
-            if (permissions.filter(obj => obj.PermissionId == "MOPAdd").length > 0) 
+
+            if (permissions.filter(obj => obj.PermissionId == "MOPAdd").length > 0)
             {
                 $("#addNewMOP").attr('disabled', false);
             }
-          
+
                 $("#AddPMS_No").val(response.pmsNo);
                 var pmsVal = "PMS No : " + response.pmsNo;
                 var labelText = document.getElementById('pmsTitle');
@@ -360,7 +363,7 @@
                         dataType: 'json',
 
                         success: OnSuccess,
-                        failure: function (response) {                     
+                        failure: function (response) {
                             $("#addNewMOP").attr('disabled', true);
                             var labelText = document.getElementById('pmsTitle');
                             labelText.innerHTML = "No PMS attached";
@@ -370,7 +373,7 @@
 
                         },
                         error: function (response) {
-                     
+
                             $("#addNewMOP").attr('disabled', true);
                             var labelText = document.getElementById('pmsTitle');
                             labelText.innerHTML = "No PMS attached";
@@ -402,14 +405,14 @@
 
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-1 col-form-label">Select Unit</label>
+                                <div class="form-group row" style="margin-bottom: 0.1rem">
+                                    <label class="col-sm-2 col-form-label">Selected Unit</label>
                                     <div class="col-sm-4">
                                         @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-sm-7">
-                                        <input type="button" id="Proceed" onclick="GetSiteConfig()" value="Proceed" class="btn btn-primary" />
+                                      @*  <input type="button" id="Proceed" onclick="GetSiteConfig()" value="Proceed" class="btn btn-primary" />*@
                                     </div>
                                 </div>
                             </div>

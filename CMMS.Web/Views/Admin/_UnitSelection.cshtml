@@ -1,4 +1,4 @@
-﻿@model ClassLibrary.Models.UnitSelectionViewModel
+﻿@model ClassLibrary.Models.DashboardViewModel
 @{
     ViewBag.Title = "EditUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,24 +20,32 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
 
             </div>
-            <div class="modal-body">
+         
+            @using (Html.BeginForm("Dashboard", "Admin", FormMethod.Post, new { @id = "myForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="modal-body">
 
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Select Unit</label>
-                                        <div class="col-sm-6">
-                                            @Html.DropDownListFor(model => model.tbl_Unit.Id, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.tbl_Unit.Id, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <input type="button" id="Proceed" onclick="goToDashboard()" value="Proceed" class="btn btn-primary btn-sm" />
-                                        </div>                          
-                                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Select Unit</label>
+                                <div class="col-sm-6">
+                                    @Html.DropDownListFor(model => model.tbl_Unit.Id, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
+                                    @Html.ValidationMessageFor(model => model.tbl_Unit.Id, "", new { @class = "text-danger" })
                                 </div>
-                            </div>                   
+                                <div class="col-sm-4">
+                                    <input type="hidden" name="siteId" id="siteId" />
+                                    <input type="submit" onclick="goToDashboard()" id="Proceed" value="Proceed" class="btn btn-primary btn-sm" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+            }
+        </div>
 
                 <!-- /.row (main row) -->
 
@@ -45,43 +53,8 @@
         </div>
 <script>
 
-
     function goToDashboard() {
         var siteId = $('#tbl_Unit_Id').val();
-        $.ajax({
-            cache: 'false',
-            type: "POST",
-            url: '@Url.Action("Dashboard", "Admin")',
-            dataType: 'json',
-            data: {
-                siteId: siteId,
-            },
-            success: function (response) {
-                alert("success");
-                location.href = "/Admin/Dashbard";
-             },
-            failure: function (response) {
-                alert("fails");
-                //var finalError = ''
-                //for (i = 0; i < vm.responseJSON.length; i++) {
-                //    finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
-                //}
-
-                //swal({ title: "ERROR", text: finalError, type: "error", });
-            },
-            error: function (response) {
-                alert("fails");
-                //console.log(response);
-
-                //var finalError = ''
-                //for (i = 0; i < vm.responseJSON.length; i++)
-                //{
-                //    finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
-                //}
-
-                //swal({ title: "ERROR", text: finalError, type: "error", });
-
-            }
-        });
+        $('#siteId').val(siteId);
     };
 </script>

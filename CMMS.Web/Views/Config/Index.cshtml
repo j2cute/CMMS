@@ -1,4 +1,5 @@
 ﻿@model ClassLibrary.ViewModels.ConfigViewModel
+@using CMMS.Web.Helper
 <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
 <script src="~/Content/Digitalscript.js"></script>
@@ -12,18 +13,23 @@
     }
 </style>
 <script>
+    var siteId;
     $(document).ready(function () {
-        $("#ConfigBox").hide();
-        $("#Proceed").click(function () {
-            $("#ConfigBox").show();
-        });
+     siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+        $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
+
+       // $("#ConfigBox").hide();
+      //  $("#Proceed").click(function () {
+       // $("#ConfigBox").show();
+        GetConfig();
+       // });
  });
 
 </script>
 
 <section class="content-header">
     <h1>
-        Configure Systems 
+        Configure Systems
     </h1>
 
 </section>
@@ -34,77 +40,77 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                       
+
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-1 col-form-label">Select Unit</label>
+                                <div class="form-group row" style="margin-bottom: 0.1rem">
+                                    <label class="col-sm-2 col-form-label">Selected Unit</label>
                                     <div class="col-sm-4">
                                         @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-sm-7">
-                                        <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />
+                                     @*   <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />*@
                                     </div>
                                 </div>
                             </div>
-                            </div>
+                        </div>
                     </div>
-                   
-                   
+
+
                 </div>
             </div>
         </div>
         <!-- /.row (main row) -->
-        </div>
+    </div>
 </section>
 
-<section class="content" >
+<section class="content">
     <div class="container-fluid">
-     
-            
-            <div class="row" id="ConfigBox">
-        
-                    <div class="col-md-6" >
-                        <div class="card" >
-                            <div class="card-body">
-                                <div class="scroll" style="overflow-x: auto;  width: 100%;">
 
-                                    <h4>Master Configuration</h4>
 
-                                    <div id="jstree" style="min-height:495px">
-                                    </div>
-                                </div>
-                                <br />
-                                <div>
-                                    <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
-                                    <input type="submit" id="items" value="Add Systems >>" class="btn btn-success" onclick="GetSiteConfig()" />
-                                    <input type="hidden" name="selectedItems" id="selectedItems" />
+        <div class="row" id="ConfigBox">
 
-                                </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="scroll" style="overflow-x: auto;  width: 100%;">
+
+                            <h4>Master Configuration</h4>
+
+                            <div id="jstree" style="min-height:495px">
                             </div>
                         </div>
+                        <br />
+                        <div>
+                            <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
+                            <input type="submit" id="items" value="Add Systems >>" class="btn btn-success" onclick="GetSiteConfig()" />
+                            <input type="hidden" name="selectedItems" id="selectedItems" />
 
-                    </div>
-
-                    <div class="col-md-6">
-
-                        <div class="card">
-                            <div class="card-body">
-
-                                <div class="scroll" style="overflow-x: auto;  width: 100%;">
-
-                                    <h4>Site Configuration</h4>
-
-                                    <div id="jstreeSiteConfig" style="min-height:550px">
-
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
-      
+                </div>
+
             </div>
+
+            <div class="col-md-6">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <div class="scroll" style="overflow-x: auto;  width: 100%;">
+
+                            <h4>Site Configuration</h4>
+
+                            <div id="jstreeSiteConfig" style="min-height:550px">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
     </div>
 </section>
@@ -112,15 +118,15 @@
 
 
 
-            <script>
-                $(function () {
-                    $('#example1').DataTable({
-                        "scrollX": true,
-                    })
-                });
-            </script>
+<script>
+    $(function () {
+        $('#example1').DataTable({
+            "scrollX": true,
+        })
+    });
+</script>
 
-            <script>
+<script>
     function GetConfig() {
         var unitId = $('#C_Site_Config_SiteId').val();
         $.ajax({
@@ -215,13 +221,12 @@
     }
 
 
-            </script>
-            <script>
+</script>
+<script>
        function GetSiteConfig() {
             var abc = $('#selectedItems').val();
            var unitId = $('#C_Site_Config_SiteId').val();
 
-           debugger;
            var selectedData = [];
            var selectedIndexes;
            selectedIndexes = $("#jstree").jstree("get_selected", true);
@@ -270,17 +275,17 @@
             $("#jstree").jstree("open_node", [selectedNode, node_info.children_d]);
         }
     }
-            </script>
+</script>
 
 
-            <div id='myModal' class='modal fade'>
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div id='myModalContent'></div>
-                    </div>
-                </div>
-            </div>
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'></div>
+        </div>
+    </div>
+</div>
 
-            @section scripts{
-                @Scripts.Render("~/Scripts/Common/ModalPopup.js")
-            }
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}

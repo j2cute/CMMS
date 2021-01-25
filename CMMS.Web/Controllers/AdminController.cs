@@ -27,7 +27,7 @@ namespace WebApplication.Controllers
         public ActionResult UnitSelection()
         {
             db = new WebAppDbContext();
-            UnitSelectionViewModel vm = new UnitSelectionViewModel
+            DashboardViewModel vm = new DashboardViewModel
             {
                 _tbl_Unit = db.tbl_Unit.ToList(),
             };
