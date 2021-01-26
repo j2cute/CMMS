@@ -272,6 +272,8 @@ namespace WebApplication.Controllers
 
                             ListPermissionViewModel.Add(permissionViewModel);
                         }
+
+                        Session[SessionKeys.SessionHelperInstance] = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UpdateFields(roleId, ListPermissionViewModel);
                     }
                     else
                     {
@@ -279,7 +281,6 @@ namespace WebApplication.Controllers
                     }
                 }
 
-                Session[SessionKeys.SessionHelperInstance] = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UpdateFields(roleId, ListPermissionViewModel);
             }
             catch(Exception ex)
             {

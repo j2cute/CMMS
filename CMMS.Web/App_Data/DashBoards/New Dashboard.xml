@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="New Dashboard" />
+  <DataSources>
+    <SqlDataSource Name="M_MOP" ComponentName="sqlDataSource1">
+      <Connection Name="IdentityDbContext" FromAppConfig="true" />
+      <Query Type="SelectQuery" Name="M_MOP">
+        <Tables>
+          <Table Name="M_MOP" />
+        </Tables>
+        <Columns>
+          <Column Table="M_MOP" Name="PMS_No" />
+          <Column Table="M_MOP" Name="MOP_No" />
+          <Column Table="M_MOP" Name="SiteId" />
+          <Column Table="M_MOP" Name="MOP_Desc" />
+          <Column Table="M_MOP" Name="By_Whom" />
+          <Column Table="M_MOP" Name="Jic" />
+          <Column Table="M_MOP" Name="Periodicity" />
+          <Column Table="M_MOP" Name="Period" />
+          <Column Table="M_MOP" Name="Doc" />
+          <Column Table="M_MOP" Name="Task_Procedure" />
+          <Column Table="M_MOP" Name="Safety_Precautions" />
+          <Column Table="M_MOP" Name="IssueDate" />
+          <Column Table="M_MOP" Name="AddReference" />
+        </Columns>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pie ComponentName="pieDashboardItem1" Name="Pies 1" DataSource="sqlDataSource1" DataMember="M_MOP">
+      <DataItems>
+        <Measure DataMember="AddReference" SummaryType="Count" DefaultId="DataItem0" />
+      </DataItems>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutItem DashboardItem="pieDashboardItem1" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

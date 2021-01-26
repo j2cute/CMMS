@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="TEST" />
+  <DataSources>
+    <SqlDataSource Name="AspNetRoles" ComponentName="sqlDataSource1">
+      <Connection Name="IdentityDbContext" FromAppConfig="true" />
+      <Query Type="SelectQuery" Name="AspNetRoles">
+        <Tables>
+          <Table Name="AspNetRoles" />
+        </Tables>
+        <Columns>
+          <Column Table="AspNetRoles" Name="Id" />
+          <Column Table="AspNetRoles" Name="Name" />
+        </Columns>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pie ComponentName="pieDashboardItem1" Name="Pies 1" DataSource="sqlDataSource1" DataMember="AspNetRoles">
+      <DataItems>
+        <Measure DataMember="Id" SummaryType="Count" DefaultId="DataItem0" />
+      </DataItems>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutItem DashboardItem="pieDashboardItem1" />
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

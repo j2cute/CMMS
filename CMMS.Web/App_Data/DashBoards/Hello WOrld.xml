@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Dashboard>
+  <Title Text="Hello WOrld" />
+  <DataSources>
+    <SqlDataSource Name="M_MOP" ComponentName="sqlDataSource1">
+      <Connection Name="IdentityDbContext" FromAppConfig="true" />
+      <Query Type="SelectQuery" Name="M_MOP">
+        <Tables>
+          <Table Name="M_MOP" />
+        </Tables>
+        <Columns>
+          <Column Table="M_MOP" Name="PMS_No" />
+          <Column Table="M_MOP" Name="MOP_No" />
+          <Column Table="M_MOP" Name="SiteId" />
+          <Column Table="M_MOP" Name="MOP_Desc" />
+          <Column Table="M_MOP" Name="By_Whom" />
+          <Column Table="M_MOP" Name="Jic" />
+          <Column Table="M_MOP" Name="Periodicity" />
+          <Column Table="M_MOP" Name="Period" />
+          <Column Table="M_MOP" Name="Doc" />
+          <Column Table="M_MOP" Name="Task_Procedure" />
+          <Column Table="M_MOP" Name="Safety_Precautions" />
+          <Column Table="M_MOP" Name="IssueDate" />
+          <Column Table="M_MOP" Name="AddReference" />
+        </Columns>
+      </Query>
+      <ConnectionOptions CloseConnection="true" />
+    </SqlDataSource>
+  </DataSources>
+  <Items>
+    <Pie ComponentName="pieDashboardItem1" Name="Pies 1" DataSource="sqlDataSource1" DataMember="M_MOP">
+      <DataItems>
+        <Measure DataMember="IssueDate" SummaryType="CountDistinct" DefaultId="DataItem0" />
+      </DataItems>
+      <Values>
+        <Value DefaultId="DataItem0" />
+      </Values>
+    </Pie>
+    <Chart ComponentName="chartDashboardItem1" Name="Chart 1" DataSource="sqlDataSource1" DataMember="M_MOP">
+      <DataItems>
+        <Measure DataMember="Period" SummaryType="Count" DefaultId="DataItem0" />
+        <Dimension DataMember="MOP_No" DefaultId="DataItem1" />
+      </DataItems>
+      <Arguments>
+        <Argument DefaultId="DataItem1" />
+      </Arguments>
+      <Panes>
+        <Pane Name="Pane 1">
+          <Series>
+            <Simple>
+              <Value DefaultId="DataItem0" />
+            </Simple>
+          </Series>
+        </Pane>
+      </Panes>
+    </Chart>
+    <Grid ComponentName="gridDashboardItem1" Name="Grid 1" DataSource="sqlDataSource1" DataMember="M_MOP">
+      <GridOptions />
+    </Grid>
+    <Pie ComponentName="pieDashboardItem2" Name="Pies 2" DataSource="sqlDataSource1" DataMember="M_MOP" />
+  </Items>
+  <LayoutTree>
+    <LayoutGroup>
+      <LayoutGroup Orientation="Vertical">
+        <LayoutItem DashboardItem="gridDashboardItem1" />
+        <LayoutGroup>
+          <LayoutItem DashboardItem="pieDashboardItem2" />
+          <LayoutItem DashboardItem="pieDashboardItem1" />
+        </LayoutGroup>
+        <LayoutItem DashboardItem="chartDashboardItem1" />
+      </LayoutGroup>
+    </LayoutGroup>
+  </LayoutTree>
+</Dashboard>

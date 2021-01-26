@@ -259,7 +259,6 @@
     <Compile Include="Controllers\CageController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
     <Compile Include="Controllers\CustomDashBoardController.cs" />
-    <Compile Include="Controllers\DashNewController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MopPlan.cs" />
