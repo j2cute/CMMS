@@ -3,7 +3,26 @@
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
 <script src="~/Content/Digitalscript.js"></script>
 <script src="~/Scripts/moment.min.js"></script>
+@*<style>
+    .modal {
+        text-align: center;
+        padding: 0 !important;
+    }
 
+        .modal:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -4px;
+        }
+
+    .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+</style>*@
 <section class="content-header">
     <h1>
         Dashboard
@@ -11,6 +30,11 @@
     </h1>
 
 </section>
+<script>
+    $(document).ready(function () {
+        $("#myModal").modal('show');
+    });
+</script>
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
     <!-- Small boxes (Stat box) -->

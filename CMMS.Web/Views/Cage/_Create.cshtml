@@ -29,7 +29,7 @@
             <!-- form start -->
             <div class="card-body" id="InputFields">
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Cage Code</label>
+                    <label class="col-md-2 col-form-label">Cage Code<span style="color:red">*</span></label>
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.tbl_Cage.CageCode, new { htmlAttributes = new { @class = "form-control" ,onchange = "CageCodeCheck()" ,@id="CageCode"} })
                         @Html.ValidationMessageFor(model => model.tbl_Cage.CageCode, "", new { @class = "text-danger" })
@@ -39,7 +39,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Cage Name</label>
+                    <label class="col-md-2 col-form-label">Cage Name<span style="color:red">*</span></label>
                     <div class="col-md-10">
                         @Html.EditorFor(model => model.tbl_Cage.CageName, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => model.tbl_Cage.CageName, "", new { @class = "text-danger" })
@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Country</label>
+                    <label class="col-md-2 col-form-label">Country<span style="color:red">*</span></label>
                     <div class="col-md-10">
                         @Html.DropDownListFor(model => model.tbl_Cage.Country, new SelectList(Model._tbl_Country, "CountryName", "CountryName"), "Select", new { @class = "form-control",@required="true" })
                         @Html.ValidationMessageFor(model => model.tbl_Cage.Country, "", new { @class = "text-danger" })

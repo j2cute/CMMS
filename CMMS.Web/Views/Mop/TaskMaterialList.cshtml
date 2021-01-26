@@ -30,6 +30,13 @@
     a {
         cursor: pointer;
     }
+    td {
+        font-size: 12px !important;
+    }
+
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 4px !important;
+    }
 </style>
 
 
@@ -43,23 +50,19 @@
     var editTable;
     var mopItemTable;
     var permissions;
+    var siteId;
     $(document).ready(function () {
+
       permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+         siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+        $("#M_MOP_ITEMS_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
+
         if (permissions.filter(obj => obj.PermissionId == "TMLAdd").length > 0) {
             $("#addNewMOPItem").attr('disabled', false);
         } else {
             $("#addNewMOPItem").attr('disabled', true);
         }
-        if (permissions.filter(obj => obj.PermissionId == "TMLEdit").length > 0) {
-            $("#editNewMOPItem").attr('disabled', false);
-        } else {
-            $("#editNewMOPItem").attr('disabled', true);
-        }
-        if (permissions.filter(obj => obj.PermissionId == "TMLDel").length > 0) {
-            $("#delNewMOPItem").attr('disabled', false);
-        } else {
-            $("#delNewMOPItem").attr('disabled', true);
-        }
+
 
         $("#gridMopItemsDiv").hide();
         $("#Proceed").click(function () {
@@ -164,7 +167,7 @@
              });
              console.log(selectedData);
              var partNo = selectedData[1];
-             alert(partNo);
+
              $('#editNewPartNo').val(partNo);
          });
     });
@@ -209,7 +212,9 @@
             $("#addMOPItem").modal('hide'); $("#editMOPItem").modal('hide'); $("#delMOPItem").modal('hide');
 
         if (response.model != null) {
-
+            swal({
+                title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
+            });
             $("#gridMopItems").DataTable().destroy();
             mopItemTable = $("#gridMopItems").DataTable(
                 {
@@ -232,15 +237,35 @@
 
                         {
                             'data': function (data, type, row, meta) {
-                                return '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn-primary btn-sm select">' + 'Edit' + '</a>' + '|' + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn-danger btn-sm select">' + 'Delete' + '</a>'
-                            }
 
+                                var actions = '';
+
+                                if (permissions.filter(obj => obj.PermissionId == "TMLEdit").length > 0) {
+                                    actions = '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn btn-primary btn-xs select">' + 'Edit' + '</a>';
+                                }
+                                else {
+                                    actions = '<a data-toggle="modal" data-target="#editMOPItem" id="editNewMOPItem"  class="btn btn-primary btn-xs select disabled">' + 'Edit' + '</a>';
+                                }
+
+                                actions = actions + " " + '|' + " ";
+
+                                if (permissions.filter(obj => obj.PermissionId == "TMLDel").length > 0) {
+                                    actions = actions + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn btn-danger btn-xs select">' + 'Delete' + '</a>';
+                                }
+                                else {
+                                    actions = actions + '<a data-toggle="modal"  data-target="#delMOPItem" id="delNewMOPItem" class="btn btn-danger btn-xs select disabled">' + 'Delete' + '</a>';
+                                }
+                                return actions;
+
+
+                                //+ '|' +
+
+
+                            }
                         },
                     ]
                 });
-            swal({
-                title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
-            });
+
             //if (!$.trim(response)) {
             //    swal({
             //        title: "Oops...", text: "No Data Found!", type: "error",
@@ -281,13 +306,9 @@
             $('#partNo').val(partNo);
             $('#M_MOP_ItemsModel_SR_Qty').val(srQty);
 
-
-
-
           //  GetSelectedData();
         });
     };
-
       function AddMOPItemData() {
         $.ajax({
             cache: 'false',
@@ -320,7 +341,6 @@
             }
         });
     };
-
       function EditMOPItemData() {
         $.ajax({
             cache: 'false',
@@ -355,12 +375,9 @@
             }
         });
     };
-
-
-    function DeleteMOPItemData() {
+      function DeleteMOPItemData() {
 
         var mopItemId = $('#mopItemId').val();
-        alert(mopItemId);
         $.ajax({
             cache: 'false',
             type: "Post",
@@ -401,7 +418,7 @@
 
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group row">
+                                <div class="form-group row" style="margin-bottom: 0.1rem">
                    
                                     <div class="col-md-3">
                                         @Html.DropDownListFor(model => model.M_MOP_ITEMS.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select Site", new { @class = "form-control", @required = "true" })
@@ -454,7 +471,7 @@
 
 
                         <div class="card-tools">
-                           <input data-toggle="modal" data-target="#addMOPItem" id="addNewMOPItem" type="button" value="Add MOP Item" class="btn btn-success btn-sm" />
+                           <input data-toggle="modal" data-target="#addMOPItem" id="addNewMOPItem" type="button" value="+ Add MOP Item" class="btn btn-success btn-sm" />
                 
 
                             <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -465,7 +482,7 @@
                     </div>
 
                     <div class="card-body">
-                        <table id="gridMopItems" class="display" cellspacing="0" width="100%">
+                        <table id="gridMopItems" class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>MOP Item</th>
@@ -560,7 +577,7 @@
                             </div>
 
                             <br />
-                            <table id="AddMOPItemTable" class="display" style="width:100%">
+                            <table id="AddMOPItemTable" class="table table-bordered table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -676,7 +693,7 @@
                                 </div>
                             </div>
                             <br />
-                            <table id="EditMOPItemTable" class="display" style="width:100%">
+                            <table id="EditMOPItemTable" class="table table-bordered table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th></th>

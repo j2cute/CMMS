@@ -30,85 +30,85 @@
 
 </script>
 <section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h4>PMS Record</h4>
-            </div>
-        </div>
-    </div><!-- /.container-fluid -->
+    <h1>
+        PMS Record
+
+    </h1>
+
 </section>
 
 
+
 <section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
 
-    <div class="row">
-        <!-- left column -->
-        <div class="col-md-12">
+                <!-- jquery validation -->
+                <div class="card">
+                    <div class="card-header">
+                        <a class="btn btn-success" id="addPMS" data-modal='' href="@Url.Action("Create","PMS")"><i class="fa fa-plus"></i> Add New PMS</a>
 
-            <!-- jquery validation -->
-            <div class="box">
-                <div class="box-header">
-                    <a class="btn btn-success" id="addPMS" data-modal='' href="@Url.Action("Create","PMS")"><i class="fa fa-plus"></i> Add New PMS</a>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
 
-                </div>
-                <!-- /.card-header -->
-                <!-- form start -->
-
-                <div class="box-body">
-                    <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>PMS No</th>
-                                <th>Description</th>
-
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+                    <div class="card-body">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
                                 <tr>
-                                    <td> @item.PMS_NO</td>
-                                    <td> @item.PMS_DESC</td>
+                                    <th>PMS No</th>
+                                    <th>Description</th>
 
-                                    @{
-                                        if (this.User.IsInRole("Admin"))
-                                        {
-                                            <td>
-                                                <a id="editPMS" class="btn-primary btn-sm" data-modal='' href="@Url.Action("Edit", "PMS", new { id = item.PMS_NO })"><i class="fa fa-pencil"></i></a> |
-                                                <a id="detailPMS" class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "PMS", new { id = item.PMS_NO }) "><i class="fa fa-eye"></i></a> |
-                                                <a id="delPMS" class="btn-danger btn-sm" data-modal='' href="@Url.Action("Delete", "PMS", new { id = item.PMS_NO })"><i class="fa fa-trash"></i></a>
-
-                                            </td>
- }
-                                        else
-                                        {
-                                            <td>
-                                                <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "PartType", new { id = item.PMS_NO }) "><i class="fa fa-eye"></i></a> |
-                                            </td>
- }
-
-                                    }
-
+                                    <th>Actions</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.card-body -->
-                <div class="box-footer">
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td> @item.PMS_NO</td>
+                                        <td> @item.PMS_DESC</td>
+
+                                        @{
+                                            if (this.User.IsInRole("Admin"))
+                                            {
+                                                <td>
+                                                    <a id="editPMS" class="btn-primary btn-sm" data-modal='' href="@Url.Action("Edit", "PMS", new { id = item.PMS_NO })"><i class="fa fa-pencil"></i></a> |
+                                                    <a id="detailPMS" class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "PMS", new { id = item.PMS_NO }) "><i class="fa fa-eye"></i></a> |
+                                                    <a id="delPMS" class="btn-danger btn-sm" data-modal='' href="@Url.Action("Delete", "PMS", new { id = item.PMS_NO })"><i class="fa fa-trash"></i></a>
+
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "PartType", new { id = item.PMS_NO }) "><i class="fa fa-eye"></i></a> |
+                                                </td>
+                                            }
+
+                                        }
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="card-footer">
+
+                    </div>
 
                 </div>
+                <!-- /.card -->
 
             </div>
-            <!-- /.card -->
-
+            <!--/.col (left) -->
+            <!--/.col (right) -->
         </div>
-        <!--/.col (left) -->
-        <!--/.col (right) -->
     </div>
-    <!-- /.row -->
+        <!-- /.row -->
 
 </section>
 

@@ -97,7 +97,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="card-body">
-                    <table id="example1" class="display" style="width:100%">
+                    <table id="example1" class="table table-bordered table-striped" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Actions</th>
@@ -144,8 +144,15 @@
 </section>
 
 <script>
+
+
     $(document).ready(function () {
 
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+        console.log(permissions);
+            if (!permissions.filter(obj => obj.PermissionId == "PartAdd").length > 0) {
+                $("#addPart").addClass('disabled')
+        }
 
         ///
           $.ajax({
@@ -164,24 +171,8 @@
 
 
 
-        
-     permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-            console.log(permissions);
-            if (permissions.filter(obj => obj.PermissionId == "PartAdd").length > 0) {
-            $("#addPart").attr('disabled', false);
-        } else {
-            $("#addPart").attr('disabled', true);
-            }
-            if (permissions.filter(obj => obj.PermissionId == "PartEdit").length > 0) {
-                $("#editPart").attr('disabled', false);
-            } else {
-                $("#editPart").attr('disabled', true);
-            }
-            if (permissions.filter(obj => obj.PermissionId == "PartDel").length > 0) {
-                $("#delPart").attr('disabled', false);
-            } else {
-                $("#delPart").attr('disabled', true);
-            }
+
+
     var table;
         // $('#example1').DataTable().destroy();
         table=  $('#example1').DataTable(
@@ -207,6 +198,7 @@
                    // contentType: "application/json; charset=utf-8",
 
                 },
+
          // add this line
 
 
@@ -214,9 +206,28 @@
 
                 columns: [
                     {
+
                         'data': function (data, type, row, meta) {
-                           // var url = '@Url.Action("Edit", "Parts")/' + data.PartId;
-                            return '<a id="editPart" class="btn-primary btn-sm select" data-modal=""  href="/Parts/Edit/' + data.PartId + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a id="delPart"  class="btn-danger btn-sm select"  data-modal="" href="/Parts/Delete/' + data.PartId + '">' + 'Delete' + '</a>';
+                            var actions = '';
+
+                            if (permissions.filter(obj => obj.PermissionId == "PartEdit").length > 0) {
+                                actions = '<a id="editPart"  class="btn btn-primary btn-xs select" data-modal=""  href="/Parts/Edit/' + data.PartId + '">' + 'Edit' + '</a>';
+                            }
+                            else {
+                                actions = '<a id="editPart"  class="btn btn-primary btn-xs select disabled" data-modal=""  href="/Parts/Edit/' + data.PartId + '">' + 'Edit' + '</a>';
+                            }
+
+                            actions = actions + " " + '|' + " ";
+
+                            if (permissions.filter(obj => obj.PermissionId == "PartDel").length > 0) {
+                                actions = actions + '<a id="delPart"  class="btn btn-danger btn-xs select"  data-modal="" href="/Parts/Delete/' + data.PartId + '">' + 'Delete' + '</a>';
+                            }
+                            else {
+                                actions = actions + '<a id="delPart"  class="btn btn-danger btn-xs select disabled"  data-modal="" href="/Parts/Delete/' + data.PartId + '">' + 'Delete' + '</a>';
+                            }
+                            return  actions;
+
+
                         }
                     },
                     { 'data': 'CageCode', "name": "CageCode", },
@@ -226,7 +237,9 @@
                     { 'data': 'PartTypeName', "name": "PartTypeName", },
                     {
                         'data': function (data, type, row, meta) {
-                            return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Parts/Details/' + data.PartId + '">' + 'Details' + '</a>';
+
+
+                            return ' <a  class="btn-info btn-sm select"  data-toggle="modal" data-target="myModal" href="/Parts/Details/' + data.PartId + '">' + 'Details' + '</a>';
                         }
                     },
             //},
@@ -236,6 +249,13 @@
         //   '<a data-modal="" class="btn-primary btn-sm"  href="Edit/' + data.MOP_No + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm" data-modal="" href="Delete/' + data.MOP_No + '">' + 'Delete' + '</a>';
 
             });
+
+
+
+
+
+
+
         $('#example1 tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
             //var siteId = $(this).closest('tr').find("td:eq(0)").text();
@@ -248,6 +268,8 @@
             return false;
         });
     });
+
+
 </script>
 
 <div id='myModal' class='modal fade'>

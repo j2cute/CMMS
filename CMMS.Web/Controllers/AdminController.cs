@@ -20,21 +20,82 @@ namespace WebApplication.Controllers
     {
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
-
+        private WebAppDbContext db;
         // Controllers
 
         #region Dashboard
-
-        public ActionResult Dashboard(string inRoleId = null)
+        public ActionResult UnitSelection()
         {
+            db = new WebAppDbContext();
+            DashboardViewModel vm = new DashboardViewModel
+            {
+                _tbl_Unit = db.tbl_Unit.ToList(),
+            };
+            //var roles = db.tbl_Unit.Select(x => new 
+            //{
+            //    id = x.Id,
+            //    Name = x.Name,
+
+            //}).ToList();
+
+            //DashboardViewModel dashboard = new DashboardViewModel();
+            //List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+            //dashboard._tbl_Unit = db.tbl_Unit.ToList();
+            //string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
+            //var loginUserId = Session[SessionKeys.UserId]?.ToString();
+            //dashboard.datetime = DateTime.Now.ToString();
+
+
+            //using (Entities _context = new Entities())
+            //{
+            //    if (string.IsNullOrWhiteSpace(defaultRoleId))
+            //    {
+            //        defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
+            //    }
+            //    else
+            //    {
+            //        defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId)?.FirstOrDefault().RoleId;
+            //    }
+
+            //    if (!String.IsNullOrWhiteSpace(defaultRoleId))
+            //    {
+            //        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
+
+            //        foreach (var item in permissions)
+            //        {
+            //            PermissionViewModel permissionViewModel = new PermissionViewModel()
+            //            {
+            //                PermissionId = item.PermissionId,
+            //                DisplayName = item.tbl_Permission.DisplayName,
+            //                Level = item.tbl_Permission.PermissionLevel.ToString(),
+            //                ParentId = item.tbl_Permission.ParentId,
+            //                URL = item.tbl_Permission.URL
+            //            };
+
+            //            ListPermissionViewModel.Add(permissionViewModel);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        // Show some error
+            //    }
+            //}
+            //Session[SessionKeys.SessionHelperInstance] = new SessionHelper(loginUserId, defaultRoleId, ListPermissionViewModel);
+            return PartialView("_UnitSelection",vm);
+
+        }
+
+        [HttpPost]
+        public ActionResult Dashboard(string siteId, string inRoleId = null)
+        {
+            db = new WebAppDbContext();
             DashboardViewModel dashboard = new DashboardViewModel();
             List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-
+            dashboard._tbl_Unit = db.tbl_Unit.ToList();
             string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
             var loginUserId = Session[SessionKeys.UserId]?.ToString();
             dashboard.datetime = DateTime.Now.ToString();
-
-  
+ 
             using (Entities _context = new Entities())
             {
                 if (string.IsNullOrWhiteSpace(defaultRoleId))
@@ -70,7 +131,7 @@ namespace WebApplication.Controllers
                 }
             }
 
-            Session[SessionKeys.SessionHelperInstance] = new SessionHelper(loginUserId, defaultRoleId, ListPermissionViewModel);
+            Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId,loginUserId, defaultRoleId, ListPermissionViewModel);
 
             return View(dashboard);
 

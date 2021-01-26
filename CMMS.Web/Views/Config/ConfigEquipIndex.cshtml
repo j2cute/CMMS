@@ -30,22 +30,27 @@
         background-color: #3c8dbc !important;
     }
 </style>
+
 <script>
     var table;
     var editTable;
     var permissions;
+    var siteId;
     $(document).ready(function () {
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-        $("#ConfigEquipment").hide();
+        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+
+        $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
+        //$("#ConfigEquipment").hide();
         $("#AddChild").attr('disabled', true);
         $("#editChild").attr('disabled', true);
         $("#delChild").attr('disabled', true);
-        $("#Proceed").click(function () {
-            resetFormInputs();
+        //$("#Proceed").click(function () {
+        //    resetFormInputs();
             $("#ConfigEquipment").show();
-        });
-
+        //});
+        GetConfig();
         $("body [data-submit-form]").on("click", function (event) {
             $("#" + $(event.target).data('submit-form')).valid();
         });
@@ -113,10 +118,6 @@
 
 
     });
-
-
-
-
     function GetSelectedConfiguration() {
         var eswbs = $('#Eswbs').val();
         var siteId = $('#C_Site_Config_SiteId').val();
@@ -132,7 +133,7 @@
                 eswbs: eswbs
             },
             success: function (data) {
-             
+
                 if (((eswbs.toString().length) = 4) && (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0)   ) {
                     $("#AddChild").removeAttr('disabled');
                 }
@@ -151,7 +152,7 @@
                     }
                     else {
                         $("#delChild").removeAttr('disabled');
-                    }                    
+                    }
                 }
 
                 else if ((eswbs.toString().length) <= 4) {
@@ -257,8 +258,6 @@
             });
         }
     });
-
-
     function AddChildData() {
 
 
@@ -281,7 +280,7 @@
             },
             success: OnSuccess,
             failure: function (vm) {
-       
+
                 var finalError = ''
                 for (i = 0; i < vm.responseJSON.length; i++) {
                     finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
@@ -494,14 +493,14 @@
 
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="form-group row">
-                                    <label class="col-sm-1 col-form-label">Select Unit</label>
+                                <div class="form-group row" style="margin-bottom: 0.1rem">
+                                    <label class="col-sm-2 col-form-label">Selected Unit</label>
                                     <div class="col-sm-4">
                                         @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-sm-7">
-                                        <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />
+                                        @*<input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />*@
                                     </div>
                                 </div>
                             </div>
@@ -847,7 +846,7 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>ESWBS No.</label>
+                                                <label>ESWBS No.<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.ESWBS, new { htmlAttributes = new { @class = "form-control", @required = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.PESWBS, "", new { @class = "text-danger" })
@@ -856,7 +855,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label>ESWBS Name</label>
+                                                <label>ESWBS Name<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.Nomanclature, new { htmlAttributes = new { @class = "form-control", @required = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.Nomanclature, "", new { @class = "text-danger" })
@@ -867,7 +866,7 @@
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
-                                                <label>Qty</label>
+                                                <label>Qty<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.Qty, new { htmlAttributes = new { @class = "form-control", @required = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.Qty, "", new { @class = "text-danger" })
@@ -897,16 +896,16 @@
                                     </div>
 
                                     <br />
-                                    <table id="example1" class="display" style="width:100%">
+                                    <table id="example1" class="table table-bordered table-striped" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <td>PartId</td>
+                                                <th>PartId</th>
                                                 <th>Part No</th>
                                                 <th>Part Name</th>
                                                 <th>Part Type</th>
                                                 <th>Cage Code</th>
-                                                <td>CageId</td>
+                                                <th>CageId</th>
 
                                             </tr>
                                         </thead>
@@ -924,9 +923,6 @@
                                                     <td> @item.tbl_PartType.PartName</td>
                                                     <td> @item.CageCode</td>
                                                     <td>@item.CageId</td>
-
-
-
                                                 </tr>
                                             }
 
@@ -1006,7 +1002,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>ESWBS No.</label>
+                                            <label>ESWBS No.<span style="color:red">*</span></label>
 
                                             @Html.EditorFor(model => model.C_SiteConfigModel.ESWBS, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.C_SiteConfigModel.PESWBS, "", new { @class = "text-danger" })
@@ -1015,7 +1011,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>ESWBS Name</label>
+                                            <label>ESWBS Name<span style="color:red">*</span></label>
 
                                             @Html.EditorFor(model => model.C_SiteConfigModel.Nomanclature, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Nomanclature, "", new { @class = "text-danger" })
@@ -1026,7 +1022,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label>Qty</label>
+                                            <label>Qty<span style="color:red">*</span></label>
 
                                             @Html.EditorFor(model => model.C_SiteConfigModel.Qty, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Qty, "", new { @class = "text-danger" })
@@ -1057,7 +1053,7 @@
                                 </div>
 
                                 <br />
-                                <table id="editChildTable" class="display" style="width:100%">
+                                <table id="editChildTable" class="table table-bordered table-striped" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th></th>

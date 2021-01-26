@@ -22,6 +22,8 @@ namespace ClassLibrary.Models
     
         public int Id { get; set; }
         public string Name { get; set; }
+        public Nullable<int> ParentUnitId { get; set; }
+        public Nullable<int> UnitTypeId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<C_Site_Config> C_Site_Config { get; set; }

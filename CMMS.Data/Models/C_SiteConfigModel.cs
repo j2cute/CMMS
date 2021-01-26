@@ -18,7 +18,7 @@ namespace ClassLibrary.Models
         [Required(ErrorMessage = "This field is required.")]
         public string Nomanclature { get; set; }
         public string Title { get; set; }
-        [Required(ErrorMessage = "This field is required.")]
+        //[Required(ErrorMessage = "This field is required.")]
         [Range(1, 1000, ErrorMessage = "The field {0} must be 1 or greater than {1}.")]
         public Nullable<int> Qty { get; set; }
         public string PMS_No { get; set; }

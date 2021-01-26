@@ -86,9 +86,9 @@ namespace WebApplication.Controllers
             {
                 case SignInStatus.Success:
 
-                    Session[SessionKeys.UserId] = model.UserName;
-                    return RedirectToAction("Dashboard", "Admin");
-
+                     Session[SessionKeys.UserId] = model.UserName;
+                    //  return RedirectToAction("Dashboard", "Admin");
+                    return RedirectToAction("UnitSelection", "Admin");
                 case SignInStatus.LockedOut:
 
                     return View("Lockout");

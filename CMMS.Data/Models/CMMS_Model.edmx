@@ -226,6 +226,21 @@
           <Property Name="MCAT_ID" Type="nvarchar" MaxLength="1" Nullable="false" />
           <Property Name="MCAT_Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="tbl_Mop_Images">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="PmsNo" />
+            <PropertyRef Name="MopNo" />
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="PmsNo" Type="nvarchar" MaxLength="11" Nullable="false" />
+          <Property Name="MopNo" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="ImageId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ImageTitle" Type="nvarchar" MaxLength="100" />
+          <Property Name="Image" Type="image" />
+          <Property Name="Remarks" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="tbl_Parts">
           <Key>
             <PropertyRef Name="PartId" />
@@ -329,6 +344,16 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ParentUnitId" Type="int" />
+          <Property Name="UnitTypeId" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_UnitType">
+          <Key>
+            <PropertyRef Name="UnitTypeId" />
+          </Key>
+          <Property Name="UnitTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UnitTypeName" Type="nvarchar" MaxLength="120" />
+          <Property Name="UnitTypeLevel" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'db_CMMS.dbo.V_MMS5' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -517,11 +542,13 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySet Name="tbl_Currency" EntityType="Self.tbl_Currency" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_ErrorLogs" EntityType="Self.tbl_ErrorLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_MCAT" EntityType="Self.tbl_MCAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_Mop_Images" EntityType="Self.tbl_Mop_Images" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Parts" EntityType="Self.tbl_Parts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_PartType" EntityType="Self.tbl_PartType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Request" EntityType="Self.tbl_Request" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_RequestLog" EntityType="Self.tbl_RequestLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Unit" EntityType="Self.tbl_Unit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_UnitType" EntityType="Self.tbl_UnitType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="V_MMS5" EntityType="Self.V_MMS5" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [V_MMS5].[Id] AS [Id], 
@@ -749,6 +776,8 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           </AssociationSet>
           <EntitySet Name="V_MMS5" EntityType="db_CMMSModel.V_MMS5" />
           <EntitySet Name="V_MSD" EntityType="db_CMMSModel.V_MSD" />
+          <EntitySet Name="tbl_UnitType" EntityType="db_CMMSModel.tbl_UnitType" />
+          <EntitySet Name="tbl_Mop_Images" EntityType="db_CMMSModel.tbl_Mop_Images" />
           <EntitySet Name="M_MOP_PLAN" EntityType="db_CMMSModel.M_MOP_PLAN" />
           <EntitySet Name="M_MOP_PLAN_HISTORY" EntityType="db_CMMSModel.M_MOP_PLAN_HISTORY" />
  
@@ -802,6 +831,8 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="C_Site_Config" Relationship="db_CMMSModel.FK_C_Site_Config_tbl_Unit" FromRole="tbl_Unit" ToRole="C_Site_Config" />
+          <Property Name="ParentUnitId" Type="Int32" />
+          <Property Name="UnitTypeId" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_Request">
           <Key>
@@ -1100,6 +1131,29 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="PMS_ID" Type="String" MaxLength="22" FixedLength="false" Unicode="true" />
           <Property Name="PartTypeID" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="tbl_UnitType">
+          <Key>
+            <PropertyRef Name="UnitTypeId" />
+          </Key>
+          <Property Name="UnitTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UnitTypeName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="UnitTypeLevel" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tbl_Mop_Images">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="PmsNo" />
+            <PropertyRef Name="MopNo" />
+            <PropertyRef Name="ImageId" />
+          </Key>
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="PmsNo" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="MopNo" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="ImageId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImageTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Image" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
         <EntityType Name="M_MOP_PLAN">
           <Key>
             <PropertyRef Name="SiteId" />
@@ -1130,7 +1184,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="DoneDate" Type="DateTime" Precision="3" />
           <Property Name="NextDueDate" Type="DateTime" Precision="3" />
           <Property Name="DoneBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
 
 
@@ -1253,6 +1307,8 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySetMapping Name="tbl_Unit">
             <EntityTypeMapping TypeName="db_CMMSModel.tbl_Unit">
               <MappingFragment StoreEntitySet="tbl_Unit">
+                <ScalarProperty Name="UnitTypeId" ColumnName="UnitTypeId" />
+                <ScalarProperty Name="ParentUnitId" ColumnName="ParentUnitId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -1489,6 +1545,28 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="tbl_UnitType">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_UnitType">
+              <MappingFragment StoreEntitySet="tbl_UnitType">
+                <ScalarProperty Name="UnitTypeLevel" ColumnName="UnitTypeLevel" />
+                <ScalarProperty Name="UnitTypeName" ColumnName="UnitTypeName" />
+                <ScalarProperty Name="UnitTypeId" ColumnName="UnitTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_Mop_Images">
+            <EntityTypeMapping TypeName="db_CMMSModel.tbl_Mop_Images">
+              <MappingFragment StoreEntitySet="tbl_Mop_Images">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Image" ColumnName="Image" />
+                <ScalarProperty Name="ImageTitle" ColumnName="ImageTitle" />
+                <ScalarProperty Name="ImageId" ColumnName="ImageId" />
+                <ScalarProperty Name="MopNo" ColumnName="MopNo" />
+                <ScalarProperty Name="PmsNo" ColumnName="PmsNo" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="M_MOP_PLAN">
             <EntityTypeMapping TypeName="db_CMMSModel.M_MOP_PLAN">
               <MappingFragment StoreEntitySet="M_MOP_PLAN">
@@ -1516,9 +1594,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-			
-			
-        </EntityContainerMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>
@@ -1533,7 +1609,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>
