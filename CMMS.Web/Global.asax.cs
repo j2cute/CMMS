@@ -14,23 +14,24 @@ namespace WebApplication
     {
         protected void Application_Start()
         {
+            DashboardConfig.RegisterService(RouteTable.Routes);
             DevExtremeBundleConfig.RegisterBundles(BundleTable.Bundles);
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             ModelBinders.Binders.Add(typeof(DateTime), new CustomDateModelBinder());
-         
+
         }
 
-       protected void Application_BeginRequest()
-       {
+        protected void Application_BeginRequest()
+        {
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             Response.Cache.SetNoStore();
         }
 
- 
+
     }
     public class CustomDateModelBinder : DefaultModelBinder
     {

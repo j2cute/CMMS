@@ -720,7 +720,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
         </Association>
-        <EntityContainer Name="WebAppDbContext" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="WebAppDbContext" annotation:LazyLoadingEnabled="false">
           <EntitySet Name="C__MigrationHistory" EntityType="Self.C__MigrationHistory" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
