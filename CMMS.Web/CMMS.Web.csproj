@@ -1761,6 +1761,7 @@
     <Content Include="Views\DashNew\Index.cshtml" />
     <Content Include="Views\CustomDashBoard\ClientMode.cshtml" />
     <Content Include="Views\CustomDashBoard\DesignerMode.cshtml" />
+    <Content Include="Views\Admin\_UnitSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\DashBoards\" />
