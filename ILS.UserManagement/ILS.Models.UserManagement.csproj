@@ -57,6 +57,9 @@
     <Compile Include="Models\tbl_Unit.cs">
       <DependentUpon>UserManagementModels.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\tbl_UnitType.cs">
+      <DependentUpon>UserManagementModels.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tbl_User.cs">
       <DependentUpon>UserManagementModels.tt</DependentUpon>
     </Compile>

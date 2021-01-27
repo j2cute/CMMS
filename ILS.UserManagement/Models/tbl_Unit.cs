@@ -22,6 +22,8 @@ namespace ILS.UserManagement.Models
     
         public int Id { get; set; }
         public string Name { get; set; }
+        public Nullable<int> ParentUnitId { get; set; }
+        public Nullable<int> UnitTypeId { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<tbl_User> tbl_User { get; set; }

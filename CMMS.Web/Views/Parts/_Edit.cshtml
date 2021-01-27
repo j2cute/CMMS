@@ -14,6 +14,10 @@
         border: 6px solid #F8F8F8;
         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
     }
+    textarea {
+        width: 100% !important;
+        border: 1px solid #ced4da !important;
+    }
 </style>
 <script>
     $('#File').change(
@@ -209,8 +213,8 @@
                     </div>
                 </div>
 
-                <fieldset>
-                    <legend>DIMENSIONS</legend>
+                <fieldset class="border p-2">
+                    <legend class="w-auto">DIMENSIONS</legend>
                     <div class="row">
                         <div class="col-md-1"></div>
                         <div class="col-md-2">
@@ -259,18 +263,20 @@
                         <div class="col-md-1"></div>
                     </div>
                 </fieldset>
-                <fieldset>
+                <fieldset class="border p-2">
 
-                    <legend>PART CHARACTERISTICS</legend>
+                    <legend class="w-auto">PART CHARACTERISTICS</legend>
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
                             <div class="form-group">
-                                <label>Part Characteristics</label>
+                                <label>Part Characteristics</label><br />
 
                                 @Html.TextAreaFor(model => model.tbl_Parts.PART_CHARACTERISTIC, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.tbl_Parts.PART_CHARACTERISTIC, "", new { @class = "text-danger" })
                             </div>
                         </div>
+                        <div class="col-md-1"></div>
                     </div>
                 </fieldset>
             </div>
