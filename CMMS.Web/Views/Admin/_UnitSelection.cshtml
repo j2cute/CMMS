@@ -29,8 +29,11 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="form-group row">
-                                <label class="col-sm-2 col-form-label">Select Unit</label>
+                     
+                                <div class="col-sm-2">
+                                <label>Select Unit</label>
+                                    </div>
+
                                 <div class="col-sm-6">
                                     @Html.DropDownListFor(model => model.tbl_Unit.Id, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
                                     @Html.ValidationMessageFor(model => model.tbl_Unit.Id, "", new { @class = "text-danger" })
@@ -39,7 +42,7 @@
                                     <input type="hidden" name="siteId" id="siteId" />
                                     <input type="submit" onclick="goToDashboard()" id="Proceed" value="Proceed" class="btn btn-primary btn-sm" />
                                 </div>
-                            </div>
+                          
                         </div>
                     </div>
                 </div>
