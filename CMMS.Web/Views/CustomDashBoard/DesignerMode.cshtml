@@ -1,13 +1,18 @@
 ﻿@using System.Web.UI.WebControls;
 
+
+<script src="~/Scripts/CustomDashboard/DeleteExtension.js"></script>
+<script src="~/Scripts/CustomDashboard/SaveAsExtension.js"></script>
+
+
 <div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
-@Html.DevExpress().Button(settings =>
-{
-   settings.Name = "SwitchWorkingModesButton";
-   settings.Text = "Switch to Viewer";
-   settings.UseSubmitBehavior = true;
-   settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
-}).GetHtml()
+    @Html.DevExpress().Button(settings =>
+    {
+       settings.Name = "SwitchWorkingModesButton";
+       settings.Text = "Switch to Viewer";
+       settings.UseSubmitBehavior = true;
+       settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
+    }).GetHtml()
 
 
     @Html.DevExpress().Dashboard(settings =>
@@ -16,12 +21,15 @@
     settings.Width = Unit.Percentage(100);
     settings.Height = Unit.Percentage(100);
     settings.EnableSqlDataSource = true;
+    settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
     settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Designer;
     settings.MobileLayoutEnabled = DevExpress.DashboardWeb.MobileLayoutMode.Auto;
+
 }).GetHtml()
 </div>
 
 <script>
+
     function switchWorkingModes(s, e) {
         var workingMode = Dashboard.GetWorkingMode();
         if (workingMode == 'designer') {
@@ -33,4 +41,12 @@
             SwitchWorkingModesButton.SetText('Switch to Viewer');
         }
     }
+
+    function customizeMenu(s, e) {
+        var control = s.GetDashboardControl();
+        control.registerExtension(new SaveAsDashboardExtension(control));
+        control.registerExtension(new DeleteDashboardExtension(s))
+    }
+
+
 </script>

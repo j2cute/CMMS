@@ -8,22 +8,70 @@ using System.Xml.Linq;
 using DevExpress.DashboardCommon;
 using DevExpress.DashboardWeb;
 using DevExpress.DashboardWeb.Mvc;
+using DevExpress.Data.Filtering;
 
 namespace WebApplication
 {
     public class DashboardConfig
     {
+        private static string dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
+        private static CustomDashboardStorage customStorage = new CustomDashboardStorage(dashboardPath);
+
         public static void RegisterService(RouteCollection routes)
         {
             routes.MapDashboardRoute();
 
-            // Uncomment this line to save dashboards to the App_Data folder.
-
-            var dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
-
-            CustomDashboardStorage newDashboardStorage = new CustomDashboardStorage(dashboardPath);
-            DashboardConfigurator.Default.SetDashboardStorage(newDashboardStorage);
+            DashboardConfigurator.Default.SetDashboardStorage(customStorage);
             DashboardConfigurator.Default.SetConnectionStringsProvider(new DevExpress.DataAccess.Web.ConfigFileConnectionStringsProvider());
+
+            DashboardConfigurator.Default.CustomFilterExpression += Default_CustomFilterExpression;
+
+        }
+
+        private static void Default_CustomFilterExpression(object sender, CustomFilterExpressionWebEventArgs e)
+        {
+            try
+            {
+                var dashBoardXML = customStorage.LoadDashboard(e.DashboardId);
+
+                // Check For Data Source
+
+                var query = dashBoardXML.Descendants("SqlDataSource").Where(x => x.Attribute("Name").Value == e.DataSourceName);
+                if (query.Any())
+                {
+                    var columns = query.Descendants("Columns");
+
+                    var tables = query.Descendants("Tables").FirstOrDefault().Elements().Select(x => x.Attributes("Name"));
+
+                    foreach (var table in tables)
+                    {
+                        if (table.Any())
+                        {
+                            var tableName = table.FirstOrDefault().Value; 
+                            var columnsDetails = columns.FirstOrDefault().Elements().Where(x => x.Attribute("Table").Value == tableName);
+
+                            foreach (var col in columnsDetails)
+                            {
+                                if (col.Attributes().Where(x => x.Name == "Name").Any())
+                                {
+                                    if (col.Attribute("Name").Value.Contains("SiteId"))
+                                    {
+                                        // To be changed
+                                        e.FilterExpression = new InOperator(tableName + ".SiteId", new List<int>() { 1 });
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+              
+            
+            }
+            catch
+            {
+
+            }
         }
     }
 
@@ -123,4 +171,13 @@ namespace WebApplication
             }
         }
     }
+
+
+    //public class CustomDataSourceStorage : IDataSourceStorage
+    //{
+    //    public XDocument GetDataSource()
+    //    {
+    //        XDocument.Load()
+    //    }
+    //}
 }
