@@ -915,15 +915,18 @@
 
                                             @foreach (var item in Model.tbl_Parts_list)
                                             {
-                                                <tr>
-                                                    <td></td>
-                                                    <td>@item.PartId</td>
-                                                    <td> @item.Part_No</td>
-                                                    <td> @item.PART_NAME</td>
-                                                    <td> @item.tbl_PartType.PartName</td>
-                                                    <td> @item.CageCode</td>
-                                                    <td>@item.CageId</td>
-                                                </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td>@item.PartId</td>
+                                                <td> @item.Part_No</td>
+                                                <td> @item.PART_NAME</td>
+                              
+                                                <td>
+                                                    @item.PartTypeID
+                                                </td>
+                                                <td> @item.CageCode</td>
+                                                <td>@item.CageId</td>
+                                            </tr>
                                             }
 
                                         </tbody>
@@ -1071,17 +1074,19 @@
 
                                         @foreach (var item in Model.tbl_Parts_list)
                                         {
-                                            <tr>
-                                                <td></td>
-                                                <td>@item.PartId</td>
-                                                <td> @item.Part_No</td>
-                                                <td> @item.PART_NAME</td>
-                                                <td> @item.tbl_PartType.PartName</td>
-                                                <td> @item.CageCode</td>
-                                                <td>@item.CageId</td>
+                                        <tr>
+                                            <td></td>
+                                            <td>@item.PartId</td>
+                                            <td> @item.Part_No</td>
+                                            <td> @item.PART_NAME</td>
+                                            <td>
+                                       @item.PartTypeID
+                                            </td>
+                                            <td> @item.CageCode</td>
+                                            <td>@item.CageId</td>
 
 
-                                            </tr>
+                                        </tr>
                                         }
 
                                     </tbody>

@@ -31,5 +31,6 @@ namespace ILS.UserManagement.Models
         public virtual DbSet<tbl_Unit> tbl_Unit { get; set; }
         public virtual DbSet<tbl_User> tbl_User { get; set; }
         public virtual DbSet<tbl_UserRole> tbl_UserRole { get; set; }
+        public virtual DbSet<tbl_UnitType> tbl_UnitType { get; set; }
     }
 }

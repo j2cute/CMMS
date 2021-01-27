@@ -13,6 +13,7 @@
           <Property Name="DisplayName" Type="varchar" MaxLength="500" />
           <Property Name="ParentId" Type="varchar" MaxLength="500" />
           <Property Name="PermissionLevel" Type="numeric" Precision="22" Scale="0" />
+          <Property Name="URL" Type="varchar" MaxLength="500" />
           <Property Name="IsActive" Type="numeric" Precision="22" Scale="0" />
           <Property Name="IconPath" Type="varchar" MaxLength="500" />
           <Property Name="Heading" Type="varchar" MaxLength="500" />
@@ -22,7 +23,6 @@
           <Property Name="SoreOrder" Type="numeric" Precision="22" Scale="0" />
           <Property Name="ToolTip" Type="varchar" MaxLength="200" />
           <Property Name="Type" Type="varchar" MaxLength="10" />
-          <Property Name="URL" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="tbl_Role">
           <Key>
@@ -52,6 +52,16 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ParentUnitId" Type="int" />
+          <Property Name="UnitTypeId" Type="int" />
+        </EntityType>
+        <EntityType Name="tbl_UnitType">
+          <Key>
+            <PropertyRef Name="UnitTypeId" />
+          </Key>
+          <Property Name="UnitTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UnitTypeName" Type="nvarchar" MaxLength="120" />
+          <Property Name="UnitTypeLevel" Type="int" />
         </EntityType>
         <EntityType Name="tbl_User">
           <Key>
@@ -159,6 +169,7 @@
           <EntitySet Name="tbl_Role" EntityType="Self.tbl_Role" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_RolePermission" EntityType="Self.tbl_RolePermission" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Unit" EntityType="Self.tbl_Unit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tbl_UnitType" EntityType="Self.tbl_UnitType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_User" EntityType="Self.tbl_User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_UserRole" EntityType="Self.tbl_UserRole" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_tbl_RolePermission_tbl_Permission" Association="Self.FK_tbl_RolePermission_tbl_Permission">
@@ -213,6 +224,7 @@
             <End Role="tbl_User" EntitySet="tbl_User" />
             <End Role="tbl_UserRole" EntitySet="tbl_UserRole" />
           </AssociationSet>
+          <EntitySet Name="tbl_UnitType" EntityType="ILS.Models.UserManagement.tbl_UnitType" />
           </EntityContainer>
         <EntityType Name="tbl_Permission">
           <Key>
@@ -291,6 +303,8 @@
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="tbl_User" Relationship="ILS.Models.UserManagement.FK_tbl_User_tbl_Unit" FromRole="tbl_Unit" ToRole="tbl_User" />
+          <Property Name="ParentUnitId" Type="Int32" />
+          <Property Name="UnitTypeId" Type="Int32" />
         </EntityType>
         <EntityType Name="tbl_User">
           <Key>
@@ -373,6 +387,14 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="tbl_UnitType">
+          <Key>
+            <PropertyRef Name="UnitTypeId" />
+          </Key>
+          <Property Name="UnitTypeId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UnitTypeName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="UnitTypeLevel" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -425,6 +447,8 @@
           <EntitySetMapping Name="tbl_Unit">
             <EntityTypeMapping TypeName="ILS.Models.UserManagement.tbl_Unit">
               <MappingFragment StoreEntitySet="tbl_Unit">
+                <ScalarProperty Name="UnitTypeId" ColumnName="UnitTypeId" />
+                <ScalarProperty Name="ParentUnitId" ColumnName="ParentUnitId" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
@@ -469,6 +493,15 @@
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tbl_UnitType">
+            <EntityTypeMapping TypeName="ILS.Models.UserManagement.tbl_UnitType">
+              <MappingFragment StoreEntitySet="tbl_UnitType">
+                <ScalarProperty Name="UnitTypeLevel" ColumnName="UnitTypeLevel" />
+                <ScalarProperty Name="UnitTypeName" ColumnName="UnitTypeName" />
+                <ScalarProperty Name="UnitTypeId" ColumnName="UnitTypeId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

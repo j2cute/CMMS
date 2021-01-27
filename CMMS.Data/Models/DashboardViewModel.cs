@@ -36,6 +36,7 @@ namespace ClassLibrary.Models
         public string URL { get; set; }
 
         public string DisplayName { get; set; }
+        public string IconPath { get; set; }
 
 
     }

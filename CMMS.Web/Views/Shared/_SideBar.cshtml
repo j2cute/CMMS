@@ -32,7 +32,10 @@
                 {
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-chart-pie"></i>
+                            @if (parentPermission.IconPath != null)
+                            { <i class="nav-icon  @parentPermission.IconPath"></i>  }
+                            else
+                            {  <i class="nav-icon  fas fa-chart-pie"></i>   }
                             <p>
                                 @parentPermission.DisplayName
                                 <i class="right fas fa-angle-left"></i>
