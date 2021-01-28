@@ -33,7 +33,9 @@ namespace WebApplication.Controllers
             {
                 var data = _context.tbl_User.Where(x => x.UserId == userId).FirstOrDefault();
                 if (data != null)
-                {  Session[SessionKeys.UserUnitId] = data.UnitId; }
+                {  
+                    Session[SessionKeys.UserUnitId] = data.UnitId;
+                }
 
                 var unit = db.tbl_Unit.Where(x => x.Id == data.UnitId).FirstOrDefault();
                 var unitLevel = _context.tbl_UnitType.Where(x => x.UnitTypeId == unit.UnitTypeId).Select(x=>x.UnitTypeLevel).FirstOrDefault();

@@ -74,4 +74,11 @@ namespace CMMS.Web.Helper
         public string RoleDescription { get; set; }
     }
 
+
+ 
+    public enum PageMode
+    {
+        Add = 1,
+        Edit = 2
+    }
 }

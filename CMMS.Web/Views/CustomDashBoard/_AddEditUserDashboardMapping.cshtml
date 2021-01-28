@@ -1,0 +1,27 @@
+﻿ 
+@{ 
+    var pageMode = ViewBag.PageMode;
+    var mo = Model;
+}
+
+<div class="modal-header">
+    <h4 class="modal-title">Dashboard Mapping</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+
+    <div class="card card-default">
+        <div class="card-body">
+            @Html.DropDownList("", (SelectList)ViewBag.UserList, "", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="card-footer" id="footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <input type="button" onclick="EditMOPData()" value="Submit" class="btn btn-primary float-right" />
+    </div>
+
+</div>

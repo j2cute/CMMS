@@ -1,0 +1,200 @@
+﻿@using CMMS.Web.Helper
+@{
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+<style>
+    .hide {
+        display: none;
+    }
+</style>
+<script>
+    var permissions;
+    $(document).ready(function ()
+    {
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+
+        if (!permissions.filter(obj => obj.PermissionId == "AssignDashboard").length > 0)
+        {
+            $("#btnAssignDashboard").addClass('disabled')
+        }
+
+        var table;
+        table = $('#tblUserDashboards').DataTable(
+            {
+                "bServerSide": true,
+                "processing": true,
+                "scrollX": true,
+                "paging": true,
+                "filter": true,
+                "order": [[1, 'asc']],
+                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+
+                ajax: {
+                    type: 'POST',
+                    url: '@Url.Action("LoadAssignedDashboards")',
+                    dataType: 'json',
+                    dataSrc: 'data',
+                },
+
+                columns: [
+                    {
+                        'data': function (data, type, row, meta) {
+                            var actions = '';
+
+                            if (permissions.filter(obj => obj.PermissionId == "EditUserDashboardMapping").length > 0) {
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select" data-toggle="modal" data-target="addEditMappingModal" href="/CustomDashboard/AddEditUserDashboard/' + data.Id + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            }
+                            else {
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled" data-toggle="modal" data-target="addEditMappingModal" href="/CustomDashboard/AddEditUserDashboard/' + data.Id + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            }
+
+                            actions = actions + " " + '|' + " ";
+
+                            if (permissions.filter(obj => obj.PermissionId == "DeleteUserDashboardMapping").length > 0) {
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select" data-toggle="modal" href="/CustomDashboard/Delete/' + data.Id + '">' + 'Delete' + '</a>';
+                            }
+                            else {
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" data-toggle="modal" href="/CustomDashboard/Delete/' + data.Id + '">' + 'Delete' + '</a>';
+                            }
+
+                            return actions;
+                        }
+                    },
+                    { 'data': 'Id', "name": "Id",  },
+                    { 'data': 'UserId', "name": "UserId", },
+                    { 'data': 'RoleId', "name": "RoleId", },
+                    { 'data': 'DashboardId', "name": "DashboardId", },
+                    { 'data': 'InsertedBy', "name": "InsertedBy", },
+                    { 'data': 'InsertionDateTime', "name": "InsertionDateTime", },
+                    { 'data': 'LastUpdatedBy', "name": "LastUpdatedBy", },
+                    { 'data': 'LastUpdatedDateTime', "name": "LastUpdatedDateTime", },
+                    { 'data': 'Default', "name": "Default", },
+                    { 'data': 'Prefered', "name": "Prefered", }
+                ],
+
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    }],
+               "rowCallback": function (row, data, dataIndex) {
+                   if (data["Status"] == "InActive") {
+                       $('td', row).css('background-color', 'red');
+
+                   }
+               },
+
+            });
+
+        //$('#tblUserDashboards tbody').on("click", '.select', function () {
+        //    var tblData = table.rows($(this).closest('tr')).data();
+        //    var data = $('#myModalContent').load(this.href, function () {
+        //        $('#addEditMappingModal').modal({
+        //            keyboard: true
+        //        }, 'show');
+        //        bindForm(this);
+        //    });
+        //    return false;
+        //});
+
+           $("#btnAssignDashboard").click(function () {
+
+            var options = {
+                "backdrop": "static",
+                keyboard: true
+            };
+  
+           $.ajax({
+                type: "GET",
+                url: '@Url.Action("AddUserDashboard", "CustomDashboard")',
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function(data)
+                {
+                    $('#myModalContent').html(data);
+                    $('#addEditMappingModal').modal(options);
+                    $('#addEditMappingModal').modal('show');
+               },
+               failure: function () {
+               },
+               error: function () {
+
+                    alert("Content load failed.");
+                }
+            });
+        });
+    });
+
+
+
+</script>
+<section class="content-header">
+    <h1>Dashboard Mapping</h1>
+</section>
+
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <div class="card-tools">
+                            <input type="button" value="Assign Dashboard" style="float:right;" class="btn btn-success" id="btnAssignDashboard">
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+                        <table id="tblUserDashboards" class="table table-bordered table-striped">
+
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>User Id</th>
+                                    <th>Role Id</th>
+                                    <th>Dashboard Name</th>
+                                    <th>Inserted By</th>
+                                    <th>Insertion Datetime</th>
+                                    <th>Last Updated By</th>
+                                    <th>Last Updated Datetime</th>
+                                    <th>Default</th>
+                                    <th>Prefered</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div class="card-footer">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<div id='addEditMappingModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}

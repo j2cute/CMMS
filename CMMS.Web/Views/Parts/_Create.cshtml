@@ -5,14 +5,15 @@
     .modal-lg {
         max-width: 80% !important;
     }
+
     .avatar-preview {
         width: 192px;
         height: 192px;
         position: relative;
-     
         border: 6px solid #F8F8F8;
         box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
     }
+
     textarea {
         width: 100% !important;
         border: 1px solid #ced4da !important;
@@ -57,7 +58,7 @@
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="card card-primary">
-   
+
             <br />
 
             <!-- /.card-header -->
@@ -69,7 +70,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>CageCode<span style="color:red">*</span></label>
-                                    @Html.DropDownListFor(model => model.tbl_Parts.CageCode, new SelectList(Model._tbl_Cage, "CageCode", "CageName"), "Select", new { @class = "form-control",@id="CageCode"})
+                                    @Html.DropDownListFor(model => model.tbl_Parts.CageCode, new SelectList(Model._tbl_Cage, "CageCode", "CageName"), "Select", new { @class = "form-control", @id = "CageCode" })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.CageCode, "", new { @class = "text-danger" })
                                 </div>
                             </div>
@@ -111,7 +112,7 @@
                                 <div class="form-group">
                                     <label>Part Type<span style="color:red">*</span></label>
 
-                                    @Html.DropDownListFor(model => model.tbl_Parts.PartTypeID, new SelectList(Model._tbl_PartType, "PartTypeID", "PartName"), "Select", new { @class = "form-control"})
+                                    @Html.DropDownListFor(model => model.tbl_Parts.PartTypeID, new SelectList(Model._tbl_PartType, "PartTypeID", "PartName"), "Select", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.PartTypeID, "", new { @class = "text-danger" })
 
                                 </div>
@@ -142,7 +143,7 @@
                                 <div class="form-group">
                                     <label>Currency</label>
 
-                                    @Html.DropDownListFor(model => model.tbl_Parts.CurrencyID, new SelectList(Model._tbl_Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-control"})
+                                    @Html.DropDownListFor(model => model.tbl_Parts.CurrencyID, new SelectList(Model._tbl_Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.CurrencyID, "", new { @class = "text-danger" })
 
                                 </div>
@@ -182,7 +183,7 @@
                         <div class="picture-container">
                             <div class="picture">
                                 <img src="~/Content/Img/default-avatar.png" class="avatar-preview" id="WizardPicturePreview" title="" />
-                                @Html.TextBoxFor(model => model.FileHelper.File, new { type = "file", @class = "form-control", @id = "File"})
+                                @Html.TextBoxFor(model => model.FileHelper.File, new { type = "file", @class = "form-control", @id = "File" })
                                 @Html.ValidationMessageFor(model => model.FileHelper.File, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -218,7 +219,7 @@
                                 @Html.ValidationMessageFor(model => model.tbl_Parts.HEIGHT, "", new { @class = "text-danger" })
                             </div>
                         </div>
-                     
+
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Diameter(cm)</label>
@@ -237,7 +238,7 @@
                         </div>
                         <div class="col-md-1"></div>
                     </div>
-</fieldset>
+                </fieldset>
                 <fieldset class="border p-2">
 
                     <legend class="w-auto">PART CHARACTERISTICS</legend>

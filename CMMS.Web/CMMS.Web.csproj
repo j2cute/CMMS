@@ -258,7 +258,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CageController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
-    <Compile Include="Controllers\CustomDashBoardController.cs" />
+    <Compile Include="Controllers\CustomDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MopPlan.cs" />
@@ -1757,10 +1757,11 @@
     <Content Include="Views\Mop\LoadMopPlan.cshtml" />
     <Content Include="Views\Mop\MopPlanList.cshtml" />
     <Content Include="Views\Mop\_MopPlan.cshtml" />
-    <Content Include="Views\DashNew\Index.cshtml" />
     <Content Include="Views\CustomDashBoard\ClientMode.cshtml" />
     <Content Include="Views\CustomDashBoard\DesignerMode.cshtml" />
     <Content Include="Views\Admin\_UnitSelection.cshtml" />
+    <Content Include="Views\CustomDashBoard\UserDashboards.cshtml" />
+    <Content Include="Views\CustomDashBoard\_AddEditUserDashboardMapping.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\DashBoards\" />

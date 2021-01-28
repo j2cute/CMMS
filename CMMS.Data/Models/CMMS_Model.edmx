@@ -355,6 +355,21 @@
           <Property Name="UnitTypeName" Type="nvarchar" MaxLength="120" />
           <Property Name="UnitTypeLevel" Type="int" />
         </EntityType>
+        <EntityType Name="UserDashboardMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="DashboardId" Type="varchar" MaxLength="700" Nullable="false" />
+          <Property Name="IsDefault" Type="varchar" MaxLength="1" />
+          <Property Name="UserId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="IsPrefered" Type="varchar" MaxLength="1" />
+          <Property Name="RoleId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="InsertionDateTime" Type="datetime" Nullable="false" />
+          <Property Name="InsertedBy" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="LastUpdatedBy" Type="varchar" MaxLength="100" />
+          <Property Name="LastUpdatedDateTime" Type="datetime" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'db_CMMS.dbo.V_MMS5' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V_MMS5">
@@ -549,6 +564,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySet Name="tbl_RequestLog" EntityType="Self.tbl_RequestLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_Unit" EntityType="Self.tbl_Unit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tbl_UnitType" EntityType="Self.tbl_UnitType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserDashboardMapping" EntityType="Self.UserDashboardMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="V_MMS5" EntityType="Self.V_MMS5" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [V_MMS5].[Id] AS [Id], 
@@ -780,6 +796,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySet Name="tbl_Mop_Images" EntityType="db_CMMSModel.tbl_Mop_Images" />
           <EntitySet Name="M_MOP_PLAN" EntityType="db_CMMSModel.M_MOP_PLAN" />
           <EntitySet Name="M_MOP_PLAN_HISTORY" EntityType="db_CMMSModel.M_MOP_PLAN_HISTORY" />
+          <EntitySet Name="UserDashboardMappings" EntityType="db_CMMSModel.UserDashboardMapping" />
  
           </EntityContainer>
         <EntityType Name="tbl_ErrorLogs">
@@ -1184,6 +1201,21 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="DoneDate" Type="DateTime" Precision="3" />
           <Property Name="NextDueDate" Type="DateTime" Precision="3" />
           <Property Name="DoneBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="UserDashboardMapping">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="DashboardId" Type="String" Nullable="false" MaxLength="700" FixedLength="false" Unicode="false" />
+          <Property Name="IsDefault" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsPrefered" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="RoleId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="InsertionDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="InsertedBy" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastUpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="LastUpdatedDateTime" Type="DateTime" Precision="3" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
 
@@ -1594,6 +1626,22 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="UserDashboardMappings">
+            <EntityTypeMapping TypeName="db_CMMSModel.UserDashboardMapping">
+              <MappingFragment StoreEntitySet="UserDashboardMapping">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LastUpdatedDateTime" ColumnName="LastUpdatedDateTime" />
+                <ScalarProperty Name="LastUpdatedBy" ColumnName="LastUpdatedBy" />
+                <ScalarProperty Name="InsertedBy" ColumnName="InsertedBy" />
+                <ScalarProperty Name="InsertionDateTime" ColumnName="InsertionDateTime" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+                <ScalarProperty Name="IsPrefered" ColumnName="IsPrefered" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+                <ScalarProperty Name="DashboardId" ColumnName="DashboardId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -1609,7 +1657,7 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

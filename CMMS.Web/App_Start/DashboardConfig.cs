@@ -5,10 +5,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using System.Xml.Linq;
+using ClassLibrary.Models;
+using CMMS.Web.Helper;
 using DevExpress.DashboardCommon;
 using DevExpress.DashboardWeb;
 using DevExpress.DashboardWeb.Mvc;
 using DevExpress.Data.Filtering;
+ 
 
 namespace WebApplication
 {
@@ -43,6 +46,8 @@ namespace WebApplication
 
                     var tables = query.Descendants("Tables").FirstOrDefault().Elements().Select(x => x.Attributes("Name"));
 
+                    var applicableSites = ((IEnumerable<tbl_Unit>)System.Web.HttpContext.Current.Session[SessionKeys.ApplicableUnits]).Select(x => x.Id);
+
                     foreach (var table in tables)
                     {
                         if (table.Any())
@@ -56,8 +61,7 @@ namespace WebApplication
                                 {
                                     if (col.Attribute("Name").Value.Contains("SiteId"))
                                     {
-                                        // To be changed
-                                        e.FilterExpression = new InOperator(tableName + ".SiteId", new List<int>() { 1 });
+                                        e.FilterExpression = new InOperator(tableName + ".SiteId", applicableSites);
                                         break;
                                     }
                                 }
