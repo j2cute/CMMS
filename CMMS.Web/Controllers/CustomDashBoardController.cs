@@ -45,22 +45,23 @@ namespace WebApplication.Controllers
             
             try
             {
-                List<string> assignedUserIds = new List<string>();
-                using (var context = new WebAppDbContext())
-                {
-                    assignedUserIds = context.UserDashboardMappings.Select(x => x.UserId).ToList();
-                }
+               // List<string> assignedUserIds = new List<string>();
+                //using (var context = new WebAppDbContext())
+                //{
+                //    assignedUserIds = context.UserDashboardMappings.Select(x => x.UserId).ToList();
+                //}
 
                 using (var context = new Entities())
                 {
-                   var response = context.tbl_User.Where(p => assignedUserIds.All(p2 => p2 != p.UserId))
+                    //.Where(p => assignedUserIds.All(p2 => p2 != p.UserId))
+                   var response = context.tbl_User
                     .Select(x => new
                     {
                         Name = x.Name,
                         Id = x.UserId
                     }).ToList();
 
-                    ViewBag.UserList = new SelectList(response.Select(m => new SelectListItem { Value = m.Id.ToString(), Text = m.Name}), "Value", "Text");
+                    ViewBag.UserList = response;
 
                     return PartialView("_AddEditUserDashboardMapping", response);
                 }
@@ -76,6 +77,48 @@ namespace WebApplication.Controllers
                 msg = msg,
                 type = type
             }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetRoles(string id)
+        {
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                using (var context = new Entities())
+                {
+                    var userRoles = context.tbl_UserRole.Where(y => y.UserId == id && y.IsDeleted != 1).Select(z => z.RoleId);
+                    var response = context.tbl_Role.Where(x=> userRoles.Contains(x.RoleId) && x.IsDeleted != 1).Select(x=> new
+                    {
+                        RoleId = x.RoleId,
+                        RoleName = x.Name
+                    }).ToList();
+
+                    return Json(response, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(string.Empty, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetAvailableDashboards(string userId,string roleId)
+        {
+            if (!string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(roleId))
+            {
+                using (var context = new WebAppDbContext())
+                {
+                    CustomDashboardStorage dashboardStorage = new CustomDashboardStorage();
+                    var dashboardsInfo = dashboardStorage.GetAvailableDashboardsInfo();
+
+                    var response = dashboardsInfo.Where(y=> !context.UserDashboardMappings.Where(x => x.RoleId == roleId && x.UserId == userId).Select(x=>x.DashboardId).Contains(y.ID)).Select(y=> new
+                    {
+                        DashId= y.ID,
+                        DashName = y.Name
+                    }).ToList();
+
+                    return Json(response, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(string.Empty, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -150,6 +193,26 @@ namespace WebApplication.Controllers
 
             var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = userDashboardMappingData };
             return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult Save(string userId,string roleId,string dashboardId)
+        {
+            var type = "success";
+            var msg = "Plan edited successfully.";
+
+            if (!string.IsNullOrWhiteSpace(userId) || !string.IsNullOrWhiteSpace(roleId) || !string.IsNullOrWhiteSpace(dashboardId))
+            {
+                using (var context = new Entities())
+                {
+                  
+                }
+            }
+            return Json(new
+            {
+                msg = msg,
+                type = type
+            }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

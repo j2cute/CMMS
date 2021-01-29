@@ -1,8 +1,186 @@
-﻿ 
-@{ 
+﻿@{
     var pageMode = ViewBag.PageMode;
-    var mo = Model;
 }
+
+<script>
+    $(document).ready(function () {
+
+    $("#ddUserIds").change(function () {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data:
+                {
+                    id: $('#ddUserIds').val()
+                },
+                url: '@Url.Action("GetRoles", "CustomDashboard")',
+                success: function (data)
+                {
+                    $("#ddRoleIds").empty();
+
+                    $("#ddDashboardIds").empty();
+                    $("#ddDashboardIds").prop("disabled", true);
+
+                    data = data || {};
+                    if (data.length > 0) {
+                        $("#ddRoleIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                        for (var i = 0; i < data.length; i++) {
+                            $("#ddRoleIds").append('<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>');
+                        }
+
+                        $("#ddRoleIds").prop("disabled", false);
+
+                    } else
+                    {
+                        $("#ddRoleIds").prop("disabled", true);
+
+                    }
+
+                },
+                failure: function ()
+                {
+                },
+                error: function ()
+                {
+                    alert("Content load failed.");
+                }
+            });
+
+
+        //enableSubmit();
+    });
+
+    $("#ddRoleIds").change(function () {
+        if ($('#ddRoleIds').val() != -1) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data:
+                {
+                    userId: $('#ddUserIds').val(),
+                    roleId: $('#ddRoleIds').val()
+                },
+                url: '@Url.Action("GetAvailableDashboards", "CustomDashboard")',
+                success: function (data) {
+                    $("#ddDashboardIds").empty();
+                    data = data || {};
+                    if (data.length > 0) {
+                        $("#ddDashboardIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                        for (var i = 0; i < data.length; i++) {
+                            $("#ddDashboardIds").append('<option value="' + data[i].DashId + '">' + data[i].DashName + '</option>');
+                        }
+
+                        $("#ddDashboardIds").prop("disabled", false);
+
+                    } else {
+                        $("#ddDashboardIds").empty();
+                        $("#ddDashboardIds").prop("disabled", true);
+                    }
+                },
+                failure: function () {
+                },
+                error: function () {
+                    alert("Content load failed.");
+                }
+            });
+        } else {
+            alert("Please select role !!");
+        }
+
+       // enableSubmit();
+    });
+});
+
+        $("#btnSubmit").click(function (e) {
+            e.preventDefault();
+            if (validate()) {
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "@Url.Action("Save")",
+                    dataType: 'json',
+                    data: {
+                        userId: $('#ddUserIds').val(),
+                        roleId: $('#ddRoleIds').val(),
+                        dashboardId: $('#ddDashboardIds').val(),
+                    },
+                    cache: false,
+                    success: function (data) {
+                        if (data.type == "success")
+                        {
+                            $("#divMopPlanModal").modal('hide');
+                            swal({ title: "Success", text: data.msg, type: "success", });
+
+
+                            $('#tblMopPlan').DataTable().ajax.reload();
+                        }
+                        else if (data.type == "error" || data.type == "failure")
+                        {
+
+                            swal({ title: "Error", text: data.msg, type: "error", });
+                        }
+                    }
+                });
+            }
+        });
+
+
+    function enableSubmit() {
+
+            if ($('#ddUserIds').val() === "-1" || $('#ddRoleIds').val() === "-1" || $('#ddDashboardIds').val() === "-1") {
+                $("#btnSubmit").prop("disabled", true);
+                alert("Dis")
+            } else {
+                $("#btnSubmit").prop("disabled", false);
+                alert("e")
+            }
+        }
+
+    function validate() {
+        var isValid = true;
+        var msg;
+
+        if ($('#ddUserIds').val() == "-1") {
+            addRemoveClass("#ddUserIds", false);
+            msg = "Please select user id";
+            isValid = false;
+        } else {
+            addRemoveClass("#ddUserIds", true);
+        }
+
+        if ($('#ddRoleIds').val() == "-1") {
+            addRemoveClass("#ddRoleIds", false);
+            msg = "Please select role id";
+            isValid = false;
+        } else {
+            addRemoveClass("#ddUserIds", true);
+        }
+
+        if ($('#ddDashboardIds').val() == "-1") {
+            addRemoveClass("#ddDashboardIds", false);
+            msg = "Please select dashboard id";
+            isValid = false;
+        } else {
+            addRemoveClass("#ddDashboardIds", true);
+        }
+
+        if (!isValid) {
+            swal({ title: "Error", text: msg, type: "error", });
+        }
+
+        return isValid;
+    }
+
+    function addRemoveClass(controlId, isSuccess) {
+        if (isSuccess) {
+            $(controlId).removeClass('text-danger');
+        } else {
+            $(controlId).addClass('text-danger');
+        }
+    }
+
+</script>
+
 
 <div class="modal-header">
     <h4 class="modal-title">Dashboard Mapping</h4>
@@ -12,16 +190,48 @@
 </div>
 
 <div class="modal-body">
+    @using (Html.BeginForm("Save", "CustomDashboard", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formUserDashboard" }))
+    {
+        <div class="card card-default">
 
-    <div class="card card-default">
-        <div class="card-body">
-            @Html.DropDownList("", (SelectList)ViewBag.UserList, "", new { @class = "form-control" })
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>User Id<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddUserIds", new SelectList(ViewBag.UserList, "Id", "Name"), new { @id = "ddUserIds", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Role Id<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddRoleIds", new SelectList("", "Id", "Name"), new { @disabled = true, @id = "ddRoleIds", @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Dashboard Name<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddDashboardIds", new SelectList("", "Id", "Name"), new { @disabled = true, @id = "ddDashboardIds", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="card-footer" id="footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input id="btnSubmit" type="button" value="Submit" class="btn btn-primary float-right" />
+            </div>
+
         </div>
-    </div>
-
-    <div class="card-footer" id="footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <input type="button" onclick="EditMOPData()" value="Submit" class="btn btn-primary float-right" />
-    </div>
-
+    }
 </div>

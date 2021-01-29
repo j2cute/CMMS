@@ -17,8 +17,7 @@ namespace WebApplication
 {
     public class DashboardConfig
     {
-        private static string dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
-        private static CustomDashboardStorage customStorage = new CustomDashboardStorage(dashboardPath);
+        private static CustomDashboardStorage customStorage = new CustomDashboardStorage();
 
         public static void RegisterService(RouteCollection routes)
         {
@@ -81,6 +80,9 @@ namespace WebApplication
 
     public class CustomDashboardStorage : IEditableDashboardStorage
     {
+        private static string dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
+
+
         public string WorkingDirectory { get; set; }
         protected virtual DirectoryInfo Directory
         {
@@ -89,6 +91,11 @@ namespace WebApplication
                 string absolutePath = Path.IsPathRooted(WorkingDirectory) ? WorkingDirectory : HttpContext.Current.Server.MapPath(WorkingDirectory);
                 return new DirectoryInfo(absolutePath);
             }
+        }
+
+        public CustomDashboardStorage()
+        {
+           WorkingDirectory = dashboardPath;
         }
 
         public CustomDashboardStorage(string workingDirectory)
