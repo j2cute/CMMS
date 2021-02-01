@@ -10,6 +10,7 @@ namespace ClassLibrary.Models
     public class PartsModel
     {
         public int PartId { get; set; }
+        public int? CageId { get; set; }
         [MaxLength(50, ErrorMessage = "Maximum Length Should be Equal to 50 Characters")]
         public string Part_No { get; set; }
         //[RegularExpression("^[a-zA-Z0-9]{5}$", ErrorMessage = "Max length should be 5, Alphanumeric Characters")]

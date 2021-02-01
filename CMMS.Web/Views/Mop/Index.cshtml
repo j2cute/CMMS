@@ -1,5 +1,5 @@
 ﻿@model ClassLibrary.ViewModels.MopViewModels
-    @using CMMS.Web.Helper
+@using CMMS.Web.Helper
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <link href="~/Content/morris.css" rel="stylesheet" />
@@ -47,7 +47,7 @@
     var siteId;
     $(document).ready(function () {
     permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
         $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
         GetSiteConfig();
         var mopTable;

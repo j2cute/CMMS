@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
@@ -162,8 +163,7 @@ namespace WebApplication.Controllers
         #region ConfigurationEquipment
 
         public ActionResult ConfigEquipIndex()
-        {
-           
+        {           
             var vm = new ConfigViewModel
             {
                 _tbl_Unit = db.tbl_Unit.ToList(),
@@ -171,8 +171,98 @@ namespace WebApplication.Controllers
                 tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A") ).ToList(),
                 _M_PMS = db.M_PMS.ToList(),
             };
-
             return View("ConfigEquipIndex", vm);
+        }
+
+        [HttpPost]
+        public JsonResult LoadData(int length, int start)
+        {
+                //search value
+                string searchvalue = Request.Form["search[value]"];
+                //Find Order Column
+                var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+                var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+                Expression<Func<tbl_Parts, object>> sortExpression;
+                switch (sortColumn)
+                {
+                    case "CageCode":
+                        sortExpression = (x => x.CageCode);
+                        break;
+
+                    case "Part_No":
+                        sortExpression = (x => x.Part_No);
+                        break;
+                    case "PART_NAME":
+                        sortExpression = (x => x.PART_NAME);
+                        break;
+
+                    case "PartTypeID":
+                        sortExpression = (x => x.PartTypeID);
+                        break;
+                    default:
+                        sortExpression = (x => x.CageCode);
+                        break;
+                }
+
+
+                int filterrecord;
+                List<PartsModel> Partdata = null;
+                if (sortColumnDir == "asc")
+                {
+                    Partdata = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A") && (
+                    x.CageCode.Contains(searchvalue)
+  
+                    || x.Part_No.Contains(searchvalue)
+                    || x.PART_NAME.Contains(searchvalue)
+                    || x.PartTypeID.Contains(searchvalue))
+                    )
+                    .OrderBy(sortExpression).Skip(start).Take(length)
+                    .Select(x => new PartsModel
+                    {
+                        PartId = x.PartId,
+                        CageId = x.CageId,
+                        CageCode = x.CageCode,
+                        Part_No = x.Part_No,
+                        PART_NAME = x.PART_NAME,
+                        PartTypeID = x.PartTypeID
+                    }).ToList();
+
+                }
+                else
+                {
+                    Partdata = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A") && (
+                  x.CageCode.Contains(searchvalue)
+     
+                    || x.Part_No.Contains(searchvalue)
+                    || x.PART_NAME.Contains(searchvalue)
+                    || x.PartTypeID.Contains(searchvalue))
+                )
+                .OrderByDescending(sortExpression).Skip(start).Take(length)
+                .Select(x => new PartsModel
+                {
+                    PartId = x.PartId,
+                    CageId = x.CageId,
+                    CageCode = x.CageCode,
+                    Part_No = x.Part_No,
+                    PART_NAME = x.PART_NAME,
+                    PartTypeID = x.PartTypeID
+                }).ToList();
+                }
+                if (searchvalue != "")
+                { filterrecord = Partdata.Count(); }
+                else { filterrecord = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A")).Count(); }
+                var recordcount = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A")).Count();
+
+                List<PartsModel> dataItems = new List<PartsModel>();
+                foreach (var item in Partdata)
+                {
+                    dataItems.Add(item);
+                }
+
+                var response = new { recordsTotal = recordcount, recordsFiltered = filterrecord, data = dataItems };
+                return Json(response, JsonRequestBehavior.AllowGet);
+            
+      
         }
 
         public JsonResult GetConfigEquipment(int? siteId)
@@ -361,11 +451,11 @@ namespace WebApplication.Controllers
                             Title = model.ESWBS + " - " + model.Nomanclature,
 
                         };
-                        if (model.EditSelectedPartId != null && model.EditSelectedCageId != null)
-                        {
-                            obj.PartId = model.EditSelectedPartId;
-                            obj.CageId = model.EditSelectedCageId;
-                        }
+                        //if (model.EditSelectedPartId != null && model.EditSelectedCageId != null)
+                        //{
+                        //    obj.PartId = model.EditSelectedPartId;
+                        //    obj.CageId = model.EditSelectedCageId;
+                        //}
                         db.Entry(obj).State = EntityState.Modified;
                         db.SaveChanges();
                         transaction.Commit();

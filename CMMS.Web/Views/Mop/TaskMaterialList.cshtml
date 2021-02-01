@@ -54,7 +54,7 @@
     $(document).ready(function () {
 
       permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-         siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+         siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
         $("#M_MOP_ITEMS_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
 
         if (permissions.filter(obj => obj.PermissionId == "TMLAdd").length > 0) {

@@ -1,0 +1,133 @@
+﻿@model ClassLibrary.ViewModels.ConfigViewModel
+@{
+    string pageMode = ViewBag.PageMode;
+    var action = ViewBag.pageMode == "1" ? "Create" : "Edit";
+    var title = "ESWBS Detail";
+    if (pageMode == "1")
+    { title = "Add ESWBS"; }
+    else if (pageMode == "2")
+    { title = "Edit ESWBS"; }
+}
+
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+
+<div class="modal-header" @*style="background-color: #ffc107!important;"*@>
+    <h4 class="modal-title" id="title"></h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+@using (Html.BeginForm(action, "Config", FormMethod.Post, new { enctype = "multipart/form-data", @id = "myForm" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="modal-body" style="background-color:#f6f6f6; color:black">
+        @*@Html.HiddenFor(model => model..CAGECDXH)
+        @Html.HiddenFor(model => model.HA.REFNUMHA)*@
+
+        <div style="column-count:2">
+            <div class="form-group row" style="column-span:all">
+                <label class="col-md-3 col-form-label">@Html.DisplayNameFor(model => model.C_Site_Config.ESWBS)</label>
+                <div class="col-md-5">
+                    @if (pageMode == "1")
+                    {
+                        @Html.EditorFor(model => model.C_Site_Config.ESWBS, new
+                        {
+                            htmlAttributes = new { @class = "form-control" }
+                        })
+                    }
+                    else
+                    {
+                        @Html.EditorFor(model => model.C_Site_Config.ESWBS, new
+                        {
+                          htmlAttributes = new { @class = "form-control", @disabled = "disabled" }
+                        })
+                    }
+                    @Html.ValidationMessageFor(model => model.C_Site_Config.ESWBS, "", new { @class = "text-danger" })
+                </div>
+                <label class="col-md-2 col-form-label">@Html.DisplayNameFor(model => model.C_Site_Config.Qty)</label>
+                <div class="col-md-2">
+                    @if (pageMode == "1")
+                    {
+                        @Html.EditorFor(model => model.C_Site_Config.Qty, new
+                        {
+                            htmlAttributes = new { @class = "form-control" }
+                        })
+                    }
+                    else
+                    {
+                        @Html.EditorFor(model => model.C_Site_Config.Qty, new
+                        {
+                          htmlAttributes = new { @class = "form-control", @disabled = "disabled" }
+                        })
+                    }
+                    @Html.ValidationMessageFor(model => model.C_Site_Config.Qty, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group row">
+
+            </div>
+            <div class="form-group row">
+                <label class="col-md-4 col-form-label">@Html.DisplayNameFor(model => model.C_Site_Config.Nomanclature)</label>
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.C_Site_Config.Nomanclature, new
+                    {
+                        htmlAttributes = new
+                        {
+                            @class = "form-control"@*, @disabled = "disabled"*@
+}
+})
+                    @Html.ValidationMessageFor(model => model.C_Site_Config.Nomanclature, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        @*<table id="editChildTable" class="table table-bordered table-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <td>PartId</td>
+                    <th>Part No</th>
+                    <th>Part Name</th>
+                    <th>Part Type</th>
+                    <th>Cage Code</th>
+                    <td>CageId</td>
+                </tr>
+            </thead>
+        </table>*@
+
+    </div>
+    <div class="modal-footer" id="footer" @*style="background-color: #ffc107!important;"*@>
+        <button type="button" id="btnCancel" class="btn btn-outline-light" data-dismiss="modal">Cancel</button>
+        <input type="submit" id="btnSubmit" value="Save" class="btn btn-outline-light pull-right" />
+
+    </div>
+}
+
+
+
+
+
+
+
+<script>
+    $(document).ready(function () {
+
+        if (ViewBag.PageMode == 0) {
+            document.getElementById("btnSubmit").style.display = "none";
+        }
+        else if (ViewBag.PageMode == "2") {
+            var c = document.getElementById("btnCancel");
+            c.className += " btn-outline-dark";
+            var d = document.getElementById("btnSubmit");
+            d.className += " btn-outline-dark";
+        }
+    });
+
+</script>
+
+
+

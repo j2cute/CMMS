@@ -39,10 +39,12 @@
     $(document).ready(function () {
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SiteId));
+        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
 
         $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
-        //$("#ConfigEquipment").hide();
+        //$("#ConfigEquipment").hide();C_Site_Config_SiteId
+        $("#addFooter").hide();
+        $("#editFooter").hide();
         $("#AddChild").attr('disabled', true);
         $("#editChild").attr('disabled', true);
         $("#delChild").attr('disabled', true);
@@ -50,26 +52,74 @@
         //    resetFormInputs();
             $("#ConfigEquipment").show();
         //});
+
+        $("#AddChild").click(function () {
+            $('#C_Site_Config_ESWBS').val("");
+            $('#C_Site_Config_Nomanclature').val("");
+            Qty: $('#C_Site_Config_Qty').val("");
+            $('#C_Site_Config_PMS_No').val("");
+            $('#C_Site_Config_SMR_Code').val("");     
+            table.$('tr.selected').removeClass('selected');
+            $("#addFooter").show();
+            $("#editFooter").hide();
+
+        });
+
+        $("#editChild").click(function () {
+            table.$('tr.selected').removeClass('selected');
+            $("#editFooter").show();
+            $("#addFooter").hide();
+
+        });
+        
         GetConfig();
-        $("body [data-submit-form]").on("click", function (event) {
-            $("#" + $(event.target).data('submit-form')).valid();
-        });
+ 
+           table=  $('#example1').DataTable(
+            {
+                "bServerSide": true,
+                "processing": true,
+               // "searchable": true,
+                "scrollX": true,
+                "paging": true,
+                "filter": true,
+                "destroy": true,
+                "order": [[1, 'asc']],
+                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
 
+                ajax: {
+                      //cache: 'false',
+                    type: 'POST',
+                    url: '@Url.Action("LoadData")',
 
-        table = $('#example1').DataTable({
-            'columnDefs': [{
-                targets: 0,
-                data: null,
-                defaultContent: '',
-                orderable: false,
-                className: 'select-checkbox'
-            }],
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-            order: [[1, 'asc']]
-        });
+                    dataType: 'json',
+                    dataSrc: 'data',
+                   // contentType: "application/json; charset=utf-8",
+
+                },
+
+                columns: [
+                    { 'data': "<td></td>" },
+                    { 'data': 'PartId', "name": "PartId", },
+                    { 'data': 'Part_No', "name": "Part_No", },
+                    { 'data': 'PART_NAME', "name": "PART_NAME", },
+                    { 'data': 'PartTypeID', "name": "PartTypeID", },
+                    { 'data': 'CageCode', "name": "CageCode", },
+                    { 'data': 'CageId', "name": "CageId", },
+                   ],
+
+                   'columnDefs': [{
+                       targets: 0,
+                       data: null,
+                       defaultContent: '',
+                       orderable: false,
+                       className: 'select-checkbox'
+                   }],
+                   select: {
+                       style: 'os',
+                       selector: 'td:first-child'
+                   },
+                   order: [[5, 'asc']],
+            });
 
         $('#example1 tbody').on("click", '.select-checkbox', function () {
             var tblData = table.rows($(this).closest('tr')).data();
@@ -77,47 +127,18 @@
             $.each(tblData, function (i, val) {
                 selectedData = tblData[i];
             });
-            console.log(selectedData);
-            var partId = selectedData[1];
-            var cageId = selectedData[6];
+            console.log("selected....///",selectedData);
+            var partId = selectedData.PartId;
+            console.log(partId);
+            var cageId = selectedData.CageId;
+            console.log(cageId);
             $('#C_Site_Config_PartId').val(partId);
             $('#C_Site_Config_CageId').val(cageId);
 
         });
 
-        ///...............Edit child table............//////
-
-        editTable = $('#editChildTable').DataTable({
-            'columnDefs': [{
-                targets: 0,
-                data: null,
-                defaultContent: '',
-                orderable: false,
-                className: 'select-checkbox'
-            }],
-            select: {
-                style: 'os',
-                selector: 'td:first-child'
-            },
-            order: [[1, 'asc']]
-        });
-
-        $('#editChildTable tbody').on("click", '.select-checkbox', function () {
-            var tblData = editTable.rows($(this).closest('tr')).data();
-            var selectedData;
-            $.each(tblData, function (i, val) {
-                selectedData = tblData[i];
-            });
-            console.log(selectedData);
-            var partId = selectedData[1];
-            var cageId = selectedData[6];
-            $('#editNewPartId').val(partId);
-            $('#editNewCageId').val(cageId);
-
-        });
-
-
     });
+
     function GetSelectedConfiguration() {
         var eswbs = $('#Eswbs').val();
         var siteId = $('#C_Site_Config_SiteId').val();
@@ -203,6 +224,7 @@
         });
 
     };
+
     function OnSuccess(response) {
         $("#myModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
         $("#AddChild").attr('disabled', true);  $("#editChild").attr('disabled', true); $("#delChild").attr('disabled', true);
@@ -247,20 +269,7 @@
         }
     };
 
-    $("#yourSubmitButtonID").click(function (e) {
-        e.preventDefault();
-        var _this = $(this);
-        var _form = _this.closest("form");
-
-        if (_form.validate().valid()) {
-            $.post(_form.attr("action"), _form.serialize(), function (data) {
-                //check the result and do whatever you want
-            });
-        }
-    });
     function AddChildData() {
-
-
         $.ajax({
             cache: 'false',
             type: "POST",
@@ -276,7 +285,6 @@
                 SMR_Code: $('#C_Site_Config_SMR_Code').val(),
                 PartId: $('#C_Site_Config_PartId').val(),
                 CageId: $('#C_Site_Config_CageId').val(),
-
             },
             success: OnSuccess,
             failure: function (vm) {
@@ -302,6 +310,7 @@
             }
         });
     };
+
     function EditChildData() {
         $.ajax({
             cache: 'false',
@@ -310,17 +319,16 @@
             dataType: 'json',
             data: {
                 SiteId: $('#C_Site_Config_SiteId').val(),
-                PESWBS: $('#C_SiteConfigModel_PESWBS').val(),
-                ESWBS: $('#C_SiteConfigModel_ESWBS').val(),
-                Nomanclature: $('#C_SiteConfigModel_Nomanclature').val(),
-                Qty: $('#C_SiteConfigModel_Qty').val(),
-                PMS_No: $('#C_SiteConfigModel_PMS_No').val(),
-                SMR_Code: $('#C_SiteConfigModel_SMR_Code').val(),
-                PartId: $('#C_SiteConfigModel_PartId').val(),
-                CageId: $('#C_SiteConfigModel_CageId').val(),
+                PESWBS: $('#C_Site_Config_PESWBS').val(),
+                ESWBS: $('#C_Site_Config_ESWBS').val(),
+                Nomanclature: $('#C_Site_Config_Nomanclature').val(),
+                Qty: $('#C_Site_Config_Qty').val(),
+                PMS_No: $('#C_Site_Config_PMS_No').val(),
+                SMR_Code: $('#C_Site_Config_SMR_Code').val(),
+                PartId: $('#C_Site_Config_PartId').val(),
+                CageId: $('#C_Site_Config_CageId').val(),
                 EditSelectedPartId: $('#editNewPartId').val(),
                 EditSelectedCageId: $('#editNewCageId').val(),
-
 
             },
             success: OnSuccess,
@@ -342,6 +350,7 @@
                 swal({ title: "ERROR", text: finalError, type: "error", }); }
         });
     };
+
     function DeleteChildData() {
         $.ajax({
             cache: 'false',
@@ -363,7 +372,7 @@
 
         });
     };
-    /////////////////////
+
     function GetConfig() {
         var siteId = $('#C_Site_Config_SiteId').val();
         $.ajax({
@@ -417,7 +426,8 @@
             }
         });
     };
-    function resetFormInputs(context) {
+
+    function resetFormInputs() {
         var siteId = $('#C_Site_Config_SiteId').val();
         jQuery('#WizardPicturePreview').removeAttr("src");
         //$("#File").prop('disabled', false)
@@ -437,14 +447,6 @@
             .each(function () {
                 jQuery(this).val(jQuery(this).prop('defautValue'));
             });
-        jQuery(':input', '#editChildModal')
-            .removeAttr('checked')
-            .removeAttr('selected')
-            .attr("style", "pointer-events: '';")
-            .not(':button, :submit, :reset, :hidden')
-            .each(function () {
-                jQuery(this).val(jQuery(this).prop('defautValue'));
-            });
         jQuery(':input', '#delChildModal')
             .removeAttr('checked')
             .removeAttr('selected')
@@ -455,17 +457,19 @@
             });
         $('#C_Site_Config_SiteId').val(siteId);
     };
+
     function GetEditChild() {
-        $("#C_SiteConfigModel_PESWBS").val($("#tbPEswbs").val());
-        $("#C_SiteConfigModel_Title").val($("#tbtitle").val());
-        $("#C_SiteConfigModel_ESWBS").val($("#tbEswbs").val());
-        $("#C_SiteConfigModel_Nomanclature").val($("#tbEswbsName").val());
-        $("#C_SiteConfigModel_Qty").val($("#tbQpa").val());
-        $("#C_SiteConfigModel_PMS_No").val($("#tbPms").val());
-        $("#C_SiteConfigModel_SMR_Code").val($("#tbSmr").val());
-        $('#C_SiteConfigModel_PartId').val($("#tbPartId").val());
-        $('#C_SiteConfigModel_CageId').val($("#tbCageId").val());
+        $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
+        $("#C_Site_Config_Title").val($("#tbtitle").val());
+        $("#C_Site_Config_ESWBS").val($("#tbEswbs").val());
+        $("#C_Site_Config_Nomanclature").val($("#tbEswbsName").val());
+        $("#C_Site_Config_Qty").val($("#tbQpa").val());
+        $("#C_Site_Config_PMS_No").val($("#tbPms").val());
+        $("#C_Site_Config_SMR_Code").val($("#tbSmr").val());
+        $('#C_Site_Config_PartId').val($("#tbPartId").val());
+        $('#C_Site_Config_CageId').val($("#tbCageId").val());
     };
+
     function OpenAllNode() {
         let selectedNode = $("#jstree").jstree("get_selected");
         if (selectedNode) {
@@ -525,7 +529,7 @@
         <div class="row" id="ConfigEquipment">
 
             <div class="col-md-6">
-                <div class="card"  style="width:100%">
+                <div class="card" style="width:100%">
                     <div class="card-header">
                         <h6 class="card-title"><b>Site Configuration</b></h6>
 
@@ -540,7 +544,7 @@
                         <div>
                             <input type="hidden" name="selectedItems" id="selectedItems" />
                             <input data-toggle="modal" data-target="#myModal" type="button" value="Add Child" class="btn btn-success" id="AddChild" />
-                            <input data-toggle="modal" data-target="#editChildModal" onclick="GetEditChild()" type="button" value="Edit Child" class="btn btn-primary" id="editChild" />
+                            <input data-toggle="modal" data-target="#myModal" onclick="GetEditChild()" type="button" value="Edit Child" class="btn btn-primary" id="editChild" />
                             <input data-toggle="modal" data-target="#delChildModal" type="button" value="Delete Child" class="btn btn-danger" id="delChild" />
                             <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
 
@@ -553,16 +557,14 @@
 
             <div class="col-md-6" id="AllDetails">
                 <div class="row" id="ConfigDetails">
-                    <div class="card card-default"  style="width:100%">
+                    <div class="card card-default" style="width:100%">
                         <div class="card-header">
                             <h3 class="card-title"><b>ESWBS DETAILS:</b></h3>
 
                             <div class="card-tools">
-
                                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                                     <i class="fas fa-minus"></i>
                                 </button>
-
                             </div>
                         </div>
                         <div class="card-body">
@@ -636,7 +638,7 @@
 
                 @*Parts Detail- start*@
                 <div class="row" id="PartsDetails">
-                    <div class="card card-default"  style="width:100%">
+                    <div class="card card-default" style="width:100%">
                         <div class="card-header">
                             <h3 class="card-title"><b>PART's DETAILS</b></h3>
 
@@ -705,7 +707,7 @@
                 @*Characteristics Details- start*@
                 <div class="row" id="PartsDetails">
 
-                    <div class="card card-default"  style="width:100%">
+                    <div class="card card-default" style="width:100%">
                         <div class="card-header">
                             <h3 class="card-title"><b>CHARACTERISTIC's DETAILS</b></h3>
 
@@ -790,13 +792,15 @@
     </div>
 </section>
 
+
+
 <div id='myModal' class='modal fade'>
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" style="max-width: 60% !important;">
         <div class="modal-content">
             <div id='myModalContent'>
 
                 <div class="modal-header">
-                    <h4 class="modal-title">Add Child</h4>
+                    <h4 class="modal-title"><strong>Add or Edit Child</strong></h4>
 
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -812,12 +816,11 @@
 
                         <div class="card card-default">
 
-
                             <!-- /.card-header -->
                             <!-- form start -->
                             <div class="card-body" id="InputFields">
-                                <fieldset>
-                                    <legend>Selected Parent (ESWBS)</legend>
+                                <fieldset class="border p-2">
+                                    <legend class="w-auto">Selected Parent (ESWBS)</legend>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -825,13 +828,11 @@
 
                                                 @Html.EditorFor(model => model.C_Site_Config.PESWBS, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.PESWBS, "", new { @class = "text-danger" })
-
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>PSWBS Name</label>
-
                                                 @Html.EditorFor(model => model.C_Site_Config.Title, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                                                 @Html.ValidationMessageFor(model => model.C_Site_Config.Title, "", new { @class = "text-danger" })
 
@@ -841,8 +842,9 @@
 
                                 </fieldset>
                                 <br />
-                                <fieldset>
-                                    <legend>Enter Child ESWBS Details</legend>
+
+                                <fieldset class="border p-2">
+                                    <legend class="w-auto">Enter Child ESWBS Details</legend>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
@@ -909,27 +911,6 @@
 
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            @*@if (Model.tbl_Parts_list != null)
-                                                {*@
-
-                                            @foreach (var item in Model.tbl_Parts_list)
-                                            {
-                                            <tr>
-                                                <td></td>
-                                                <td>@item.PartId</td>
-                                                <td> @item.Part_No</td>
-                                                <td> @item.PART_NAME</td>
-                              
-                                                <td>
-                                                    @item.PartTypeID
-                                                </td>
-                                                <td> @item.CageCode</td>
-                                                <td>@item.CageId</td>
-                                            </tr>
-                                            }
-
-                                        </tbody>
                                     </table>
                                 </fieldset>
 
@@ -937,9 +918,13 @@
 
                         </div>
 
-                        <div class="card-footer" id="footer">
+                        <div class="card-footer" id="addFooter">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                             <input id="btnAddChild" type="button" onclick="AddChildData()" value="Submit" class="btn btn-primary float-right" />
+                        </div>
+                        <div class="card-footer" id="editFooter">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <input id="btnEditChild" type="button" onclick="EditChildData()" value="Save" class="btn btn-primary float-right" />
                         </div>
 
 
@@ -950,165 +935,6 @@
     </div>
 </div>
 
-
-<div id='editChildModal' class='modal fade'>
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id='myModalContent'>
-
-                <div class="modal-header">
-                    <h4 class="modal-title">Edit Child</h4>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-
-                <div class="modal-body">
-
-                    <input type="hidden" name="editNewPartId" id="editNewPartId" />
-                    <input type="hidden" name="editNewCageId" id="editNewPartId" />
-                    <div class="card card-default">
-
-
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        <div class="card-body" id="InputFields">
-                            <fieldset>
-                                <legend>Selected Parent (ESWBS)</legend>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>PSWBS No.</label>
-
-                                            @Html.EditorFor(model => model.C_SiteConfigModel.PESWBS, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.PESWBS, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>PSWBS Name</label>
-
-                                            @Html.EditorFor(model => model.C_SiteConfigModel.Title, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Title, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </fieldset>
-                            <br />
-                            <fieldset>
-                                <legend>Enter Child ESWBS Details</legend>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>ESWBS No.<span style="color:red">*</span></label>
-
-                                            @Html.EditorFor(model => model.C_SiteConfigModel.ESWBS, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.PESWBS, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>ESWBS Name<span style="color:red">*</span></label>
-
-                                            @Html.EditorFor(model => model.C_SiteConfigModel.Nomanclature, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Nomanclature, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>Qty<span style="color:red">*</span></label>
-
-                                            @Html.EditorFor(model => model.C_SiteConfigModel.Qty, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.Qty, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>PMS No.</label>
-
-
-                                            @Html.DropDownListFor(model => model.C_SiteConfigModel.PMS_No, new SelectList(Model._M_PMS, "PMS_NO", "PMS_NO"), "Select", new { @class = "form-control", @required = "true" })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.PMS_No, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label>SMR Code</label>
-
-                                            @Html.EditorFor(model => model.C_SiteConfigModel.SMR_Code, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.C_SiteConfigModel.SMR_Code, "", new { @class = "text-danger" })
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <br />
-                                <table id="editChildTable" class="table table-bordered table-striped" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <td>PartId</td>
-                                            <th>Part No</th>
-                                            <th>Part Name</th>
-                                            <th>Part Type</th>
-                                            <th>Cage Code</th>
-                                            <td>CageId</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @*@if (Model.tbl_Parts_list != null)
-                                            {*@
-
-                                        @foreach (var item in Model.tbl_Parts_list)
-                                        {
-                                        <tr>
-                                            <td></td>
-                                            <td>@item.PartId</td>
-                                            <td> @item.Part_No</td>
-                                            <td> @item.PART_NAME</td>
-                                            <td>
-                                       @item.PartTypeID
-                                            </td>
-                                            <td> @item.CageCode</td>
-                                            <td>@item.CageId</td>
-
-
-                                        </tr>
-                                        }
-
-                                    </tbody>
-                                </table>
-                            </fieldset>
-
-                        </div>
-
-                    </div>
-
-                    <div class="card-footer" id="footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <input type="button" onclick="EditChildData()" value="Submit" class="btn btn-primary float-right" />
-                    </div>
-
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <div id='delChildModal' class='modal fade'>
@@ -1143,10 +969,100 @@
     @Scripts.Render("~/Scripts/Common/ModalPopup.js")
 }
 
-<script>
-
-    // Get Site Configuration
-
-</script>
 
 
+
+
+             @*//table = $('#example11').DataTable({
+        //    'columnDefs': [{
+        //        targets: 0,
+        //        data: null,
+        //        defaultContent: '',
+        //        orderable: false,
+        //        className: 'select-checkbox'
+        //    }],
+        //    select: {
+        //        style: 'os',
+        //        selector: 'td:first-child'
+        //    },
+        //    order: [[1, 'asc']]
+        //});
+
+
+        ///...............Edit child table............//////
+
+        //editTable = $('#editChildTable').DataTable({
+        //    'columnDefs': [{
+        //        targets: 0,
+        //        data: null,
+        //        defaultContent: '',
+        //        orderable: false,
+        //        className: 'select-checkbox'
+        //    }],
+        //    select: {
+        //        style: 'os',
+        //        selector: 'td:first-child'
+        //    },
+        //    order: [[1, 'asc']]
+        //});*@
+
+@*editTable = $('#editChildTable').DataTable(
+        {
+            "bServerSide": true,
+            "processing": true,
+           // "searchable": true,
+            "scrollX": true,
+            "paging": true,
+            "filter": true,
+            "destroy": true,
+            "order": [[1, 'asc']],
+            "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+
+            ajax: {
+                  //cache: 'false',
+                type: 'POST',
+                url: '@Url.Action("LoadData")',
+
+                dataType: 'json',
+                dataSrc: 'data',
+               // contentType: "application/json; charset=utf-8",
+
+            },
+
+            columns: [
+                { 'data': "<td></td>" },
+                { 'data': 'PartId', "name": "PartId", },
+                { 'data': 'Part_No', "name": "Part_No", },
+                { 'data': 'PART_NAME', "name": "PART_NAME", },
+                { 'data': 'PartTypeID', "name": "PartTypeID", },
+                { 'data': 'CageCode', "name": "CageCode", },
+                { 'data': 'CageId', "name": "CageId", },
+               ],
+
+               'columnDefs': [{
+                   targets: 0,
+                   data: null,
+                   defaultContent: '',
+                   orderable: false,
+                   className: 'select-checkbox'
+               }],
+               select: {
+                   style: 'os',
+                   selector: 'td:first-child'
+               },
+               order: [[1, 'asc']],
+        });
+
+    $('#editChildTable tbody').on("click", '.select-checkbox', function () {
+        var tblData = editTable.rows($(this).closest('tr')).data();
+        var selectedData;
+        $.each(tblData, function (i, val) {
+            selectedData = tblData[i];
+        });
+        console.log(selectedData);
+        var partId = selectedData[1];
+        var cageId = selectedData[6];
+        $('#editNewPartId').val(partId);
+        $('#editNewCageId').val(cageId);
+
+    });*@
