@@ -217,6 +217,7 @@
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\CageViewModels.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
+    <Compile Include="ViewModels\LinkedDashboardsVM.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\MopSchedulerFilterViewModel.cs" />
     <Compile Include="ViewModels\MopViewModels.cs" />

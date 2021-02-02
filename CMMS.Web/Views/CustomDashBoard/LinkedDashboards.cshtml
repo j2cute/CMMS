@@ -1,9 +1,10 @@
 ﻿@using CMMS.Web.Helper
 @{
+    ViewBag.Title = "LinkedDashboards";
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
 }
 
-<style>
+@*<style>
     .hide {
         display: none;
     }
@@ -39,14 +40,15 @@
 
                 ajax: {
                     type: 'POST',
-                    url: '@Url.Action("LoadAssignedDashboards")',
+                    url: '@Url.Action("LoadUserDashboard")',
                     dataType: 'json',
                     dataSrc: 'data',
+                    data: '{userId:' + @ViewBag.UserId + '}'
                 },
 
                 columns: [
+
                     { 'data': 'Id', "name": "Id",  },
-                    { 'data': 'UserId', "name": "User Id", },
                     { 'data': 'RoleId', "name": "Role Id", },
                     { 'data': 'DashboardId', "name": "Dashboard Id", },
                     { 'data': 'InsertedBy', "name": "Inserted By", },
@@ -74,19 +76,19 @@
                             var actions = '';
 
                             if (permissions.filter(obj => obj.PermissionId == "EditUserDashboardMapping").length > 0) {
-                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select"   href="/CustomDashboard/LinkedDashboards/' + data.UserId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select"   href="/CustomDashboard/LinkedDashboards/' + data.Id + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
                             }
                             else {
-                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled"   href="/CustomDashboard/LinkedDashboards/' + data.UserId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled"   href="/CustomDashboard/LinkedDashboards/' + data.Id + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
                             }
 
                             actions = actions + " " + '|' + " ";
 
                             if (permissions.filter(obj => obj.PermissionId == "DeleteUserDashboardMapping").length > 0) {
-                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select"  href="/CustomDashboard/Delete/' + data.UserId + '">' + 'Delete' + '</a>';
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select"  href="/CustomDashboard/Delete/' + data.Id + '">' + 'Delete' + '</a>';
                             }
                             else {
-                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" href="/CustomDashboard/Delete/' + data.UserId + '">' + 'Delete' + '</a>';
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" href="/CustomDashboard/Delete/' + data.Id + '">' + 'Delete' + '</a>';
                             }
 
                             return actions;
@@ -109,69 +111,37 @@
 
             });
 
-        //$('#tblUserDashboards tbody').on("click", '.select', function () {
-        //    var tblData = table.rows($(this).closest('tr')).data();
-        //    debugger;
-
-        //    var options = {
-        //        "backdrop": "static",
-        //        keyboard: true
-        //    };
-
-        //   $.ajax({
-        //        type: "GET",
-        //        url: this.href,
-        //        contentType: "application/json; charset=utf-8",
-        //        datatype: "json",
-        //        success: function(data)
-        //        {
-        //            $('#myModalContent').html(data);
-        //            $('#addEditMappingModal').modal(options);
-        //            $('#addEditMappingModal').modal('show');
-        //       },
-        //       failure: function () {
-        //       },
-        //       error: function () {
-
-        //            alert("Content load failed.");
-        //        }
-        //   });
-
-        //    return false;
-        //});
-
-
         $('#tblUserDashboards tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
-       
+           
             var options = {
                 "backdrop": "static",
                 keyboard: true
             };
- 
-            $.ajax({
-                type: "POST",
+
+           $.ajax({
+                type: "GET",
                 url: this.href,
-                dataType: "json",
-                data: {
-                    userId: tblData[0].UserId
-                },
-                success: function (data) {
- 
-                },
-                failure: function () {
-                },
-                error: function (abc) {
-                    debugger;
+                contentType: "application/json; charset=utf-8",
+                datatype: "json",
+                success: function(data)
+                {
+                    $('#myModalContent').html(data);
+                    $('#addEditMappingModal').modal(options);
+                    $('#addEditMappingModal').modal('show');
+               },
+               failure: function () {
+               },
+               error: function () {
+
                     alert("Content load failed.");
                 }
-            });
+           });
 
             return false;
         });
 
-
-           $("#btnAssignDashboard").click(function () {
+        $("#btnAssignDashboard").click(function () {
 
             var options = {
                 "backdrop": "static",
@@ -198,13 +168,7 @@
             });
         });
     });
-
-
-
 </script>
-<section class="content-header">
-    <h1>Dashboard Mapping</h1>
-</section>
 
 <section class="content">
 
@@ -226,7 +190,6 @@
                             <thead>
                                 <tr>
                                     <th>Id</th>
-                                    <th>User Id</th>
                                     <th>Role Id</th>
                                     <th>Dashboard Name</th>
                                     <th>Inserted By</th>
@@ -264,9 +227,12 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
 
 @section scripts{
     @Scripts.Render("~/Scripts/Common/ModalPopup.js")
 }
+
+
+

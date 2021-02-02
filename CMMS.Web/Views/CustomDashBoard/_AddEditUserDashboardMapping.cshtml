@@ -1,54 +1,63 @@
-﻿@{
-    var pageMode = ViewBag.PageMode;
+﻿ 
+@using WebApplication.Controllers
+@using CMMS.Web.Helper;
+@{
+    string pageMode = ViewBag.PageMode.ToString();
+    dynamic role;
+    if(ViewBag.PageMode == PageMode.Edit)
+    {
+        role = ViewBag.Details.Roles;
+    }
 }
 
 <script>
+
+    var addPageMode = @Html.Raw(Json.Encode(PageMode.Add ));
+    var pageMode = @Html.Raw(Json.Encode(ViewBag.PageMode));
+
     $(document).ready(function () {
 
-    $("#ddUserIds").change(function () {
-            $.ajax({
-                type: "POST",
-                dataType: 'json',
-                data:
-                {
-                    id: $('#ddUserIds').val()
-                },
-                url: '@Url.Action("GetRoles", "CustomDashboard")',
-                success: function (data)
-                {
-                    $("#ddRoleIds").empty();
+        if (pageMode == addPageMode) {
+            $("#ddUserIds").change(function () {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data:
+                    {
+                        id: $('#ddUserIds').val()
+                    },
+                    url: '@Url.Action("GetRoles", "CustomDashboard")',
+                    success: function (data) {
+                        $("#ddRoleIds").empty();
 
-                    $("#ddDashboardIds").empty();
-                    $("#ddDashboardIds").prop("disabled", true);
+                        $("#ddDashboardIds").empty();
+                        $("#ddDashboardIds").prop("disabled", true);
 
-                    data = data || {};
-                    if (data.length > 0) {
-                        $("#ddRoleIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
-                        for (var i = 0; i < data.length; i++) {
-                            $("#ddRoleIds").append('<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>');
+                        data = data || {};
+                        if (data.length > 0) {
+                            $("#ddRoleIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                            for (var i = 0; i < data.length; i++) {
+                                $("#ddRoleIds").append('<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>');
+                            }
+
+                            $("#ddRoleIds").prop("disabled", false);
+
+                        } else {
+                            $("#ddRoleIds").prop("disabled", true);
+
                         }
 
-                        $("#ddRoleIds").prop("disabled", false);
-
-                    } else
-                    {
-                        $("#ddRoleIds").prop("disabled", true);
-
+                    },
+                    failure: function () {
+                    },
+                    error: function () {
+                        alert("Content load failed.");
                     }
-
-                },
-                failure: function ()
-                {
-                },
-                error: function ()
-                {
-                    alert("Content load failed.");
-                }
+                });
             });
+        } else {
 
-
-        //enableSubmit();
-    });
+        }
 
     $("#ddRoleIds").change(function () {
         if ($('#ddRoleIds').val() != -1) {
@@ -87,43 +96,40 @@
             alert("Please select role !!");
         }
 
-       // enableSubmit();
+        // enableSubmit();
     });
-});
+    });
 
-        $("#btnSubmit").click(function (e) {
-            e.preventDefault();
-            if (validate()) {
-                $.ajax({
-                    type: "POST",
-                    async: false,
-                    url: "@Url.Action("Save")",
-                    dataType: 'json',
-                    data: {
-                        userId: $('#ddUserIds').val(),
-                        roleId: $('#ddRoleIds').val(),
-                        dashboardId: $('#ddDashboardIds').val(),
-                    },
-                    cache: false,
-                    success: function (data) {
-                        if (data.type == "success")
-                        {
-                            $("#divMopPlanModal").modal('hide');
-                            swal({ title: "Success", text: data.msg, type: "success", });
-
-
-                            $('#tblMopPlan').DataTable().ajax.reload();
-                        }
-                        else if (data.type == "error" || data.type == "failure")
-                        {
-
-                            swal({ title: "Error", text: data.msg, type: "error", });
-                        }
+    $("#btnSubmit").click(function (e) {
+        e.preventDefault();
+        if (validate()) {
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "@Url.Action("Save")",
+                dataType: 'json',
+                data: {
+                    userId: $('#ddUserIds').val(),
+                    roleId: $('#ddRoleIds').val(),
+                    dashboardId: $('#ddDashboardIds').val(),
+                },
+                cache: false,
+                success: function (data) {
+                    if (data.type == "success")
+                    {
+                        $("#addEditMappingModal").modal('hide');
+                        swal({ title: "Success", text: data.msg, type: "success", });
+                        $('#tblUserDashboards').DataTable().ajax.reload();
                     }
-                });
-            }
-        });
+                    else if (data.type == "error" || data.type == "failure")
+                    {
 
+                        swal({ title: "Error", text: data.msg, type: "error", });
+                    }
+                }
+            });
+        }
+    });
 
     function enableSubmit() {
 
@@ -200,14 +206,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>User Id<span style="color:red"> *</span></label>
-                            @Html.DropDownList("ddUserIds", new SelectList(ViewBag.UserList, "Id", "Name"), new { @id = "ddUserIds", @class = "form-control" })
+                            @Html.DropDownList("ddUserIds", new SelectList(ViewBag.UserList, "Id", "Name"), new { @disabled = (pageMode == PageMode.Edit.ToString() ? "true" : "false"), @id = "ddUserIds", @class = "form-control" })
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Role Id<span style="color:red"> *</span></label>
-                            @Html.DropDownList("ddRoleIds", new SelectList("", "Id", "Name"), new { @disabled = true, @id = "ddRoleIds", @class = "form-control" })
+                            @Html.DropDownList("ddRoleIds", (ViewBag.PageMode == PageMode.Add  ?  new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.Roles), new { @disabled = true, @id = "ddRoleIds", @class = "form-control" })
                         </div>
                     </div>
 
