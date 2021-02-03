@@ -10,14 +10,19 @@
     }
 }
 
-<script>
+    <script>
 
     var addPageMode = @Html.Raw(Json.Encode(PageMode.Add ));
     var pageMode = @Html.Raw(Json.Encode(ViewBag.PageMode));
 
     $(document).ready(function () {
 
+       // LoadData();
+
         if (pageMode == addPageMode) {
+
+            loadDashboards();
+
             $("#ddUserIds").change(function () {
                 $.ajax({
                     type: "POST",
@@ -61,7 +66,16 @@
 
     $("#ddRoleIds").change(function () {
         if ($('#ddRoleIds').val() != -1) {
-            $.ajax({
+            loadDashboards();
+        } else {
+            alert("Please select role !!");
+        }
+    });
+    });
+
+
+        function loadDashboards() {
+                $.ajax({
                 type: "POST",
                 dataType: 'json',
                 data:
@@ -92,13 +106,8 @@
                     alert("Content load failed.");
                 }
             });
-        } else {
-            alert("Please select role !!");
         }
 
-        // enableSubmit();
-    });
-    });
 
     $("#btnSubmit").click(function (e) {
         e.preventDefault();
@@ -119,7 +128,8 @@
                     {
                         $("#addEditMappingModal").modal('hide');
                         swal({ title: "Success", text: data.msg, type: "success", });
-                        $('#tblUserDashboards').DataTable().ajax.reload();
+
+                        window.location.href = '@Url.Action("LinkedDashboards","CustomDashboard")' + "?userId=" + $('#ddUserIds').val();
                     }
                     else if (data.type == "error" || data.type == "failure")
                     {
@@ -185,7 +195,54 @@
         }
     }
 
-</script>
+    function LoadData() {
+               $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data:
+                    {
+                        userId: $('#ddUserIds').val(),
+                        pageMode: '@ViewBag.PageMode'
+                    },
+                    url: '@Url.Action("PopulateUserData", "CustomDashboard")',
+                   success: function (data) {
+
+
+                       if ('@ViewBag.PageMode' == '2') {
+                           $("#ddRoleIds").empty();
+
+                           $("#ddDashboardIds").empty();
+                           $("#ddDashboardIds").prop("disabled", true);
+
+                           data = data || {};
+                           if (data.length > 0) {
+                               $("#ddRoleIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                               for (var i = 0; i < data.length; i++) {
+                                   $("#ddRoleIds").append('<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>');
+                               }
+
+                               $("#ddRoleIds").prop("disabled", false);
+
+                           } else {
+                               $("#ddRoleIds").prop("disabled", true);
+
+                           }
+                       }
+                       else
+                       {
+
+                       }
+
+                    },
+                    failure: function () {
+                    },
+                    error: function () {
+                        alert("Content load failed.");
+                    }
+                });
+    }
+
+    </script>
 
 
 <div class="modal-header">
@@ -206,14 +263,14 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>User Id<span style="color:red"> *</span></label>
-                            @Html.DropDownList("ddUserIds", new SelectList(ViewBag.UserList, "Id", "Name"), new { @disabled = (pageMode == PageMode.Edit.ToString() ? "true" : "false"), @id = "ddUserIds", @class = "form-control" })
+                            @Html.DropDownList("ddUserIds", (SelectList)ViewBag.Details.UserDetails, new { @disabled=true, @id = "ddUserIds", @class = "form-control" })
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Role Id<span style="color:red"> *</span></label>
-                            @Html.DropDownList("ddRoleIds", (ViewBag.PageMode == PageMode.Add  ?  new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.Roles), new { @disabled = true, @id = "ddRoleIds", @class = "form-control" })
+                            @Html.DropDownList("ddRoleIds", (SelectList)ViewBag.Details.Roles, new {  @id = "ddRoleIds", @class = "form-control" })
                         </div>
                     </div>
 
@@ -225,7 +282,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Dashboard Name<span style="color:red"> *</span></label>
-                            @Html.DropDownList("ddDashboardIds", new SelectList("", "Id", "Name"), new { @disabled = true, @id = "ddDashboardIds", @class = "form-control" })
+                            @Html.DropDownList("ddDashboardIds", pageMode == PageMode.Add.ToString() ?  new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.DashboardDetails, new { @id = "ddDashboardIds", @class = "form-control" })
                         </div>
                     </div>
                 </div>

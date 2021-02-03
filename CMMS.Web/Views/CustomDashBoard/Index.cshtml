@@ -1,0 +1,134 @@
+﻿@using CMMS.Web.Helper
+@{
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+<style>
+    .hide {
+        display: none;
+    }
+</style>
+
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+<script>
+    var permissions;
+
+    var dtFormat = 'DD/MM/YYYY';
+
+    $(document).ready(function ()
+    {
+  
+        var table;
+        table = $('#tblUserDashboards').DataTable(
+            {
+                "bServerSide": true,
+                "processing": true,
+                "scrollX": true,
+                "paging": true,
+                "filter": true,
+                "order": [[1, 'asc']],
+                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+
+                ajax: {
+                    type: 'POST',
+                    url: '@Url.Action("LoadUsers")',
+                    dataType: 'json',
+                    dataSrc: 'data',
+                },
+
+                columns: [
+                   
+                    { 'data': 'UserId', "name": "User Id"},
+                    { 'data': 'UserName', "name": "Role Id" },
+                     {
+                        'data': function (data, type, row, meta) {
+                            var actions = '';
+
+                           // if (permissions.filter(obj => obj.PermissionId == "EditUserDashboardMapping").length > 0) {
+                             actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select"   href="/CustomDashboard/LinkedDashboards?userId=' + data.UserId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                           // }
+                            //else {
+                            //    actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled"   href="/CustomDashboard/LinkedDashboards/' + data.UserId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            //}
+
+                            actions = actions + " " + '|' + " ";
+
+                           // if (permissions.filter(obj => obj.PermissionId == "DeleteUserDashboardMapping").length > 0) {
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select"  href="/CustomDashboard/Delete/' + data.UserId + '">' + 'Delete' + '</a>';
+                         ////   }
+                            //else {
+                            //    actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" href="/CustomDashboard/Delete/' + data.UserId + '">' + 'Delete' + '</a>';
+                            //}
+
+                            return actions;
+                        }
+                    },
+                ],
+
+             
+               "rowCallback": function (row, data, dataIndex) {
+                   //if (data["Status"] == "InActive") {
+                   //    $('td', row).css('background-color', 'red');
+
+                   //}
+               },
+
+            });
+
+        $('#tblUserDashboards tbody').on("click", '.select', function () {
+            var tblData = table.rows($(this).closest('tr')).data();
+ 
+            window.location.href = '@Url.Action("LinkedDashboards", "CustomDashboard")' + '?userId=' + tblData[0].UserId;
+
+            return false;
+        });
+    });
+
+</script>
+<section class="content-header">
+    <h1>Dashboard Mapping</h1>
+</section>
+
+<section class="content">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <div class="card-header">
+                        <div class="card-tools">
+                            <input type="button" value="Assign Dashboard" style="float:right;" class="btn btn-success" id="btnAssignDashboard">
+                        </div>
+
+                    </div>
+
+                    <div class="card-body">
+                        <table id="tblUserDashboards" class="table table-bordered table-striped">
+
+                            <thead>
+                                <tr>
+                                    <th>User Id</th>
+                                    <th>User Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                    <div class="card-footer">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+ 

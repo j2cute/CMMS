@@ -38,98 +38,119 @@ namespace WebApplication.Controllers
             return View("UserDashboards");
         }
 
-
-        public ActionResult AddUserDashboard()
+        public ActionResult LoadUsers(int length, int start)
         {
-            ViewBag.PageMode = PageMode.Add;
-
-            var type = "success";
-            string msg = string.Empty;
+            int recordCount = 0, filterrecord = 0;
+            dynamic userDashboardMappingData = null;
 
             try
             {
-                // List<string> assignedUserIds = new List<string>();
-                //using (var context = new WebAppDbContext())
-                //{
-                //    assignedUserIds = context.UserDashboardMappings.Select(x => x.UserId).ToList();
-                //}
-
-                using (var context = new Entities())
+                using (var db = new Entities())
                 {
-                    //.Where(p => assignedUserIds.All(p2 => p2 != p.UserId))
-                    var response = context.tbl_User
-                     .Select(x => new
-                     {
-                         Name = x.Name,
-                         Id = x.UserId
-                     }).ToList();
+                    string searchvalue = Request.Form["search[value]"];
+                    var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+                    var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+                    Expression<Func<tbl_User, object>> sortExpression;
+                    switch (sortColumn)
+                    {
+                        case "UserId":
+                            sortExpression = (x => x.UserId);
+                            break;
+                        case "UserName":
+                            sortExpression = (x => x.Name);
+                            break;
+                        default:
+                            sortExpression = (x => x.UserId);
+                            break;
+                    }
 
-                    ViewBag.UserList = response;
+                    if (sortColumnDir == "asc")
+                    {
+                        userDashboardMappingData = db.tbl_User.Where(x => x.UserId.Contains(searchvalue)
+                     || x.Name.Contains(searchvalue))
+                     .OrderBy(sortExpression).Skip(start).Take(length).Where(x=>x.IsActive != 0).ToList().Select(y => new { UserId = y.UserId, UserName = y.Name });
+                    }
+                    else
+                    {
+                        userDashboardMappingData = db.tbl_User.Where(x => x.UserId.Contains(searchvalue)
+                    || x.Name.Contains(searchvalue))
+                    .OrderByDescending(sortExpression).Skip(start).Take(length).Where(x => x.IsActive != 0).ToList().Select(y => new { UserId = y.UserId, UserName = y.Name });
+                    }
 
-                    return PartialView("_AddEditUserDashboardMapping", response);
+                    var recordcount = db.tbl_User.Count();
+
+                    if (searchvalue != "")
+                    {
+                        filterrecord = userDashboardMappingData.Count();
+                    }
+                    else
+                    {
+                        filterrecord = recordcount;
+                    }
                 }
-
             }
-            catch (Exception ex)
+            catch
             {
 
             }
 
-            return Json(new
-            {
-                msg = msg,
-                type = type
-            }, JsonRequestBehavior.AllowGet);
+            var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = userDashboardMappingData };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public ActionResult LinkedDashboards(string userId)
         {
-            ViewBag.PageMode = PageMode.Edit;
+            TempData["UserId"] = userId;
+            ViewBag.UserId = userId;
+            return View("UserDashboards");
+        }
 
-            var type = "success";
-            string msg = string.Empty;
+        [HttpPost]
+        public ActionResult LoadUserDashboard(int length, int start)
+        {
+            string userId = TempData["UserId"]?.ToString();
+            int recordCount = 0, filterrecord = 0;
+            List<UserDashboardMapping> userDashboardMappingData = new List<UserDashboardMapping>();
 
             try
             {
-                string userName = string.Empty;
-                string roleName = string.Empty;
-
-                using (var context = new WebAppDbContext())
+                using (WebAppDbContext db = new WebAppDbContext())
                 {
-                    var response = context.UserDashboardMappings.Where(x => x.Id == id);
-
-                    if (response.Any())
+                    string searchvalue = Request.Form["search[value]"];
+                    var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+                    var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+                    Expression<Func<UserDashboardMapping, object>> sortExpression;
+                    switch (sortColumn)
                     {
-                        var userDashboard = response.FirstOrDefault();
-                        using (var entities = new Entities())
-                        {
-                            userName = entities.tbl_User.FirstOrDefault(x => x.UserId == userDashboard.UserId).Name;
-                        }
+                        case "UserId":
+                            sortExpression = (x => x.UserId);
+                            break;
+                        default:
+                            sortExpression = (x => x.UserId);
+                            break;
+                    }
 
-                        var result = new List<dynamic>
-                        {
-                            new
-                            {
-                                Name = userName,
-                                Id = userDashboard.UserId
-                            }
-                        };
+                    if (sortColumnDir == "asc")
+                    {
+                        userDashboardMappingData = db.UserDashboardMappings.Where(x => x.UserId.Contains(userId))
+                       .OrderBy(sortExpression).Skip(start).Take(length).ToList();
+                    }
+                    else
+                    {
+                        userDashboardMappingData = db.UserDashboardMappings.Where(x => x.UserId.Contains(userId))
+                        .OrderByDescending(sortExpression).Skip(start).Take(length).ToList();
+                    }
 
-                        var roles = GetUserRoles(userDashboard.UserId);
-                        roleName = roles.FirstOrDefault(x => x.RoleId == userDashboard.RoleId).RoleName;
+                    var recordcount = db.UserDashboardMappings.Where(x => x.UserId == userId).Count();
 
-                        ViewBag.UserList = result;
-
-                        dynamic details = new ExpandoObject();
-                        details.UserDetails = new { Id = userDashboard.UserId, Name = userName };
-                        details.Roles = new SelectList(roles, new { Id = userDashboard.RoleId, Name = roleName });
-                        details.CurrentRole = new { RoleId = userDashboard.RoleId, RoleName = roleName };
-                        details.DashboardDetails = new SelectList(new List<dynamic> { new { DashboardId = userDashboard.DashboardId, DashboardName = userDashboard.DashboardId } }, userDashboard.DashboardId);
-
-                        ViewBag.Details = details;
-
-                        return PartialView("_AddEditUserDashboardMapping", result);
+                    if (searchvalue != "")
+                    {
+                        filterrecord = userDashboardMappingData.Count();
+                    }
+                    else
+                    {
+                        filterrecord = recordcount;
                     }
                 }
             }
@@ -138,22 +159,33 @@ namespace WebApplication.Controllers
 
             }
 
-            return Json(new
-            {
-                msg = msg,
-                type = type
-            }, JsonRequestBehavior.AllowGet);
-
-
+            var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = userDashboardMappingData };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult LinkedDashboards(string userId)
+        public ActionResult AddUserDashboard(string userId)
         {
-            ViewBag.UserId = userId;
-            return View("LinkedDashboards");
+            ViewBag.PageMode = PageMode.Add;
+            return RedirectToAction("PopulateUserData", new { userId = userId, pageMode = PageMode.Add });
         }
 
+        [HttpPost]
+        public ActionResult EditUserDashboard(string userId)
+        {
+            ViewBag.PageMode = PageMode.Edit;
+            return RedirectToAction("PopulateUserData", new { userId = userId, pageMode = PageMode.Edit });
+        }
+
+        [HttpPost]
+        public ActionResult DeleteDashboard(string DashboardID)
+        {
+            var dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
+            CustomDashboardStorage newDashboardStorage = new CustomDashboardStorage(dashboardPath);
+
+            newDashboardStorage.DeleteDashboard(HttpContext.Request.MapPath(Path.Combine(dashboardPath, $"{DashboardID}.xml")));
+            return new EmptyResult();
+        }
 
         [HttpPost]
         public ActionResult GetRoles(string id)
@@ -182,93 +214,11 @@ namespace WebApplication.Controllers
             {
                 using (var context = new WebAppDbContext())
                 {
-                    CustomDashboardStorage dashboardStorage = new CustomDashboardStorage();
-                    var dashboardsInfo = dashboardStorage.GetAvailableDashboardsInfo();
-
-                    var response = dashboardsInfo.Where(y => !context.UserDashboardMappings.Where(x => x.RoleId == roleId && x.UserId == userId).Select(x => x.DashboardId).Contains(y.ID)).Select(y => new
-                    {
-                        DashId = y.ID,
-                        DashName = y.Name
-                    }).ToList();
-
+                    var response = GetDashboards(userId, roleId);
                     return Json(response, JsonRequestBehavior.AllowGet);
                 }
             }
             return Json(string.Empty, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpPost]
-        public ActionResult LoadAssignedDashboards(int length, int start)
-        {
-            int recordCount = 0, filterrecord = 0;
-            List<UserDashboardMapping> userDashboardMappingData = new List<UserDashboardMapping>();
-
-            try
-            {
-                using (WebAppDbContext db = new WebAppDbContext())
-                {
-                    string searchvalue = Request.Form["search[value]"];
-                    var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
-                    var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
-                    Expression<Func<UserDashboardMapping, object>> sortExpression;
-                    switch (sortColumn)
-                    {
-                        case "UserId":
-                            sortExpression = (x => x.UserId);
-                            break;
-                        case "RoleId":
-                            sortExpression = (x => x.RoleId);
-                            break;
-                        case "DashboardName":
-                            sortExpression = (x => x.DashboardId);
-                            break;
-                        case "InsertedBy":
-                            sortExpression = (x => x.InsertedBy);
-                            break;
-                        case "LastUpdatedBy":
-                            sortExpression = (x => x.LastUpdatedBy);
-                            break;
-                        default:
-                            sortExpression = (x => x.UserId);
-                            break;
-                    }
-
-                    if (sortColumnDir == "asc")
-                    {
-                        userDashboardMappingData = db.UserDashboardMappings.Where(x => x.UserId.Contains(searchvalue)
-                     || x.RoleId.Contains(searchvalue)
-                     || x.DashboardId.Contains(searchvalue)
-                     || x.InsertedBy.Contains(searchvalue) || x.LastUpdatedBy.Contains(searchvalue))
-                     .OrderBy(sortExpression).Skip(start).Take(length).ToList();
-                    }
-                    else
-                    {
-                        userDashboardMappingData = db.UserDashboardMappings.Where(x => x.UserId.Contains(searchvalue)
-                       || x.RoleId.Contains(searchvalue)
-                       || x.DashboardId.Contains(searchvalue)
-                       || x.InsertedBy.Contains(searchvalue) || x.LastUpdatedBy.Contains(searchvalue))
-                         .OrderByDescending(sortExpression).Skip(start).Take(length).ToList();
-                    }
-
-                    var recordcount = db.UserDashboardMappings.Count();
-
-                    if (searchvalue != "")
-                    {
-                        filterrecord = userDashboardMappingData.Count();
-                    }
-                    else
-                    {
-                        filterrecord = recordcount;
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-
-            var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = userDashboardMappingData };
-            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -281,70 +231,52 @@ namespace WebApplication.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(userId) || !string.IsNullOrWhiteSpace(roleId) || !string.IsNullOrWhiteSpace(dashboardId))
                 {
-                    using (var context = new WebAppDbContext())
+                    if (ViewBag.PageMode == PageMode.Add)
                     {
-                        UserDashboardMapping model = new UserDashboardMapping()
+                        using (var context = new WebAppDbContext())
                         {
-                            UserId = userId,
-                            RoleId = roleId,
-                            DashboardId = dashboardId,
-                            InsertedBy = Session[SessionKeys.UserId].ToString(),
-                            InsertionDateTime = DateTime.Now,
-                            IsDefault = "1"
-                        };
+                            UserDashboardMapping model = new UserDashboardMapping()
+                            {
+                                UserId = userId,
+                                RoleId = roleId,
+                                DashboardId = dashboardId,
+                                InsertedBy = Session[SessionKeys.UserId].ToString(),
+                                InsertionDateTime = DateTime.Now,
+                                IsDefault = "1"
+                            };
 
-                        context.UserDashboardMappings.Add(model);
-                        context.SaveChanges();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                type = "error";
-                msg = ex.ToString();
-            }
-
-            return Json(new
-            {
-                msg = msg,
-                type = type
-            }, JsonRequestBehavior.AllowGet);
-        }
-
-
-        [HttpPost]
-        public ActionResult Edit(string userId, string roleId, string dashboardId)
-        {
-            var type = "success";
-            var msg = "Plan edited successfully.";
-
-            try
-            {
-                if (!string.IsNullOrWhiteSpace(userId) || !string.IsNullOrWhiteSpace(roleId) || !string.IsNullOrWhiteSpace(dashboardId))
-                {
-                    using (var context = new WebAppDbContext())
-                    {
-                        UserDashboardMapping model = new UserDashboardMapping()
-                        {
-                            UserId = userId,
-                            RoleId = roleId,
-                            DashboardId = dashboardId,
-                            InsertedBy = Session[SessionKeys.UserId].ToString(),
-                            InsertionDateTime = DateTime.Now,
-                            IsDefault = "1"
-                        };
-
-                        var previousDefault = context.UserDashboardMappings.FirstOrDefault(x => x.UserId == userId && x.IsDefault == "1");
-                        if (previousDefault != null)
-                        {
-                            previousDefault.IsDefault = "0";
-                            context.UserDashboardMappings.Attach(previousDefault);
-                            context.Entry(previousDefault).State = EntityState.Modified;
+                            context.UserDashboardMappings.Add(model);
+                            context.SaveChanges();
                         }
+                    }
+                    else if(ViewBag.PageMode == PageMode.Edit)
+                    {
+                        msg = "Plan edited successfully.";
+
+                        using (var context = new WebAppDbContext())
+                        {
+                            UserDashboardMapping model = new UserDashboardMapping()
+                            {
+                                UserId = userId,
+                                RoleId = roleId,
+                                DashboardId = dashboardId,
+                                InsertedBy = Session[SessionKeys.UserId].ToString(),
+                                InsertionDateTime = DateTime.Now,
+                                IsDefault = "1"
+                            };
+
+                            var previousDefault = context.UserDashboardMappings.FirstOrDefault(x => x.UserId == userId && x.IsDefault == "1");
+                            if (previousDefault != null)
+                            {
+                                previousDefault.IsDefault = "0";
+                                context.UserDashboardMappings.Attach(previousDefault);
+                                context.Entry(previousDefault).State = EntityState.Modified;
+                            }
 
 
-                        context.UserDashboardMappings.Add(model);
-                        context.SaveChanges();
+                            context.UserDashboardMappings.Add(model);
+                            context.SaveChanges();
+                        }
                     }
                 }
             }
@@ -360,19 +292,7 @@ namespace WebApplication.Controllers
                 type = type
             }, JsonRequestBehavior.AllowGet);
         }
-
-
-        [HttpPost]
-        public ActionResult DeleteDashboard(string DashboardID)
-        {
-            var dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
-            CustomDashboardStorage newDashboardStorage = new CustomDashboardStorage(dashboardPath);
-
-            newDashboardStorage.DeleteDashboard(HttpContext.Request.MapPath(Path.Combine(dashboardPath, $"{DashboardID}.xml")));
-            return new EmptyResult();
-        }
-
-
+ 
         private List<RoleDetails> GetUserRoles(string userId)
         {
             using (var context = new Entities())
@@ -385,22 +305,85 @@ namespace WebApplication.Controllers
                 }
                 ).ToList();
 
+                
+                
                 return response;
             }
         }
 
-
-        [HttpPost]
-        public ActionResult LoadUserDashboard(string userId)
+        public ActionResult PopulateUserData(string userId, string pageMode)
         {
+            var type = "success";
+            string msg = string.Empty;
+
             try
             {
                 if (!String.IsNullOrWhiteSpace(userId))
                 {
+
+                    dynamic details = new ExpandoObject();
+                    string userName = string.Empty;
+                    string roleName = string.Empty;
+
                     using (var context = new WebAppDbContext())
                     {
-                        var dashboards = context.UserDashboardMappings.Where(x => x.UserId == userId);
-                      
+                        if (pageMode == PageMode.Add.ToString())
+                        {
+                            ViewBag.PageMode = PageMode.Add;
+                            using (var db = new Entities())
+                            {
+                                var user = db.tbl_User.FirstOrDefault(x => x.UserId == userId && x.IsActive != 0);
+
+                                if (user != null)
+                                {
+                                    var roles = GetUserRoles(user.UserId);
+
+                                    details.UserDetails = new SelectList(new List<dynamic>{                                        new
+                                        {
+                                            Id = user.UserId, Name = user.Name
+                                        }
+                                    }, "Id", "Name");
+
+                                    details.Roles = new SelectList(roles, "RoleId", "RoleName");
+
+                                    ViewBag.Details = details;
+
+                                    return PartialView("_AddEditUserDashboardMapping");
+                                }
+                            }
+
+                        }
+                        else if (pageMode == PageMode.Edit.ToString())
+                        {
+                            ViewBag.PageMode = PageMode.Edit;
+                            var response = context.UserDashboardMappings.Where(x => x.UserId == userId);
+
+                            if (response.Any())
+                            {
+                                var userDashboard = response.FirstOrDefault();
+                                using (var entities = new Entities())
+                                {
+                                    userName = entities.tbl_User.FirstOrDefault(x => x.UserId == userDashboard.UserId).Name;
+                                }
+
+                                var roles = GetUserRoles(userDashboard.UserId);
+                                roleName = roles.FirstOrDefault(x => x.RoleId == userDashboard.RoleId).RoleName;
+
+
+                                details.UserDetails = new SelectList(new List<dynamic>{new
+                                        {
+                                            Id = userDashboard.UserId, Name = userName
+                                        }
+                                    }, "Id", "Name");
+
+                                details.Roles = new SelectList(roles,"RoleId","RoleName", new { RoleId = userDashboard.RoleId, RoleName = roleName });
+                                details.DashboardDetails = new SelectList(new List<dynamic> { new { DashboardId = userDashboard.DashboardId, DashboardName = userDashboard.DashboardId } },"DashboardId","DashboardName", userDashboard.DashboardId);
+
+                                ViewBag.Details = details;
+
+                                return PartialView("_AddEditUserDashboardMapping");
+                            }
+                        }
                     }
                 }
             }
@@ -409,7 +392,33 @@ namespace WebApplication.Controllers
 
             }
 
-            return null;
+            return Json(new
+            {
+                msg = msg,
+                type = type
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        public dynamic GetDashboards(string userId,string roleId)
+        {
+            dynamic response = null;
+            if (!string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(roleId))
+            {
+                using (var context = new WebAppDbContext())
+                {
+                    CustomDashboardStorage dashboardStorage = new CustomDashboardStorage();
+                    var dashboardsInfo = dashboardStorage.GetAvailableDashboardsInfo();
+
+                    response = dashboardsInfo.Where(y => !context.UserDashboardMappings.Where(x => x.RoleId == roleId && x.UserId == userId).Select(x => x.DashboardId).Contains(y.ID)).Select(y => new
+                    {
+                        DashId = y.ID,
+                        DashName = y.Name
+                    }).ToList();
+
+                }
+            }
+
+            return response;
         }
     }
 

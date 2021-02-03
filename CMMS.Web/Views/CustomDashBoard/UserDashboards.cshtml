@@ -1,6 +1,7 @@
 ﻿@using CMMS.Web.Helper
 @{
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+    var userId = ViewBag.UserId;
 }
 
 <style>
@@ -39,8 +40,9 @@
 
                 ajax: {
                     type: 'POST',
-                    url: '@Url.Action("LoadAssignedDashboards")',
+                    url: '@Url.Action("LoadUserDashboard")',
                     dataType: 'json',
+
                     dataSrc: 'data',
                 },
 
@@ -74,10 +76,10 @@
                             var actions = '';
 
                             if (permissions.filter(obj => obj.PermissionId == "EditUserDashboardMapping").length > 0) {
-                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select"   href="/CustomDashboard/LinkedDashboards/' + data.UserId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
                             }
                             else {
-                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled"   href="/CustomDashboard/LinkedDashboards/' + data.UserId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
                             }
 
                             actions = actions + " " + '|' + " ";
@@ -109,60 +111,31 @@
 
             });
 
-        //$('#tblUserDashboards tbody').on("click", '.select', function () {
-        //    var tblData = table.rows($(this).closest('tr')).data();
-        //    debugger;
-
-        //    var options = {
-        //        "backdrop": "static",
-        //        keyboard: true
-        //    };
-
-        //   $.ajax({
-        //        type: "GET",
-        //        url: this.href,
-        //        contentType: "application/json; charset=utf-8",
-        //        datatype: "json",
-        //        success: function(data)
-        //        {
-        //            $('#myModalContent').html(data);
-        //            $('#addEditMappingModal').modal(options);
-        //            $('#addEditMappingModal').modal('show');
-        //       },
-        //       failure: function () {
-        //       },
-        //       error: function () {
-
-        //            alert("Content load failed.");
-        //        }
-        //   });
-
-        //    return false;
-        //});
-
 
         $('#tblUserDashboards tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
-       
+
             var options = {
                 "backdrop": "static",
                 keyboard: true
             };
- 
-            $.ajax({
+
+          $.ajax({
                 type: "POST",
-                url: this.href,
-                dataType: "json",
-                data: {
-                    userId: tblData[0].UserId
-                },
-                success: function (data) {
- 
-                },
-                failure: function () {
-                },
-                error: function (abc) {
-                    debugger;
+                url: '@Url.Action("EditUserDashboard", "CustomDashboard")',
+               contentType: "application/json; charset=utf-8",
+               data: JSON.stringify({ userId: '@userId' }),
+                datatype: "json",
+                success: function(data)
+                {
+                    $('#myModalContent').html(data);
+                    $('#addEditMappingModal').modal(options);
+                    $('#addEditMappingModal').modal('show');
+               },
+               failure: function () {
+               },
+               error: function (data,abc,xyz) {
+
                     alert("Content load failed.");
                 }
             });
@@ -179,9 +152,10 @@
             };
 
            $.ajax({
-                type: "GET",
+                type: "POST",
                 url: '@Url.Action("AddUserDashboard", "CustomDashboard")',
-                contentType: "application/json; charset=utf-8",
+               contentType: "application/json; charset=utf-8",
+               data: JSON.stringify({ userId: '@userId' }),
                 datatype: "json",
                 success: function(data)
                 {
@@ -191,7 +165,7 @@
                },
                failure: function () {
                },
-               error: function () {
+               error: function (data,abc,xyz) {
 
                     alert("Content load failed.");
                 }

@@ -1763,6 +1763,7 @@
     <Content Include="Views\CustomDashBoard\UserDashboards.cshtml" />
     <Content Include="Views\CustomDashBoard\_AddEditUserDashboardMapping.cshtml" />
     <Content Include="Views\CustomDashBoard\LinkedDashboards.cshtml" />
+    <Content Include="Views\CustomDashBoard\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\DashBoards\" />
