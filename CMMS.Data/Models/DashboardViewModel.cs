@@ -25,6 +25,8 @@ namespace ClassLibrary.Models
         public string datetime { get; set; }
         public tbl_Unit tbl_Unit { get; set; }
         public IEnumerable<tbl_Unit> _tbl_Unit { get; set; }
+
+        public string DashboardId { get; set; }
     }
 
 

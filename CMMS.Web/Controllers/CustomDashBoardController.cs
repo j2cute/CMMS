@@ -17,7 +17,7 @@ namespace WebApplication.Controllers
 {
     public class CustomDashboardController : Controller
     {
-
+        private const string AllRoles = "AllRoles";
         // GET: Dashboard
         public ActionResult Index()
         {
@@ -68,7 +68,7 @@ namespace WebApplication.Controllers
                     {
                         userDashboardMappingData = db.tbl_User.Where(x => x.UserId.Contains(searchvalue)
                      || x.Name.Contains(searchvalue))
-                     .OrderBy(sortExpression).Skip(start).Take(length).Where(x=>x.IsActive != 0).ToList().Select(y => new { UserId = y.UserId, UserName = y.Name });
+                     .OrderBy(sortExpression).Skip(start).Take(length).Where(x => x.IsActive != 0).ToList().Select(y => new { UserId = y.UserId, UserName = y.Name });
                     }
                     else
                     {
@@ -222,16 +222,43 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(string userId, string roleId, string dashboardId,string pageMode)
+        public ActionResult Save(string userId, string roleId, string dashboardId, string pageMode)
         {
             var type = "success";
-            var msg = pageMode == PageMode.Add.ToString() ?  "Plan added successfully." : "Plan updated successfully.";
+            var msg = pageMode == PageMode.Add.ToString() ? "Plan added successfully." : "Plan updated successfully.";
 
             try
             {
                 if (!string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(roleId) && !string.IsNullOrWhiteSpace(dashboardId))
                 {
-                        using (var context = new WebAppDbContext())
+                    using (var context = new WebAppDbContext())
+                    {
+
+                        if (roleId == AllRoles)
+                        {
+                            context.UserDashboardMappings.RemoveRange(context.UserDashboardMappings.Where(x => x.UserId == userId));
+
+                            var roles = GetUserRoles(userId);
+                            List<UserDashboardMapping> models = new List<UserDashboardMapping>();
+                            foreach (var role in roles)
+                            {
+                                UserDashboardMapping model = new UserDashboardMapping()
+                                {
+                                    UserId = userId,
+                                    RoleId = role.RoleId,
+                                    DashboardId = dashboardId,
+                                    InsertedBy = Session[SessionKeys.UserId].ToString(),
+                                    InsertionDateTime = DateTime.Now,
+                                    IsDefault = "1"
+                                };
+                                models.Add(model);
+                            }
+
+                            context.UserDashboardMappings.AddRange(models);
+                            context.SaveChanges();
+                        }
+
+                        else
                         {
                             UserDashboardMapping model = new UserDashboardMapping()
                             {
@@ -254,6 +281,7 @@ namespace WebApplication.Controllers
                             context.UserDashboardMappings.Add(model);
                             context.SaveChanges();
                         }
+                    }
                 }
             }
             catch (Exception ex)
@@ -268,7 +296,7 @@ namespace WebApplication.Controllers
                 type = type
             }, JsonRequestBehavior.AllowGet);
         }
- 
+
         private List<RoleDetails> GetUserRoles(string userId)
         {
             using (var context = new Entities())
@@ -281,8 +309,8 @@ namespace WebApplication.Controllers
                 }
                 ).ToList();
 
-                
-                
+
+
                 return response;
             }
         }
@@ -313,6 +341,8 @@ namespace WebApplication.Controllers
                                 if (user != null)
                                 {
                                     var roles = GetUserRoles(user.UserId);
+
+                                    roles.Add(new RoleDetails() { RoleId = AllRoles, RoleName = "All" });
 
                                     details.UserDetails = new SelectList(new List<dynamic>{                                        new
                                         {
@@ -352,13 +382,13 @@ namespace WebApplication.Controllers
                                         }
                                     }, "Id", "Name");
 
-                                details.Roles = new  SelectList(new List<dynamic>{new
+                                details.Roles = new SelectList(new List<dynamic>{new
                                         {
                                             RoleId = userDashboard.RoleId, RoleName = roleName
                                         }
                                     }, "RoleId", "RoleName");
 
-                                details.DashboardDetails = new SelectList(new List<dynamic> { new { DashboardId = userDashboard.DashboardId, DashboardName = userDashboard.DashboardId } },"DashboardId","DashboardName", userDashboard.DashboardId);
+                                details.DashboardDetails = new SelectList(new List<dynamic> { new { DashboardId = userDashboard.DashboardId, DashboardName = userDashboard.DashboardId } }, "DashboardId", "DashboardName", userDashboard.DashboardId);
 
                                 ViewBag.Details = details;
 
@@ -380,7 +410,7 @@ namespace WebApplication.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
-        public dynamic GetDashboards(string userId,string roleId)
+        public dynamic GetDashboards(string userId, string roleId)
         {
             dynamic response = null;
             if (!string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(roleId))
@@ -390,11 +420,22 @@ namespace WebApplication.Controllers
                     CustomDashboardStorage dashboardStorage = new CustomDashboardStorage();
                     var dashboardsInfo = dashboardStorage.GetAvailableDashboardsInfo();
 
-                    response = dashboardsInfo.Where(y => !context.UserDashboardMappings.Where(x => x.RoleId == roleId && x.UserId == userId).Select(x => x.DashboardId).Contains(y.ID)).Select(y => new
+                    if (roleId == AllRoles)
                     {
-                        DashId = y.ID,
-                        DashName = y.Name
-                    }).ToList();
+                        response = dashboardsInfo.Select(x => new
+                        {
+                            DashId = x.ID,
+                            DashName = x.Name
+                        }).ToList();
+                    }
+                    else
+                    {
+                        response = dashboardsInfo.Where(y => !context.UserDashboardMappings.Where(x => x.RoleId == roleId && x.UserId == userId).Select(x => x.DashboardId).Contains(y.ID)).Select(y => new
+                        {
+                            DashId = y.ID,
+                            DashName = y.Name
+                        }).ToList();
+                    }
                 }
             }
 
@@ -411,21 +452,21 @@ namespace WebApplication.Controllers
             {
                 using (var context = new WebAppDbContext())
                 {
-                    var userDashboards = context.UserDashboardMappings.Where(x => x.UserId == userId &&  x.RoleId == roleId).ToList();
+                    var userDashboards = context.UserDashboardMappings.Where(x => x.UserId == userId && x.RoleId == roleId).ToList();
 
                     var toBeDeleted = userDashboards.First(x => x.DashboardId == dashboardId);
 
-                    if(toBeDeleted.IsDefault == "1")
+                    if (toBeDeleted.IsDefault == "1")
                     {
                         var remainingDashboards = userDashboards.Where(x => x.DashboardId != dashboardId);
-                        if(remainingDashboards.Any())
+                        if (remainingDashboards.Any())
                         {
                             var newDefaultDashboard = remainingDashboards.FirstOrDefault();
                             newDefaultDashboard.IsDefault = "1";
 
                             context.UserDashboardMappings.Add(newDefaultDashboard);
                             context.Entry(newDefaultDashboard).State = EntityState.Modified;
-                            
+
                         }
                     }
 
@@ -435,7 +476,7 @@ namespace WebApplication.Controllers
                     context.SaveChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 type = "error";
                 msg = ex.ToString();
@@ -448,6 +489,112 @@ namespace WebApplication.Controllers
             }, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult ClientDashboards()
+        {
+            TempData["UserId"] = Session[SessionKeys.UserId].ToString();
+            ViewBag.UserId = Session[SessionKeys.UserId].ToString();
+            return View("UserDashboards_ClientView");
+        }
+
+        [HttpPost]
+        public ActionResult LoadUserDashboardClientView(int length, int start)
+        {
+            string userId = Session[SessionKeys.UserId].ToString();
+            int recordCount = 0, filterrecord = 0;
+            List<UserDashboardMapping> userDashboardMappingData = new List<UserDashboardMapping>();
+
+            try
+            {
+                using (WebAppDbContext db = new WebAppDbContext())
+                {
+                    string searchvalue = Request.Form["search[value]"];
+                    var sortColumn = Request.Form.GetValues("columns[" + Request.Form.GetValues("order[0][column]").FirstOrDefault() + "][name]").FirstOrDefault();
+                    var sortColumnDir = Request.Form.GetValues("order[0][dir]").FirstOrDefault();
+                    Expression<Func<UserDashboardMapping, object>> sortExpression;
+                    switch (sortColumn)
+                    {
+                        case "UserId":
+                            sortExpression = (x => x.UserId);
+                            break;
+                        default:
+                            sortExpression = (x => x.UserId);
+                            break;
+                    }
+
+                    if (sortColumnDir == "asc")
+                    {
+                        userDashboardMappingData = db.UserDashboardMappings.Where(x => x.UserId.Contains(userId))
+                       .OrderBy(sortExpression).Skip(start).Take(length).ToList();
+                    }
+                    else
+                    {
+                        userDashboardMappingData = db.UserDashboardMappings.Where(x => x.UserId.Contains(userId))
+                        .OrderByDescending(sortExpression).Skip(start).Take(length).ToList();
+                    }
+
+                    var recordcount = db.UserDashboardMappings.Where(x => x.UserId == userId).Count();
+
+                    if (searchvalue != "")
+                    {
+                        filterrecord = userDashboardMappingData.Count();
+                    }
+                    else
+                    {
+                        filterrecord = recordcount;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = userDashboardMappingData };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult EditClientDashboard(string userId,string roleId,string dashboardId)
+        {
+            using(var context = new WebAppDbContext())
+            {
+                var response = context.UserDashboardMappings.FirstOrDefault(x => x.UserId == userId && x.RoleId == roleId && x.DashboardId == dashboardId);
+                return View("ClientMode", response);
+            }
+        }
+
+        [HttpPost]
+        public JsonResult SaveAsDashboard(string dashboardId,string userId,string roleId)
+        {
+            var type = "success";
+            var msg = "Dashboard added successfully";
+            try
+            {
+                using(var context = new WebAppDbContext())
+                {
+                    UserDashboardMapping model = new UserDashboardMapping()
+                    {
+                        DashboardId = dashboardId,
+                        UserId = userId,
+                        RoleId = roleId,
+                        IsDefault = "0",
+                        InsertionDateTime = DateTime.Now,
+                        InsertedBy = Session[SessionKeys.UserId].ToString()
+                    };
+
+                    context.UserDashboardMappings.Add(model);
+                    context.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                type = "error";
+                msg = ex.ToString();
+            }
+
+            return Json(new { type = type, msg = msg }, JsonRequestBehavior.AllowGet);
+        }
     }
 
 

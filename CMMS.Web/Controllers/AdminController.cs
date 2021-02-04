@@ -111,10 +111,47 @@ namespace WebApplication.Controllers
             }
 
             Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId,loginUserId, defaultRoleId, ListPermissionViewModel);
+
+
+            dashboard.DashboardId = GetDashboardId();
+
+
             return View(dashboard);
 
         }
 
+
+        public string GetDashboardId()
+        {
+            UserDashboardMapping dashboard = null;
+            var id = "DefaultDashboard";
+            try
+            {
+                using (var _context = new WebAppDbContext())
+                {
+                    var sessionDetails = (SessionHelper)Session[SessionKeys.SessionHelperInstance];
+                    var userId = Session[SessionKeys.UserId].ToString();
+                    var dashboards = _context.UserDashboardMappings.Where(x => x.UserId == userId && x.RoleId == sessionDetails.CurrentRoleId);
+                    if(dashboards.Any())
+                    {
+                        dashboard = dashboards.FirstOrDefault(x => x.IsPrefered == "1");
+
+                        if(dashboard == null)
+                        {
+                            dashboard = dashboards.FirstOrDefault(x => x.IsDefault == "1");
+                        }
+
+                        id = dashboard.DashboardId;
+                    } 
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+            return id;
+        }
         #endregion
 
         #region UserCheck

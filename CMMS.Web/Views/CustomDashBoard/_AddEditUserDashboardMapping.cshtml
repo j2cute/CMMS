@@ -290,9 +290,10 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Dashboard Name<span style="color:red"> *</span></label>
-                            @Html.DropDownList("ddDashboardIds", pageMode == PageMode.Add.ToString() ?  new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.DashboardDetails, new { @id = "ddDashboardIds", @class = "form-control" })
+                            @Html.DropDownList("ddDashboardIds", pageMode == PageMode.Add.ToString() ? new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.DashboardDetails, new { @id = "ddDashboardIds", @class = "form-control" })
                         </div>
                     </div>
+
                 </div>
 
 
