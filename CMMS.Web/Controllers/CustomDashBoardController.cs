@@ -222,17 +222,15 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(string userId, string roleId, string dashboardId)
+        public ActionResult Save(string userId, string roleId, string dashboardId,string pageMode)
         {
             var type = "success";
-            var msg = "Plan added successfully.";
+            var msg = pageMode == PageMode.Add.ToString() ?  "Plan added successfully." : "Plan updated successfully.";
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(userId) || !string.IsNullOrWhiteSpace(roleId) || !string.IsNullOrWhiteSpace(dashboardId))
+                if (!string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(roleId) && !string.IsNullOrWhiteSpace(dashboardId))
                 {
-                    if (ViewBag.PageMode == PageMode.Add)
-                    {
                         using (var context = new WebAppDbContext())
                         {
                             UserDashboardMapping model = new UserDashboardMapping()
@@ -245,27 +243,7 @@ namespace WebApplication.Controllers
                                 IsDefault = "1"
                             };
 
-                            context.UserDashboardMappings.Add(model);
-                            context.SaveChanges();
-                        }
-                    }
-                    else if(ViewBag.PageMode == PageMode.Edit)
-                    {
-                        msg = "Plan edited successfully.";
-
-                        using (var context = new WebAppDbContext())
-                        {
-                            UserDashboardMapping model = new UserDashboardMapping()
-                            {
-                                UserId = userId,
-                                RoleId = roleId,
-                                DashboardId = dashboardId,
-                                InsertedBy = Session[SessionKeys.UserId].ToString(),
-                                InsertionDateTime = DateTime.Now,
-                                IsDefault = "1"
-                            };
-
-                            var previousDefault = context.UserDashboardMappings.FirstOrDefault(x => x.UserId == userId && x.IsDefault == "1");
+                            var previousDefault = context.UserDashboardMappings.FirstOrDefault(x => x.RoleId == roleId && x.UserId == userId && x.IsDefault == "1");
                             if (previousDefault != null)
                             {
                                 previousDefault.IsDefault = "0";
@@ -273,11 +251,9 @@ namespace WebApplication.Controllers
                                 context.Entry(previousDefault).State = EntityState.Modified;
                             }
 
-
                             context.UserDashboardMappings.Add(model);
                             context.SaveChanges();
                         }
-                    }
                 }
             }
             catch (Exception ex)
@@ -376,7 +352,12 @@ namespace WebApplication.Controllers
                                         }
                                     }, "Id", "Name");
 
-                                details.Roles = new SelectList(roles,"RoleId","RoleName", new { RoleId = userDashboard.RoleId, RoleName = roleName });
+                                details.Roles = new  SelectList(new List<dynamic>{new
+                                        {
+                                            RoleId = userDashboard.RoleId, RoleName = roleName
+                                        }
+                                    }, "RoleId", "RoleName");
+
                                 details.DashboardDetails = new SelectList(new List<dynamic> { new { DashboardId = userDashboard.DashboardId, DashboardName = userDashboard.DashboardId } },"DashboardId","DashboardName", userDashboard.DashboardId);
 
                                 ViewBag.Details = details;
@@ -414,12 +395,59 @@ namespace WebApplication.Controllers
                         DashId = y.ID,
                         DashName = y.Name
                     }).ToList();
-
                 }
             }
 
             return response;
         }
+
+        [HttpPost]
+        public ActionResult DeleteUserDashboard(string userId, string dashboardId, string roleId)
+        {
+            var type = "success";
+            string msg = string.Empty;
+
+            try
+            {
+                using (var context = new WebAppDbContext())
+                {
+                    var userDashboards = context.UserDashboardMappings.Where(x => x.UserId == userId &&  x.RoleId == roleId).ToList();
+
+                    var toBeDeleted = userDashboards.First(x => x.DashboardId == dashboardId);
+
+                    if(toBeDeleted.IsDefault == "1")
+                    {
+                        var remainingDashboards = userDashboards.Where(x => x.DashboardId != dashboardId);
+                        if(remainingDashboards.Any())
+                        {
+                            var newDefaultDashboard = remainingDashboards.FirstOrDefault();
+                            newDefaultDashboard.IsDefault = "1";
+
+                            context.UserDashboardMappings.Add(newDefaultDashboard);
+                            context.Entry(newDefaultDashboard).State = EntityState.Modified;
+                            
+                        }
+                    }
+
+                    context.UserDashboardMappings.Attach(toBeDeleted);
+                    context.Entry(toBeDeleted).State = EntityState.Deleted;
+
+                    context.SaveChanges();
+                }
+            }
+            catch(Exception ex)
+            {
+                type = "error";
+                msg = ex.ToString();
+            }
+
+            return Json(new
+            {
+                msg = msg,
+                type = type
+            }, JsonRequestBehavior.AllowGet);
+        }
+
     }
 
 

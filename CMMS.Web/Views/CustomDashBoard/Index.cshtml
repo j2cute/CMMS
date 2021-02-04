@@ -19,7 +19,7 @@
 
     $(document).ready(function ()
     {
-  
+
         var table;
         table = $('#tblUserDashboards').DataTable(
             {
@@ -39,7 +39,7 @@
                 },
 
                 columns: [
-                   
+
                     { 'data': 'UserId', "name": "User Id"},
                     { 'data': 'UserName', "name": "Role Id" },
                      {
@@ -67,7 +67,7 @@
                     },
                 ],
 
-             
+
                "rowCallback": function (row, data, dataIndex) {
                    //if (data["Status"] == "InActive") {
                    //    $('td', row).css('background-color', 'red');
@@ -79,7 +79,7 @@
 
         $('#tblUserDashboards tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
- 
+
             window.location.href = '@Url.Action("LinkedDashboards", "CustomDashboard")' + '?userId=' + tblData[0].UserId;
 
             return false;
@@ -87,26 +87,23 @@
     });
 
 </script>
-<section class="content-header">
-    <h1>Dashboard Mapping</h1>
-</section>
+
 
 <section class="content">
 
     <div class="container-fluid">
         <div class="row">
+        </div>
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
 
                     <div class="card-header">
-                        <div class="card-tools">
-                            <input type="button" value="Assign Dashboard" style="float:right;" class="btn btn-success" id="btnAssignDashboard">
-                        </div>
-
+                        <h4 class="card-title" style="font-weight:bold">Users</h4>
                     </div>
 
                     <div class="card-body">
-                        <table id="tblUserDashboards" class="table table-bordered table-striped">
+                        <table id="tblUserDashboards" class="table table-bordered table-striped"  style="width:100%" >
 
                             <thead>
                                 <tr>
@@ -131,4 +128,7 @@
     </div>
 
 </section>
- 
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}

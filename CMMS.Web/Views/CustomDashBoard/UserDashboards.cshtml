@@ -85,10 +85,10 @@
                             actions = actions + " " + '|' + " ";
 
                             if (permissions.filter(obj => obj.PermissionId == "DeleteUserDashboardMapping").length > 0) {
-                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select"  href="/CustomDashboard/Delete/' + data.UserId + '">' + 'Delete' + '</a>';
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select" >' + 'Delete' + '</a>';
                             }
                             else {
-                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" href="/CustomDashboard/Delete/' + data.UserId + '">' + 'Delete' + '</a>';
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" >' + 'Delete' + '</a>';
                             }
 
                             return actions;
@@ -112,7 +112,7 @@
             });
 
 
-        $('#tblUserDashboards tbody').on("click", '.select', function () {
+        $('#tblUserDashboards tbody').on("click", '#btnEditMapping', function () {
             var tblData = table.rows($(this).closest('tr')).data();
 
             var options = {
@@ -144,7 +144,46 @@
         });
 
 
-           $("#btnAssignDashboard").click(function () {
+        $('#tblUserDashboards tbody').on("click", '#btnDelMapping', function () {
+            var tblData = table.rows($(this).closest('tr')).data();
+
+            var options = {
+                "backdrop": "static",
+                keyboard: true
+            };
+
+          $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteUserDashboard", "CustomDashboard")',
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify({ userId: '@userId', dashboardId: tblData[0].DashboardId, roleId: tblData[0].RoleId }),
+                datatype: "json",
+                success: function(data)
+                {
+                    if (data.type == "success") {
+                        swal({ title: "Success", text: data.msg, type: "success", });
+
+
+                        $('#tblUserDashboards').DataTable().ajax.reload();
+
+
+                    } else {
+                        swal({ title: "Error", text: data.msg, type: "error", });
+                    }
+               },
+               failure: function () {
+               },
+               error: function (data,abc,xyz) {
+
+                    alert("Content load failed.");
+                }
+            });
+
+            return false;
+        });
+
+
+         $("#btnAssignDashboard").click(function () {
 
             var options = {
                 "backdrop": "static",
@@ -176,56 +215,60 @@
 
 
 </script>
-<section class="content-header">
-    <h1>Dashboard Mapping</h1>
-</section>
-
+ 
 <section class="content">
 
+ 
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
 
-                    <div class="card-header">
-                        <div class="card-tools">
-                            <input type="button" value="Assign Dashboard" style="float:right;" class="btn btn-success" id="btnAssignDashboard">
+ 
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <h4 class="card-title" style="font-weight:bold">User Dashboards</h4>
+                            <div class="card-tools">
+
+                                <input type="button" value="Assign Dashboard" style="float:right;" class="btn btn-success" id="btnAssignDashboard">
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <table id="tblUserDashboards" class="table table-bordered table-striped" style="width:100%">
+
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User Id</th>
+                                        <th>Role Id</th>
+                                        <th>Dashboard Name</th>
+                                        <th>Inserted By</th>
+                                        <th>Insertion Datetime</th>
+                                        <th>Last Updated By</th>
+                                        <th>Last Updated Datetime</th>
+                                        <th>Default</th>
+                                        <th>Prefered</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <div class="card-footer">
                         </div>
 
                     </div>
-
-                    <div class="card-body">
-                        <table id="tblUserDashboards" class="table table-bordered table-striped">
-
-                            <thead>
-                                <tr>
-                                    <th>Id</th>
-                                    <th>User Id</th>
-                                    <th>Role Id</th>
-                                    <th>Dashboard Name</th>
-                                    <th>Inserted By</th>
-                                    <th>Insertion Datetime</th>
-                                    <th>Last Updated By</th>
-                                    <th>Last Updated Datetime</th>
-                                    <th>Default</th>
-                                    <th>Prefered</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                            </tbody>
-
-                        </table>
-                    </div>
-
-                    <div class="card-footer">
-                    </div>
-
                 </div>
             </div>
         </div>
-    </div>
 
 </section>
 
