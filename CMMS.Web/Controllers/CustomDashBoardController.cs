@@ -167,14 +167,14 @@ namespace WebApplication.Controllers
         public ActionResult AddUserDashboard(string userId)
         {
             ViewBag.PageMode = PageMode.Add;
-            return RedirectToAction("PopulateUserData", new { userId = userId, pageMode = PageMode.Add });
+            return RedirectToAction("PopulateUserData", new { userId = userId, roleId = "", dashboardId = "", pageMode = PageMode.Add });
         }
 
         [HttpPost]
-        public ActionResult EditUserDashboard(string userId)
+        public ActionResult EditUserDashboard(string userId,string dashboardId,string roleId)
         {
             ViewBag.PageMode = PageMode.Edit;
-            return RedirectToAction("PopulateUserData", new { userId = userId, pageMode = PageMode.Edit });
+            return RedirectToAction("PopulateUserData", new { userId = userId,roleId = roleId, dashboardId = dashboardId, pageMode = PageMode.Edit });
         }
 
         [HttpPost]
@@ -222,11 +222,12 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save(string userId, string roleId, string dashboardId, string pageMode)
+        public ActionResult Save(string userId, string roleId, string dashboardId,string isDefault, string pageMode)
         {
             var type = "success";
             var msg = pageMode == PageMode.Add.ToString() ? "Plan added successfully." : "Plan updated successfully.";
 
+            isDefault = String.IsNullOrWhiteSpace(isDefault) ? "0" : isDefault;
             try
             {
                 if (!string.IsNullOrWhiteSpace(userId) && !string.IsNullOrWhiteSpace(roleId) && !string.IsNullOrWhiteSpace(dashboardId))
@@ -249,7 +250,7 @@ namespace WebApplication.Controllers
                                     DashboardId = dashboardId,
                                     InsertedBy = Session[SessionKeys.UserId].ToString(),
                                     InsertionDateTime = DateTime.Now,
-                                    IsDefault = "1"
+                                    IsDefault = isDefault
                                 };
                                 models.Add(model);
                             }
@@ -260,25 +261,47 @@ namespace WebApplication.Controllers
 
                         else
                         {
-                            UserDashboardMapping model = new UserDashboardMapping()
-                            {
-                                UserId = userId,
-                                RoleId = roleId,
-                                DashboardId = dashboardId,
-                                InsertedBy = Session[SessionKeys.UserId].ToString(),
-                                InsertionDateTime = DateTime.Now,
-                                IsDefault = "1"
-                            };
+                            UserDashboardMapping model = null;
 
-                            var previousDefault = context.UserDashboardMappings.FirstOrDefault(x => x.RoleId == roleId && x.UserId == userId && x.IsDefault == "1");
-                            if (previousDefault != null)
+                            if (pageMode == PageMode.Add.ToString())
                             {
-                                previousDefault.IsDefault = "0";
-                                context.UserDashboardMappings.Attach(previousDefault);
-                                context.Entry(previousDefault).State = EntityState.Modified;
+                                model = new UserDashboardMapping()
+                                {
+                                    UserId = userId,
+                                    RoleId = roleId,
+                                    DashboardId = dashboardId,
+                                    InsertedBy = Session[SessionKeys.UserId].ToString(),
+                                    InsertionDateTime = DateTime.Now,
+                                    IsDefault = isDefault
+                                };
+
+                                context.UserDashboardMappings.Add(model);
+                            }
+                            else if (pageMode == PageMode.Edit.ToString())
+                            {
+                                var dashboard = context.UserDashboardMappings.FirstOrDefault(x => x.RoleId == roleId && x.UserId == userId && x.DashboardId == dashboardId);
+                                if (dashboard != null)
+                                {
+                                    dashboard.IsDefault = isDefault;
+                                    context.UserDashboardMappings.Attach(dashboard);
+                                    context.Entry(dashboard).State = EntityState.Modified;
+                                }
+                            }
+                         
+                            if (isDefault == "1")
+                            {
+                                var previousDefault = context.UserDashboardMappings.FirstOrDefault(x => x.RoleId == roleId && x.UserId == userId && x.IsDefault == "1");
+                                if (previousDefault != null)
+                                {
+                                    if (previousDefault.RoleId != roleId)
+                                    {
+                                        previousDefault.IsDefault = "0";
+                                        context.UserDashboardMappings.Attach(previousDefault);
+                                        context.Entry(previousDefault).State = EntityState.Modified;
+                                    }
+                                }
                             }
 
-                            context.UserDashboardMappings.Add(model);
                             context.SaveChanges();
                         }
                     }
@@ -315,7 +338,7 @@ namespace WebApplication.Controllers
             }
         }
 
-        public ActionResult PopulateUserData(string userId, string pageMode)
+        public ActionResult PopulateUserData(string userId, string roleId , string dashboardId , string pageMode)
         {
             var type = "success";
             string msg = string.Empty;
@@ -350,6 +373,11 @@ namespace WebApplication.Controllers
                                         }
                                     }, "Id", "Name");
 
+                                    details.IsDefault = new SelectList(new List<dynamic>{
+                                           new{  Id = "0", Name = "False" },
+                                           new {  Id = "1", Name = "True"  }
+                                    }, "Id", "Name");
+
                                     details.Roles = new SelectList(roles, "RoleId", "RoleName");
 
                                     ViewBag.Details = details;
@@ -362,7 +390,7 @@ namespace WebApplication.Controllers
                         else if (pageMode == PageMode.Edit.ToString())
                         {
                             ViewBag.PageMode = PageMode.Edit;
-                            var response = context.UserDashboardMappings.Where(x => x.UserId == userId);
+                            var response = context.UserDashboardMappings.Where(x => x.UserId == userId && x.DashboardId == dashboardId && roleId == x.RoleId);
 
                             if (response.Any())
                             {
@@ -387,6 +415,11 @@ namespace WebApplication.Controllers
                                             RoleId = userDashboard.RoleId, RoleName = roleName
                                         }
                                     }, "RoleId", "RoleName");
+
+                                details.IsDefault = new SelectList(new List<dynamic>{ 
+                                           new{  Id = "0", Name = "False" },
+                                           new {  Id = "1", Name = "True"  }
+                                    }, "Id", "Name", userDashboard.IsDefault);
 
                                 details.DashboardDetails = new SelectList(new List<dynamic> { new { DashboardId = userDashboard.DashboardId, DashboardName = userDashboard.DashboardId } }, "DashboardId", "DashboardName", userDashboard.DashboardId);
 

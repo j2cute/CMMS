@@ -15,7 +15,7 @@ using WebApplication.Helpers;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+
     public class AdminController : BaseController
     {
         private ApplicationUserManager _userManager;
@@ -24,100 +24,125 @@ namespace WebApplication.Controllers
         // Controllers
 
         #region Dashboard
+
         public ActionResult UnitSelection()
         {
-            db = new WebAppDbContext();
-            var userId = Session[SessionKeys.UserId]?.ToString();
             DashboardViewModel vm = new DashboardViewModel();
-            using (Entities _context = new Entities())
+            try
             {
-                var data = _context.tbl_User.Where(x => x.UserId == userId).FirstOrDefault();
-                if (data != null)
-                {  
-                    Session[SessionKeys.UserUnitId] = data.UnitId;
-                }
-
-                var unit = db.tbl_Unit.Where(x => x.Id == data.UnitId).FirstOrDefault();
-                var unitLevel = _context.tbl_UnitType.Where(x => x.UnitTypeId == unit.UnitTypeId).Select(x=>x.UnitTypeLevel).FirstOrDefault();
-                IEnumerable<ClassLibrary.Models.tbl_Unit> UnitList;
-              
-                if (unitLevel == 0)
+                if (Session[SessionKeys.UserId] != null)
                 {
-                    UnitList = db.tbl_Unit.ToList();
-
-                }
-                else if (unitLevel == 1)
-                {
-                    var lookup = db.tbl_Unit.ToLookup(x => x.ParentUnitId);
-                    var res = lookup[data.UnitId].SelectRecursive(x => lookup[x.Id]).ToList();
-                    res.Add(unit);
-                    UnitList = res;
-                }
-                else
-                {
-                    UnitList = db.tbl_Unit.Where(x=>x.Id == data.UnitId).ToList();
-                }
-                Session[SessionKeys.ApplicableUnits] = UnitList;
-                vm._tbl_Unit = UnitList;
-            }         
-            return PartialView("_UnitSelection",vm);
-        }
-
-        [HttpPost]
-        public ActionResult Dashboard(string siteId, string inRoleId = null)
-        {
-            db = new WebAppDbContext();
-            DashboardViewModel dashboard = new DashboardViewModel();
-            List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-            dashboard._tbl_Unit = db.tbl_Unit.ToList();
-            string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
-            var loginUserId = Session[SessionKeys.UserId]?.ToString();
-            dashboard.datetime = DateTime.Now.ToString();
- 
-            using (Entities _context = new Entities())
-            {
-                if (string.IsNullOrWhiteSpace(defaultRoleId))
-                {
-                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
-                }
-                else
-                {
-                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId)?.FirstOrDefault().RoleId;
-                }
-
-                if (!String.IsNullOrWhiteSpace(defaultRoleId))
-                {
-                    var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
-
-                    foreach (var item in permissions)
+                    using (var db = new WebAppDbContext())
                     {
-                        PermissionViewModel permissionViewModel = new PermissionViewModel()
-                        {
-                            PermissionId = item.PermissionId,
-                            DisplayName = item.tbl_Permission.DisplayName,
-                            Level = item.tbl_Permission.PermissionLevel.ToString(),
-                            ParentId = item.tbl_Permission.ParentId,
-                            URL = item.tbl_Permission.URL,
-                            IconPath = item.tbl_Permission.IconPath
-                        };
+                        var userId = Session[SessionKeys.UserId]?.ToString();
 
-                        ListPermissionViewModel.Add(permissionViewModel);
+                        using (Entities _context = new Entities())
+                        {
+                            var data = _context.tbl_User.Where(x => x.UserId == userId).FirstOrDefault();
+                            
+                            if (data != null)
+                            {
+                                Session[SessionKeys.UserUnitId] = data.UnitId;
+
+                                var unit = db.tbl_Unit.Where(x => x.Id == data.UnitId).FirstOrDefault();
+                                var unitLevel = _context.tbl_UnitType.Where(x => x.UnitTypeId == unit.UnitTypeId).Select(x => x.UnitTypeLevel).FirstOrDefault();
+                                IEnumerable<ClassLibrary.Models.tbl_Unit> UnitList;
+
+                                if (unitLevel == 0)
+                                {
+                                    UnitList = db.tbl_Unit.ToList();
+                                }
+                                else if (unitLevel == 1)
+                                {
+                                    var lookup = db.tbl_Unit.ToLookup(x => x.ParentUnitId);
+                                    var res = lookup[data.UnitId].SelectRecursive(x => lookup[x.Id]).ToList();
+                                    res.Add(unit);
+                                    UnitList = res;
+                                }
+                                else
+                                {
+                                    UnitList = db.tbl_Unit.Where(x => x.Id == data.UnitId).ToList();
+                                }
+
+                                Session[SessionKeys.ApplicableUnits] = UnitList;
+                                vm._tbl_Unit = UnitList;
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    // Show some error
+                    RedirectToAction("Login", "Account");
                 }
             }
+            catch
+            {
 
-            Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId,loginUserId, defaultRoleId, ListPermissionViewModel);
+            }
+            return PartialView("_UnitSelection", vm);
+        }
+
+        [HttpPost]
+        [Authorization]
+        public ActionResult Dashboard(string siteId, string inRoleId = null)
+        {
+
+            if (!string.IsNullOrWhiteSpace(siteId))
+            {
+                db = new WebAppDbContext();
+                DashboardViewModel dashboard = new DashboardViewModel();
+                List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+                dashboard._tbl_Unit = db.tbl_Unit.ToList();
+                string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
+                var loginUserId = Session[SessionKeys.UserId]?.ToString();
+                dashboard.datetime = DateTime.Now.ToString();
+
+                using (Entities _context = new Entities())
+                {
+                    if (string.IsNullOrWhiteSpace(defaultRoleId))
+                    {
+                        defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
+                    }
+                    else
+                    {
+                        defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId)?.FirstOrDefault().RoleId;
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                    {
+                        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
+
+                        foreach (var item in permissions)
+                        {
+                            PermissionViewModel permissionViewModel = new PermissionViewModel()
+                            {
+                                PermissionId = item.PermissionId,
+                                DisplayName = item.tbl_Permission.DisplayName,
+                                Level = item.tbl_Permission.PermissionLevel.ToString(),
+                                ParentId = item.tbl_Permission.ParentId,
+                                URL = item.tbl_Permission.URL,
+                                IconPath = item.tbl_Permission.IconPath
+                            };
+
+                            ListPermissionViewModel.Add(permissionViewModel);
+                        }
+                    }
+                    else
+                    {
+                        // Show some error
+                    }
+                }
+
+                Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId, loginUserId, defaultRoleId, ListPermissionViewModel);
 
 
-            dashboard.DashboardId = GetDashboardId();
+                dashboard.DashboardId = GetDashboardId();
 
 
-            return View(dashboard);
+                return View(dashboard);
+            }
 
+            return RedirectToAction("UnitSelection");
         }
 
 
@@ -132,30 +157,32 @@ namespace WebApplication.Controllers
                     var sessionDetails = (SessionHelper)Session[SessionKeys.SessionHelperInstance];
                     var userId = Session[SessionKeys.UserId].ToString();
                     var dashboards = _context.UserDashboardMappings.Where(x => x.UserId == userId && x.RoleId == sessionDetails.CurrentRoleId);
-                    if(dashboards.Any())
+                    if (dashboards.Any())
                     {
                         dashboard = dashboards.FirstOrDefault(x => x.IsPrefered == "1");
 
-                        if(dashboard == null)
+                        if (dashboard == null)
                         {
                             dashboard = dashboards.FirstOrDefault(x => x.IsDefault == "1");
                         }
 
                         id = dashboard.DashboardId;
-                    } 
+                    }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
 
             return id;
         }
+
         #endregion
 
         #region UserCheck
 
+        [Authorization]
         public JsonResult CheckUserName(string UserName)
         {
             using (WebAppDbContext db = new WebAppDbContext())

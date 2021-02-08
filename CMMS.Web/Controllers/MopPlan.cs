@@ -1,6 +1,7 @@
 ﻿using ClassLibrary.Models;
 using ClassLibrary.ViewModels;
 using CMMS.Web.Helper;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,6 +14,12 @@ namespace WebApplication.Controllers
 {
     public partial class MopController : BaseController
     {
+        private static Logger _logger;
+
+        public MopController()
+        {
+            _logger = LogManager.GetCurrentClassLogger();
+        }
         private Dictionary<string, string> PlanActions = new Dictionary<string, string>()
         {
             {"Deferred","Deferred"},
@@ -28,11 +35,13 @@ namespace WebApplication.Controllers
         [HttpPost]
         public JsonResult LoadPlans(int length, int start)
         {
+            string actionName = "LoadPlans";
             int recordCount = 0, filterrecord = 0;
 
             List<M_MOP_PLAN> model = new List<M_MOP_PLAN>();
             try
             {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
                 using (var context = new WebAppDbContext())
                 {
                     //search value
@@ -111,11 +120,11 @@ namespace WebApplication.Controllers
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
-
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             var response = new { recordsTotal = recordCount, recordsFiltered = filterrecord, data = model };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
@@ -123,9 +132,11 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult MopPlanData(M_MOP_PLAN data)
         {
+            string actionName = "MopPlanData";
             M_MOP_PLAN model = new M_MOP_PLAN();
             try
             {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
                 if (data.SiteId == 0 || string.IsNullOrWhiteSpace(data.PMS_No)
                    || string.IsNullOrWhiteSpace(data.MOP_No) || string.IsNullOrWhiteSpace(data.ESWBS))
                 {
@@ -153,20 +164,23 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
-
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             return PartialView("_MopPlan", model);
         }
 
         [HttpPost]
         public JsonResult EditPlan(M_MOP_PLAN plan)
         {
+            string actionName = "MopPlanData";
+
             var type = "success";
             var msg = "Plan edited successfully.";
 
             if (plan.SelectedDate != null)
             {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
                 using (var transaction = db.Database.BeginTransaction())
                 {
                     try
@@ -228,6 +242,8 @@ namespace WebApplication.Controllers
                     }
                     catch (Exception ex)
                     {
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+
                         type = "failure";
                         msg = "Internal server error.";
                         transaction.Rollback();
@@ -240,6 +256,7 @@ namespace WebApplication.Controllers
                 msg = "Please fill complete data.";
             }
 
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             return Json(new
             {
                 msg = msg,
@@ -252,11 +269,16 @@ namespace WebApplication.Controllers
             IEnumerable<DataModel> result = LoadDataForScheduler();
             return View("LoadMopPlan", result);
         }
+
         public IEnumerable<DataModel> LoadDataForScheduler()
         {
+            string actionName = "LoadDataForScheduler";
+
             Queue<DataModel> queue = new Queue<DataModel>();
             try
             {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
                 using (var context = new WebAppDbContext())
                 {
                     var finalResult = from mop in context.M_MOP
@@ -306,10 +328,15 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
 
             }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
             return queue.ToList();
         }
+
         public DataModel CalculateRoutineSchedule(Queue<DataModel> queue, M_MOP mop, DateTime nextDueDate, double totalDays)
         {
             DataModel model;
@@ -348,6 +375,7 @@ namespace WebApplication.Controllers
             queue.Enqueue(model);
             return CalculateRoutineSchedule(queue, mop, nextDueDate.AddDays(totalDays), totalDays);
         }
+        
         private double GetDaysViaPeriod(string period, int periodicity)
         {
             double totalDaysTillNextDueDate = 0.0;

@@ -39,6 +39,8 @@ namespace CMMS.Web.Helper
                     UserRoles = roles?.Select(x => new RolesVM() { RoleId = x.RoleId,RoleName = x.Name, RoleDescription = x.Description }).ToList();
                 }
             }
+
+          
         }
 
 

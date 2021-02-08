@@ -9,19 +9,21 @@ using System.Web;
 using System.Web.Mvc;
 using System.Collections;
 using WebApplication.Helpers;
+using NLog;
 
 namespace WebApplication.Controllers
 {
     [Authorization]
     public class ReportsController : Controller
     {
-        private ReportDocument _reportDocument;
-        // GET: Reports
-        public ActionResult Index()
-        {
-            return View();
-        }
+        private static Logger _logger;
 
+        public ReportsController()
+        {
+            _logger = LogManager.GetCurrentClassLogger();
+        }
+        private ReportDocument _reportDocument;
+    
         public ActionResult MMS5()
         {
             try
@@ -48,7 +50,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-
+                _logger.Log(LogLevel.Error, "Exception :: " + ex.ToString());
             }
 
             return null;
@@ -103,7 +105,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-
+                _logger.Log(LogLevel.Error, "Exception :: " + ex.ToString());
             }
 
             return null;
@@ -142,14 +144,13 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-
+                _logger.Log(LogLevel.Error,"", "Exception :: " + ex.ToString());
             }
 
             return null;
         }
     }
     public static class Reports
-
     {
         public static Tuple<string,string> MMS5 = new Tuple<string,string>("rptMMS5.rpt","MMS5") ;
         public static Tuple<string,string> JIC = new Tuple<string,string>("rptJIC.rpt", "JIC");

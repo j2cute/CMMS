@@ -1,4 +1,5 @@
 ﻿using ClassLibrary.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,27 +14,60 @@ namespace WebApplication.Controllers
     [Authorization]
     public class PartTypeController : BaseController
     {
-        public ActionResult Index()
+        private static Logger _logger;
+
+        public PartTypeController()
         {
-            using (WebAppDbContext db = new WebAppDbContext())
-            {
-                var abc = db.tbl_PartType.ToList();
-                return View(abc);
-            }
+            _logger = LogManager.GetCurrentClassLogger();
         }
 
-        // GET: AreaType/Details/5
+        public ActionResult Index()
+        {
+            string actionName = "Index";
+            List<tbl_PartType> response = new List<tbl_PartType>();
+            try
+            {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                using (WebAppDbContext db = new WebAppDbContext())
+                {
+                    response = db.tbl_PartType.ToList();
+                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
+            return View(response);
+        }
+ 
         public ActionResult Details(string id)
         {
-            if (id == null)
+            string actionName = "Details";
+            tbl_PartType response = new tbl_PartType();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                if (String.IsNullOrWhiteSpace(id))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        response = db.tbl_PartType.FirstOrDefault(x => x.PartTypeID == id);
+                    }
+                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             }
-            using (WebAppDbContext db = new WebAppDbContext())
+            catch(Exception ex)
             {
-                var abc = db.tbl_PartType.Where(x => x.PartTypeID == id).FirstOrDefault();
-                return PartialView("_Details", abc);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
+
+            return PartialView("_Details", response);
         }
 
         // GET: AreaType/Create
@@ -47,110 +81,176 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(tbl_PartType tbl_PartType)
         {
+            string actionName = "Create";
             try
             {
-                // TODO: Add insert logic here
-                using (WebAppDbContext db = new WebAppDbContext())
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                 
+                if(ModelState.IsValid)
                 {
-                    if (!ModelState.IsValid)
+                    using (WebAppDbContext db = new WebAppDbContext())
                     {
-                        return PartialView("_Create");
+                        db.tbl_PartType.Add(tbl_PartType);
+                        db.SaveChanges();
                     }
-                    db.tbl_PartType.Add(tbl_PartType);
-                    db.SaveChanges();
                 }
+                else
+                {
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                    return PartialView("_Create");
+                }
+                
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
                 Alert("Data Saved Sucessfully!!!", NotificationType.success);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }
         }
-
-        // GET: AreaType/Edit/5
+ 
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            string actionName = "Create";
+            tbl_PartType response = new tbl_PartType();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                if (String.IsNullOrWhiteSpace(id))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        response = db.tbl_PartType.FirstOrDefault(x => x.PartTypeID == id);
+                    }
+                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             }
-            using (WebAppDbContext db = new WebAppDbContext())
+            catch(Exception ex)
             {
-                var abc = db.tbl_PartType.Where(x => x.PartTypeID == id).FirstOrDefault();
-                return PartialView("_Edit", abc);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
+    
+            return PartialView("_Edit", response);
         }
-
-        // POST: AreaType/Edit/5
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, tbl_PartType tbl_PartType)
         {
+            string actionName = "Edit";
             try
             {
-                if (id == null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                if (String.IsNullOrWhiteSpace(id))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                // TODO: Add update logic here
-                using (WebAppDbContext db = new WebAppDbContext())
+                else
                 {
-                    if (!ModelState.IsValid)
+                    if(ModelState.IsValid)
                     {
+                        using (WebAppDbContext db = new WebAppDbContext())
+                        {
+                            db.Entry(tbl_PartType).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                         return PartialView("_Edit");
                     }
-                    db.Entry(tbl_PartType).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
                 }
+
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
                 Alert("Record Updated Sucessfully!!!", NotificationType.success);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }
         }
 
-        // GET: AreaType/Delete/5
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            string actionName = "Delete";
+            tbl_PartType response = new tbl_PartType();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                if (String.IsNullOrWhiteSpace(id))
+                {
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        response = db.tbl_PartType.FirstOrDefault(x => x.PartTypeID == id);
+                    }
+                }
             }
-            using (WebAppDbContext db = new WebAppDbContext())
+            catch(Exception ex)
             {
-                var abc = db.tbl_PartType.Where(x => x.PartTypeID == id).FirstOrDefault();
-                return PartialView("_Delete", abc);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+            return PartialView("_Delete", response);
         }
-
-        // POST: AreaType/Delete/5
+ 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id, tbl_PartType tbl_PartType)
         {
+            string actionName = "Delete";
             try
             {
-                if (id == null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                if (String.IsNullOrWhiteSpace(id))
                 {
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                // TODO: Add delete logic here
-                using (WebAppDbContext db = new WebAppDbContext())
+                else
                 {
-                    var abc = db.tbl_PartType.Where(x => x.PartTypeID == id).FirstOrDefault();
-                    db.tbl_PartType.Remove(abc);
-                    db.SaveChanges();
+                    // TODO: Add delete logic here
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        var response = db.tbl_PartType.FirstOrDefault(x => x.PartTypeID == id);
+                        if (response != null)
+                        {
+                            db.tbl_PartType.Remove(response);
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                            Alert("Record not found!!!", NotificationType.error);
+                            return RedirectToAction("Index");
+                        }
+                    }
+
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                    Alert("Record Deleted Sucessfully!!!", NotificationType.success);
+                    return RedirectToAction("Index");
                 }
-                Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }

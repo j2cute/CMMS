@@ -12,6 +12,8 @@ namespace WebApplication.Helpers
 {
     public class AuthorizationAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
+        private static string ReturnUrlToUnitSelection = "~/Admin/UnitSelection";
+        private static string ReturnUrlToLogin = "~/Account/Login";
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             try
@@ -26,12 +28,36 @@ namespace WebApplication.Helpers
                 // Check for authorization  
                 if (HttpContext.Current.Session[SessionKeys.UserId] == null)
                 {
-                    filterContext.Result = new RedirectResult("~/Account/Login");
+                    filterContext.Result = new RedirectResult(ReturnUrlToLogin);
                 }
+
+                if (HttpContext.Current.Request.FilePath.Contains("/Admin/UnitSelection"))
+                {
+
+                }
+                else
+                { 
+                    if (!HttpContext.Current.Request.FilePath.Contains("/Admin/Dashboard"))
+                    {
+                        // Check for authorization  
+                        if (HttpContext.Current.Session[SessionKeys.SessionHelperInstance] != null)
+                        {
+                            if (String.IsNullOrWhiteSpace(((SessionHelper)(HttpContext.Current.Session[SessionKeys.SessionHelperInstance])).SelectedSiteId))
+                            {
+                                filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
+                            }
+                        }
+                        else
+                        {
+                            filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
+                        }
+                    }
+                }
+            
             }
             catch
             {
-                filterContext.Result = new RedirectResult("~/Account/Login");
+                filterContext.Result = new RedirectResult(ReturnUrlToLogin);
             }
         }
         protected override bool AuthorizeCore(HttpContextBase httpContext)

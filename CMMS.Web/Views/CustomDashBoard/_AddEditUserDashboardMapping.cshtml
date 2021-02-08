@@ -127,6 +127,7 @@
                     userId: $('#ddUserIds').val(),
                     roleId: $('#ddRoleIds').val(),
                     dashboardId: $('#ddDashboardIds').val(),
+                    isDefault: $('#ddIsDefault').val(),
                     pageMode: '@ViewBag.PageMode'
                 },
                 cache: false,
@@ -291,6 +292,13 @@
                         <div class="form-group">
                             <label>Dashboard Name<span style="color:red"> *</span></label>
                             @Html.DropDownList("ddDashboardIds", pageMode == PageMode.Add.ToString() ? new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.DashboardDetails, new { @id = "ddDashboardIds", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Is Default<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddIsDefault", (SelectList)ViewBag.Details.IsDefault, new { @id = "ddIsDefault", @class = "form-control" })
                         </div>
                     </div>
 

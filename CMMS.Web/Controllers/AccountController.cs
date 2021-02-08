@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,28 +7,32 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using ClassLibrary.Models;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System.Configuration;
 using CMMS.Web.Helper;
 using WebApplication.Helpers;
 using ILS.UserManagement.Models;
 using System.Collections.Generic;
+using NLog;
 
 namespace WebApplication.Controllers
 {
+    [HandleError]
     public class AccountController : Controller
     {
+        private static Logger _logger;
+
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
         public AccountController()
         {
+            _logger = LogManager.GetCurrentClassLogger();
         }
 
         public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _logger = LogManager.GetCurrentClassLogger();
         }
 
         public ApplicationSignInManager SignInManager
@@ -73,38 +75,40 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+            try
             {
-                return View(model);
-            }
+                _logger.Log(LogLevel.Trace, "Login attempted for : " + model.UserName);
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-            result = SignInStatus.Success;
-            switch (result)
-            {
-                case SignInStatus.Success:
-
-                     Session[SessionKeys.UserId] = model.UserName;
-                    //  return RedirectToAction("Dashboard", "Admin");
-                    return RedirectToAction("UnitSelection", "Admin");
-                case SignInStatus.LockedOut:
-
-                    return View("Lockout");
-
-                case SignInStatus.RequiresVerification:
-
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-
-                case SignInStatus.Failure:
-
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                if (!ModelState.IsValid)
+                {
                     return View(model);
-            }
-        }
+                }
 
+                var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
+                result = SignInStatus.Success;
+               
+                switch (result)
+                {
+                    case SignInStatus.Success:
+                        Session[SessionKeys.UserId] = model.UserName;
+                        return RedirectToAction("UnitSelection", "Admin");
+
+                    case SignInStatus.Failure:
+                        return View("Login","Account");
+
+                    default:
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return View(model);
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex.ToString());
+            }
+
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return View(model);
+        }
 
         //
         // POST: /Account/LogOff
@@ -113,22 +117,30 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            try
+            {
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
-            Session.Clear();
-            Session.RemoveAll();
-            Session.Abandon();
+                Session.Clear();
+                Session.RemoveAll();
+                Session.Abandon();
 
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-            Response.Cache.SetNoStore();
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+                Response.Cache.SetNoStore();
+
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, ex.ToString());
+            }
 
             return RedirectToAction("Login", "Account");
         }
 
-      
         [HttpPost]
         [Authorization]
+        [ValidateAntiForgeryToken]
         public ActionResult SwitchRole(string roleId = "")
         {
             try
@@ -138,9 +150,9 @@ namespace WebApplication.Controllers
                     LoadRole(roleId);
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                _logger.Log(LogLevel.Error, ex.ToString());
             }
 
             var redirectUrl = new UrlHelper(Request.RequestContext).Action("Dashboard", "Admin", new { inRoleId = roleId });
@@ -248,47 +260,49 @@ namespace WebApplication.Controllers
         {
             try
             {
-                List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-
-                using (Entities _context = new Entities())
+                if (!String.IsNullOrWhiteSpace(roleId))
                 {
-                    var loginId = Session[SessionKeys.UserId].ToString();
-                    var currentRole = _context.tbl_UserRole.Where(x => x.UserId == loginId && x.RoleId == roleId)?.FirstOrDefault().RoleId;
+                    List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
 
-                    if (!string.IsNullOrWhiteSpace(currentRole))
+                    using (Entities _context = new Entities())
                     {
-                        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == currentRole).ToList();
+                        var loginId = Session[SessionKeys.UserId].ToString();
+                        var currentRole = _context.tbl_UserRole.Where(x => x.UserId == loginId && x.RoleId == roleId)?.FirstOrDefault().RoleId;
 
-                        foreach (var item in permissions)
+                        if (!string.IsNullOrWhiteSpace(currentRole))
                         {
-                            PermissionViewModel permissionViewModel = new PermissionViewModel()
+                            var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == currentRole).ToList();
+
+                            foreach (var item in permissions)
                             {
-                                PermissionId = item.PermissionId,
-                                DisplayName = item.tbl_Permission.DisplayName,
-                                Level = item.tbl_Permission.PermissionLevel.ToString(),
-                                ParentId = item.tbl_Permission.ParentId,
-                                URL = item.tbl_Permission.URL
-                            };
+                                PermissionViewModel permissionViewModel = new PermissionViewModel()
+                                {
+                                    PermissionId = item.PermissionId,
+                                    DisplayName = item.tbl_Permission.DisplayName,
+                                    Level = item.tbl_Permission.PermissionLevel.ToString(),
+                                    ParentId = item.tbl_Permission.ParentId,
+                                    URL = item.tbl_Permission.URL
+                                };
 
-                            ListPermissionViewModel.Add(permissionViewModel);
+                                ListPermissionViewModel.Add(permissionViewModel);
+                            }
+
+                            Session[SessionKeys.SessionHelperInstance] = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UpdateFields(roleId, ListPermissionViewModel);
                         }
-
-                        Session[SessionKeys.SessionHelperInstance] = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UpdateFields(roleId, ListPermissionViewModel);
-                    }
-                    else
-                    {
-                        // Show some error
+                        else
+                        {
+                            // Show some error
+                        }
                     }
                 }
-
             }
             catch(Exception ex)
             {
-
+                _logger.Log(LogLevel.Error, ex.ToString());
             }
         }
 
-        public void GetUserRole()
+        private void GetUserRole()
         {
             IEnumerable<tbl_Role> roles = new List<tbl_Role>();
             try
@@ -304,9 +318,9 @@ namespace WebApplication.Controllers
                     }
                 }
             }
-            catch 
+            catch(Exception ex)
             {
-                
+                _logger.Log(LogLevel.Error," Exception :: " + ex.ToString());
             }
         }
     }

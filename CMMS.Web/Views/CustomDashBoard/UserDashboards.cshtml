@@ -123,8 +123,8 @@
           $.ajax({
                 type: "POST",
                 url: '@Url.Action("EditUserDashboard", "CustomDashboard")',
-               contentType: "application/json; charset=utf-8",
-               data: JSON.stringify({ userId: '@userId' }),
+              contentType: "application/json; charset=utf-8",
+               data: JSON.stringify({ userId: '@userId', dashboardId: tblData[0].DashboardId, roleId: tblData[0].RoleId }),
                 datatype: "json",
                 success: function(data)
                 {
