@@ -1,21 +1,40 @@
-﻿function SaveAsDashboardExtension(dashboardControl) {
+﻿function SaveAsDashboardExtension(dashboardControl, userId, roleId) {
     this._dashboardControl = dashboardControl;
+    this.userId = userId;
+    this.roleId = roleId;
     this._menuItem = {
         id: "dashboard-save-as",
         title: "Save As...",
+
         template: "dx-save-as-form",
         selected: ko.observable(true),
         disabled: ko.computed(function () { return !dashboardControl.dashboard(); }),
         index: 112,
         data: this
     };
+
     this.newName = ko.observable("New Dashboard Name");
 }
 SaveAsDashboardExtension.prototype.saveAs = function () {
     if (this.isExtensionAvailable()) {
-        this._toolbox.menuVisible(false);
-        this._newDashboardExtension.performCreateDashboard(this.newName(), this._dashboardControl.dashboard().getJSON());
+
+        var dashboardid = this._dashboardControl.getDashboardId();
+
+        $.ajax({
+            url: 'SaveAsDashboard',
+            data: { dashboardId: this.newName, userId: this.userId, roleId: this.roleId },
+            type: 'POST',
+
+            success: (function (data) {
+
+                if (data.type == "success") {
+                    this._toolbox.menuVisible(false);
+                    this._newDashboardExtension.performCreateDashboard(this.newName(), this._dashboardControl.dashboard().getJSON());
+                }
+            }).bind(this)
+        });
     }
+
 };
 SaveAsDashboardExtension.prototype.isExtensionAvailable = function () {
     return this._toolbox !== undefined && this._newDashboardExtension !== undefined;

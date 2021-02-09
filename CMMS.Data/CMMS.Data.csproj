@@ -203,6 +203,9 @@
     <Compile Include="Models\tbl_UnitType.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserDashboardMapping.cs">
+      <DependentUpon>CMMS_Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UserRolesDTO.cs" />
     <Compile Include="Models\V_MMS5.cs">
       <DependentUpon>CMMS_Model.tt</DependentUpon>
@@ -213,11 +216,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\CageViewModels.cs" />
+    <Compile Include="ViewModels\ClientModeVM.cs" />
     <Compile Include="ViewModels\ConfigViewModel.cs" />
+    <Compile Include="ViewModels\LinkedDashboardsVM.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\MopSchedulerFilterViewModel.cs" />
     <Compile Include="ViewModels\MopViewModels.cs" />
     <Compile Include="ViewModels\PartsViewModels.cs" />
+    <Compile Include="ViewModels\UserDashboardMappingVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <EntityDeploy Include="Models\CMMS_Model.edmx">
@@ -244,6 +250,12 @@
       <DependentUpon>CMMS_Model.edmx</DependentUpon>
       <LastGenOutput>CMMS_Model.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ILS.UserManagement\ILS.Models.UserManagement.csproj">
+      <Project>{3296DA90-5CDC-4B24-BD72-029E7DFB3344}</Project>
+      <Name>ILS.Models.UserManagement</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

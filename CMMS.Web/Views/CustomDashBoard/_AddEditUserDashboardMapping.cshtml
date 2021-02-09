@@ -1,0 +1,317 @@
+﻿ 
+@using WebApplication.Controllers
+@using CMMS.Web.Helper;
+@{
+    string pageMode = ViewBag.PageMode.ToString();
+    dynamic role;
+    if(ViewBag.PageMode == PageMode.Edit)
+    {
+        role = ViewBag.Details.Roles;
+    }
+}
+
+    <script>
+
+    var addPageMode = @Html.Raw(Json.Encode(PageMode.Add ));
+    var pageMode = @Html.Raw(Json.Encode(ViewBag.PageMode));
+
+    $(document).ready(function () {
+
+       // LoadData();
+
+        if (pageMode == addPageMode) {
+
+            loadDashboards();
+
+            $("#ddUserIds").change(function () {
+                $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data:
+                    {
+                        id: $('#ddUserIds').val()
+                    },
+                    url: '@Url.Action("GetRoles", "CustomDashboard")',
+                    success: function (data) {
+                        $("#ddRoleIds").empty();
+
+                        $("#ddDashboardIds").empty();
+                        $("#ddDashboardIds").prop("disabled", true);
+
+                        data = data || {};
+                        if (data.length > 0) {
+                            $("#ddRoleIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                            for (var i = 0; i < data.length; i++) {
+                                $("#ddRoleIds").append('<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>');
+                            }
+
+                            $("#ddRoleIds").prop("disabled", false);
+
+                        } else {
+                            $("#ddRoleIds").prop("disabled", true);
+
+                        }
+
+                    },
+                    failure: function () {
+                    },
+                    error: function () {
+                        alert("Content load failed.");
+                    }
+                });
+            });
+        } else {
+    
+            $("#ddRoleIds").prop("disabled", true);
+        
+            $("#ddDashboardIds").prop("disabled", true);
+        }
+
+    $("#ddRoleIds").change(function () {
+        if ($('#ddRoleIds').val() != -1) {
+            loadDashboards();
+        } else {
+            alert("Please select role !!");
+        }
+    });
+    });
+
+
+        function loadDashboards() {
+                $.ajax({
+                type: "POST",
+                dataType: 'json',
+                data:
+                {
+                    userId: $('#ddUserIds').val(),
+                    roleId: $('#ddRoleIds').val()
+                },
+                url: '@Url.Action("GetAvailableDashboards", "CustomDashboard")',
+                success: function (data) {
+                    $("#ddDashboardIds").empty();
+                    data = data || {};
+                    if (data.length > 0) {
+                        $("#ddDashboardIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                        for (var i = 0; i < data.length; i++) {
+                            $("#ddDashboardIds").append('<option value="' + data[i].DashId + '">' + data[i].DashName + '</option>');
+                        }
+
+                        $("#ddDashboardIds").prop("disabled", false);
+
+                    } else {
+                        $("#ddDashboardIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                        $("#ddDashboardIds").empty();
+                        $("#ddDashboardIds").prop("disabled", true);
+                    }
+                },
+                failure: function () {
+                },
+                error: function () {
+                    alert("Content load failed.");
+                }
+            });
+        }
+
+
+    $("#btnSubmit").click(function (e) {
+        e.preventDefault();
+        if (validate()) {
+
+ 
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "@Url.Action("Save")",
+                dataType: 'json',
+                data: {
+                    userId: $('#ddUserIds').val(),
+                    roleId: $('#ddRoleIds').val(),
+                    dashboardId: $('#ddDashboardIds').val(),
+                    isDefault: $('#ddIsDefault').val(),
+                    pageMode: '@ViewBag.PageMode'
+                },
+                cache: false,
+                success: function (data) {
+                    if (data.type == "success")
+                    {
+                        $("#addEditMappingModal").modal('hide');
+                        swal({ title: "Success", text: data.msg, type: "success", });
+
+                        window.location.href = '@Url.Action("LinkedDashboards","CustomDashboard")' + "?userId=" + $('#ddUserIds').val();
+                    }
+                    else if (data.type == "error" || data.type == "failure")
+                    {
+
+                        swal({ title: "Error", text: data.msg, type: "error", });
+                    }
+                }
+            });
+        }
+    });
+
+    function enableSubmit() {
+
+            if ($('#ddUserIds').val() === "-1" || $('#ddRoleIds').val() === "-1" || $('#ddDashboardIds').val() === "-1") {
+                $("#btnSubmit").prop("disabled", true);
+                alert("Dis")
+            } else {
+                $("#btnSubmit").prop("disabled", false);
+                alert("e")
+            }
+        }
+
+    function validate() {
+        var isValid = true;
+        var msg;
+
+        if ($('#ddUserIds').val() == "-1") {
+            addRemoveClass("#ddUserIds", false);
+            msg = "Please select user id";
+            isValid = false;
+        } else {
+            addRemoveClass("#ddUserIds", true);
+        }
+
+        if ($('#ddRoleIds').val() == "-1" || $('#ddRoleIds').val() == '') {
+            addRemoveClass("#ddRoleIds", false);
+            msg = "Please select role id";
+            isValid = false;
+        } else {
+            addRemoveClass("#ddUserIds", true);
+        }
+
+        if ($('#ddDashboardIds').val() == "-1" || $('#ddDashboardIds').val() == '') {
+            addRemoveClass("#ddDashboardIds", false);
+            msg = "Please select dashboard id";
+            isValid = false;
+        } else {
+            addRemoveClass("#ddDashboardIds", true);
+        }
+
+        if (!isValid) {
+            swal({ title: "Error", text: msg, type: "error", });
+        }
+
+        return isValid;
+    }
+
+    function addRemoveClass(controlId, isSuccess) {
+        if (isSuccess) {
+            $(controlId).removeClass('text-danger');
+        } else {
+            $(controlId).addClass('text-danger');
+        }
+    }
+
+    function LoadData() {
+               $.ajax({
+                    type: "POST",
+                    dataType: 'json',
+                    data:
+                    {
+                        userId: $('#ddUserIds').val(),
+                        pageMode: '@ViewBag.PageMode'
+                    },
+                    url: '@Url.Action("PopulateUserData", "CustomDashboard")',
+                   success: function (data) {
+
+
+                       if ('@ViewBag.PageMode' == '2') {
+
+                           $("#ddRoleIds").empty();
+                           $("#ddRoleIds").prop("disabled", true);
+                           $("#ddDashboardIds").empty();
+                           $("#ddDashboardIds").prop("disabled", true);
+                         
+                           //data = data || {};
+                           //if (data.length > 0) {
+                           //    $("#ddRoleIds").append('<option value="' + "-1" + '">' + "----Select----" + '</option>');
+                           //    for (var i = 0; i < data.length; i++) {
+                           //        $("#ddRoleIds").append('<option value="' + data[i].RoleId + '">' + data[i].RoleName + '</option>');
+                           //    }
+
+                           //    $("#ddRoleIds").prop("disabled", false);
+
+                           //} else {
+                           //    $("#ddRoleIds").prop("disabled", true);
+
+                           //}
+                       }
+                       else
+                       {
+
+                       }
+
+                    },
+                    failure: function () {
+                    },
+                    error: function () {
+                        alert("Content load failed.");
+                    }
+                });
+    }
+
+    </script>
+
+
+<div class="modal-header">
+    <h4 class="modal-title">Dashboard Mapping</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="modal-body">
+    @using (Html.BeginForm("Save", "CustomDashboard", FormMethod.Post, new { enctype = "multipart/form-data", @id = "formUserDashboard" }))
+    {
+        <div class="card card-default">
+
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>User Id<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddUserIds", (SelectList)ViewBag.Details.UserDetails, new { @disabled=true, @id = "ddUserIds", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Role Id<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddRoleIds", (SelectList)ViewBag.Details.Roles, new {  @id = "ddRoleIds", @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Dashboard Name<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddDashboardIds", pageMode == PageMode.Add.ToString() ? new SelectList("", "Id", "Name") : (SelectList)ViewBag.Details.DashboardDetails, new { @id = "ddDashboardIds", @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Is Default<span style="color:red"> *</span></label>
+                            @Html.DropDownList("ddIsDefault", (SelectList)ViewBag.Details.IsDefault, new { @id = "ddIsDefault", @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div>
+
+
+            </div>
+
+            <div class="card-footer" id="footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input id="btnSubmit" type="button" value="Submit" class="btn btn-primary float-right" />
+            </div>
+
+        </div>
+    }
+</div>

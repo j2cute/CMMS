@@ -5,30 +5,84 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using System.Xml.Linq;
+using ClassLibrary.Models;
+using CMMS.Web.Helper;
 using DevExpress.DashboardCommon;
 using DevExpress.DashboardWeb;
 using DevExpress.DashboardWeb.Mvc;
+using DevExpress.Data.Filtering;
+ 
 
 namespace WebApplication
 {
     public class DashboardConfig
     {
+        private static CustomDashboardStorage customStorage = new CustomDashboardStorage();
+
         public static void RegisterService(RouteCollection routes)
         {
             routes.MapDashboardRoute();
 
-            // Uncomment this line to save dashboards to the App_Data folder.
-
-            var dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
-
-            CustomDashboardStorage newDashboardStorage = new CustomDashboardStorage(dashboardPath);
-            DashboardConfigurator.Default.SetDashboardStorage(newDashboardStorage);
+            DashboardConfigurator.Default.SetDashboardStorage(customStorage);
             DashboardConfigurator.Default.SetConnectionStringsProvider(new DevExpress.DataAccess.Web.ConfigFileConnectionStringsProvider());
+
+            DashboardConfigurator.Default.CustomFilterExpression += Default_CustomFilterExpression;
+
+        }
+
+        private static void Default_CustomFilterExpression(object sender, CustomFilterExpressionWebEventArgs e)
+        {
+            try
+            {
+                var dashBoardXML = customStorage.LoadDashboard(e.DashboardId);
+
+                // Check For Data Source
+
+                var query = dashBoardXML.Descendants("SqlDataSource").Where(x => x.Attribute("Name").Value == e.DataSourceName);
+                if (query.Any())
+                {
+                    var columns = query.Descendants("Columns");
+
+                    var tables = query.Descendants("Tables").FirstOrDefault().Elements().Select(x => x.Attributes("Name"));
+
+                    var applicableSites = ((IEnumerable<tbl_Unit>)System.Web.HttpContext.Current.Session[SessionKeys.ApplicableUnits]).Select(x => x.Id);
+
+                    foreach (var table in tables)
+                    {
+                        if (table.Any())
+                        {
+                            var tableName = table.FirstOrDefault().Value; 
+                            var columnsDetails = columns.FirstOrDefault().Elements().Where(x => x.Attribute("Table").Value == tableName);
+
+                            foreach (var col in columnsDetails)
+                            {
+                                if (col.Attributes().Where(x => x.Name == "Name").Any())
+                                {
+                                    if (col.Attribute("Name").Value.Contains("SiteId"))
+                                    {
+                                        e.FilterExpression = new InOperator(tableName + ".SiteId", applicableSites);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+              
+            
+            }
+            catch
+            {
+
+            }
         }
     }
 
     public class CustomDashboardStorage : IEditableDashboardStorage
     {
+        private static string dashboardPath = $"~/{ConfigurationManager.AppSettings["DashboardPath"]?.ToString()}";
+
+
         public string WorkingDirectory { get; set; }
         protected virtual DirectoryInfo Directory
         {
@@ -37,6 +91,11 @@ namespace WebApplication
                 string absolutePath = Path.IsPathRooted(WorkingDirectory) ? WorkingDirectory : HttpContext.Current.Server.MapPath(WorkingDirectory);
                 return new DirectoryInfo(absolutePath);
             }
+        }
+
+        public CustomDashboardStorage()
+        {
+           WorkingDirectory = dashboardPath;
         }
 
         public CustomDashboardStorage(string workingDirectory)
@@ -123,4 +182,13 @@ namespace WebApplication
             }
         }
     }
+
+
+    //public class CustomDataSourceStorage : IDataSourceStorage
+    //{
+    //    public XDocument GetDataSource()
+    //    {
+    //        XDocument.Load()
+    //    }
+    //}
 }

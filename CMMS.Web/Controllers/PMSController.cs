@@ -1,4 +1,5 @@
 ﻿using ClassLibrary.Models;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,27 +14,65 @@ namespace WebApplication.Controllers
     [Authorization]
     public class PMSController : BaseController
     {
+        private static Logger _logger;
+
+        public PMSController()
+        {
+            _logger = LogManager.GetCurrentClassLogger();
+        }
+
         public ActionResult Index()
         {
-            using (WebAppDbContext db = new WebAppDbContext())
+            string actionName = "Index";
+            List<M_PMS> response = new List<M_PMS>();
+            try
             {
-                var abc = db.M_PMS.ToList();
-                return View(abc);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                using (WebAppDbContext db = new WebAppDbContext())
+                {
+                    response = db.M_PMS.ToList(); 
+                }
+
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
+
+            return View(response);
         }
 
 
         public ActionResult Details(string id)
         {
-            if (id == null)
+            string actionName = "Details";
+            M_PMS response = new M_PMS();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                if (String.IsNullOrWhiteSpace(id))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        response = db.M_PMS.FirstOrDefault(x => x.PMS_NO == id);
+                    }
+                }
+
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             }
-            using (WebAppDbContext db = new WebAppDbContext())
+            catch(Exception ex)
             {
-                var abc = db.M_PMS.Where(x => x.PMS_NO == id).FirstOrDefault();
-                return PartialView("_Details", abc);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
+
+            return PartialView("_Details", response);
         }
 
      
@@ -47,23 +86,34 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(M_PMS M_PMS)
         {
+            string actionName = "Create";
             try
             {
-                // TODO: Add insert logic here
-                using (WebAppDbContext db = new WebAppDbContext())
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+          
+                if (ModelState.IsValid)
                 {
-                    if (!ModelState.IsValid)
+                    using (WebAppDbContext db = new WebAppDbContext())
                     {
-                        return PartialView("_Create");
+                        db.M_PMS.Add(M_PMS);
+                        db.SaveChanges();
                     }
-                    db.M_PMS.Add(M_PMS);
-                    db.SaveChanges();
+
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+                    Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                    return RedirectToAction("Index");
                 }
-                Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                return RedirectToAction("Index");
+                else
+                {
+
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                    return PartialView("_Create");
+                }
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }
@@ -71,15 +121,31 @@ namespace WebApplication.Controllers
 
         public ActionResult Edit(string id)
         {
-            if (id == null)
+            string actionName = "Edit";
+            M_PMS response = new M_PMS();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                if (String.IsNullOrWhiteSpace(id))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        response = db.M_PMS.FirstOrDefault(x => x.PMS_NO == id);
+                    }
+                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             }
-            using (WebAppDbContext db = new WebAppDbContext())
+            catch(Exception ex)
             {
-                var abc = db.M_PMS.Where(x => x.PMS_NO == id).FirstOrDefault();
-                return PartialView("_Edit", abc);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
+
+            return PartialView("_Edit", response);
         }
 
 
@@ -87,27 +153,38 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, M_PMS M_PMS)
         {
+            string actionName = "Edit";
             try
             {
-                if (id == null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                if (String.IsNullOrWhiteSpace(id))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                // TODO: Add update logic here
-                using (WebAppDbContext db = new WebAppDbContext())
+                else
                 {
-                    if (!ModelState.IsValid)
+                    if(ModelState.IsValid)
+                    {
+                        using (WebAppDbContext db = new WebAppDbContext())
+                        {
+                            db.Entry(M_PMS).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
+                        }
+                    }
+                    else
                     {
                         return PartialView("_Edit");
                     }
-                    db.Entry(M_PMS).State = System.Data.Entity.EntityState.Modified;
-                    db.SaveChanges();
                 }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
                 Alert("Record Updated Sucessfully!!!", NotificationType.success);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }
@@ -115,15 +192,30 @@ namespace WebApplication.Controllers
 
         public ActionResult Delete(string id)
         {
-            if (id == null)
+            string actionName = "Delete";
+            M_PMS response = new M_PMS();
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                if (String.IsNullOrWhiteSpace(id))
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                else
+                {
+                    using (WebAppDbContext db = new WebAppDbContext())
+                    {
+                        response = db.M_PMS.FirstOrDefault(x => x.PMS_NO == id);
+                    }
+                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             }
-            using (WebAppDbContext db = new WebAppDbContext())
+            catch (Exception ex)
             {
-                var abc = db.M_PMS.Where(x => x.PMS_NO == id).FirstOrDefault();
-                return PartialView("_Delete", abc);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
+
+            return PartialView("_Delete", response);
         }
 
 
@@ -131,24 +223,39 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(string id, M_PMS M_PMS)
         {
+            string actionName = "Delete";
+            M_PMS response = new M_PMS();
             try
             {
-                if (id == null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                if (String.IsNullOrWhiteSpace(id))
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                // TODO: Add delete logic here
+
                 using (WebAppDbContext db = new WebAppDbContext())
                 {
-                    var abc = db.M_PMS.Where(x => x.PMS_NO == id).FirstOrDefault();
-                    db.M_PMS.Remove(abc);
-                    db.SaveChanges();
+                    response = db.M_PMS.FirstOrDefault(x => x.PMS_NO == id);
+                    if(response != null)
+                    {
+                        db.M_PMS.Remove(response);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                        Alert("Record not found!!!", NotificationType.error);
+                        return RedirectToAction("Index");
+                    }
                 }
+
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                 Alert("Record Deleted Sucessfully!!!", NotificationType.success);
                 return RedirectToAction("Index");
             }
-            catch
+            catch(Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }

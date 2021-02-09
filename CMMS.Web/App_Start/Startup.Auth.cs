@@ -6,11 +6,13 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using ClassLibrary.Models;
+using System.Configuration;
 
 namespace WebApplication
 {
     public partial class Startup
     {
+        double expirationTime = Convert.ToDouble((ConfigurationManager.AppSettings["SessionExpiration"].ToString()));
         // For more information on configuring authentication, please visit https://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -28,16 +30,18 @@ namespace WebApplication
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
+                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
+                ExpireTimeSpan = TimeSpan.FromMinutes(expirationTime),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Enables the application to validate the security stamp when the user logs in.
                     // This is a security feature which is used when you change a password or add an external login to your account.  
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                        validateInterval: TimeSpan.FromMinutes(30),
+                        validateInterval: TimeSpan.FromMinutes(expirationTime),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 },
-            });  
-            
+            }); ;
+
         }
     }
 }

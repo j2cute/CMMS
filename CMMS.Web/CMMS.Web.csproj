@@ -104,6 +104,9 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.7.7\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
@@ -114,9 +117,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -258,7 +265,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CageController.cs" />
     <Compile Include="Controllers\ConfigController.cs" />
-    <Compile Include="Controllers\CustomDashBoardController.cs" />
+    <Compile Include="Controllers\CustomDashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MopPlan.cs" />
@@ -1670,19 +1677,7 @@
     </Content>
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -1691,7 +1686,6 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_AdminLayoutPage.cshtml" />
     <Content Include="Views\Admin\Create.cshtml" />
     <Content Include="Views\Admin\AddRole.cshtml" />
     <Content Include="Views\Admin\EditRoles.cshtml" />
@@ -1699,9 +1693,6 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\ViewAllRoles.cshtml" />
     <Content Include="Views\Admin\Dashboard.cshtml" />
-    <Content Include="Views\Shared\_StartApplication.cshtml" />
-    <Content Include="Views\Shared\_UserLayoutPage.cshtml" />
-    <Content Include="Views\User\Dashboard.cshtml" />
     <Content Include="Views\Shared\_NotificationPanel.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
@@ -1757,10 +1748,14 @@
     <Content Include="Views\Mop\LoadMopPlan.cshtml" />
     <Content Include="Views\Mop\MopPlanList.cshtml" />
     <Content Include="Views\Mop\_MopPlan.cshtml" />
-    <Content Include="Views\DashNew\Index.cshtml" />
     <Content Include="Views\CustomDashBoard\ClientMode.cshtml" />
     <Content Include="Views\CustomDashBoard\DesignerMode.cshtml" />
     <Content Include="Views\Admin\_UnitSelection.cshtml" />
+    <Content Include="Views\CustomDashBoard\UserDashboards.cshtml" />
+    <Content Include="Views\CustomDashBoard\_AddEditUserDashboardMapping.cshtml" />
+    <Content Include="Views\CustomDashBoard\Index.cshtml" />
+    <Content Include="Views\CustomDashBoard\UserDashboards_ClientView.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Config\_AddEditConfig.cshtml" />
   </ItemGroup>
   <ItemGroup>

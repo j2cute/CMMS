@@ -1,0 +1,289 @@
+﻿@using CMMS.Web.Helper
+@{
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+    var userId = ViewBag.UserId;
+}
+
+<style>
+    .hide {
+        display: none;
+    }
+</style>
+
+<link href="~/Content/sweetalert.css" rel="stylesheet" />
+<script src="~/Scripts/sweetalert.min.js"></script>
+
+<script>
+    var permissions;
+
+    var dtFormat = 'DD/MM/YYYY';
+
+    $(document).ready(function ()
+    {
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+
+        if (!permissions.filter(obj => obj.PermissionId == "AssignDashboard").length > 0)
+        {
+            $("#btnAssignDashboard").addClass('disabled')
+        }
+
+        var table;
+        table = $('#tblUserDashboards').DataTable(
+            {
+                "bServerSide": true,
+                "processing": true,
+                "scrollX": true,
+                "paging": true,
+                "filter": true,
+                "order": [[1, 'asc']],
+                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+
+                ajax: {
+                    type: 'POST',
+                    url: '@Url.Action("LoadUserDashboard")',
+                    dataType: 'json',
+
+                    dataSrc: 'data',
+                },
+
+                columns: [
+                    { 'data': 'Id', "name": "Id",  },
+                    { 'data': 'UserId', "name": "User Id", },
+                    { 'data': 'RoleId', "name": "Role Id", },
+                    { 'data': 'DashboardId', "name": "Dashboard Id", },
+                    { 'data': 'InsertedBy', "name": "Inserted By", },
+                    {
+                        'data': 'InsertionDateTime',
+                        "name": "Insertion Date Time",
+                        "render": function (value) {
+                            if (value === null) return "N/A";
+                            return moment(value).format(dtFormat);
+                        }
+                    },
+                    { 'data': 'LastUpdatedBy', "name": "LastUpdatedBy", },
+                      {
+                        'data': 'LastUpdatedDateTime',
+                        "name": "Last Updated Date Time",
+                        "render": function (value) {
+                            if (value === null) return "N/A";
+                            return moment(value).format(dtFormat);
+                        }
+                    },
+                    { 'data': 'IsDefault', "name": "Default" },
+                    { 'data': 'IsPrefered', "name": "Prefered" },
+                     {
+                        'data': function (data, type, row, meta) {
+                            var actions = '';
+
+                            if (permissions.filter(obj => obj.PermissionId == "EditUserDashboardMapping").length > 0) {
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            }
+                            else {
+                                actions = '<a id="btnEditMapping" class="btn btn-primary btn-xs select disabled"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                            }
+
+                            actions = actions + " " + '|' + " ";
+
+                            if (permissions.filter(obj => obj.PermissionId == "DeleteUserDashboardMapping").length > 0) {
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select" >' + 'Delete' + '</a>';
+                            }
+                            else {
+                                actions = actions + '<a id="btnDelMapping" class="btn btn-danger btn-xs select disabled" >' + 'Delete' + '</a>';
+                            }
+
+                            return actions;
+                        }
+                    },
+                ],
+
+                "columnDefs": [
+                    {
+                        "targets": [0],
+                        "visible": false,
+                        "searchable": false
+                    }],
+               "rowCallback": function (row, data, dataIndex) {
+                   if (data["Status"] == "InActive") {
+                       $('td', row).css('background-color', 'red');
+
+                   }
+               },
+
+            });
+
+
+        $('#tblUserDashboards tbody').on("click", '#btnEditMapping', function () {
+            var tblData = table.rows($(this).closest('tr')).data();
+
+            var options = {
+                "backdrop": "static",
+                keyboard: true
+            };
+
+          $.ajax({
+                type: "POST",
+                url: '@Url.Action("EditUserDashboard", "CustomDashboard")',
+              contentType: "application/json; charset=utf-8",
+               data: JSON.stringify({ userId: '@userId', dashboardId: tblData[0].DashboardId, roleId: tblData[0].RoleId }),
+                datatype: "json",
+                success: function(data)
+                {
+                    $('#myModalContent').html(data);
+                    $('#addEditMappingModal').modal(options);
+                    $('#addEditMappingModal').modal('show');
+               },
+               failure: function () {
+               },
+               error: function (data,abc,xyz) {
+
+                    alert("Content load failed.");
+                }
+            });
+
+            return false;
+        });
+
+
+        $('#tblUserDashboards tbody').on("click", '#btnDelMapping', function () {
+            var tblData = table.rows($(this).closest('tr')).data();
+
+            var options = {
+                "backdrop": "static",
+                keyboard: true
+            };
+
+          $.ajax({
+                type: "POST",
+                url: '@Url.Action("DeleteUserDashboard", "CustomDashboard")',
+              contentType: "application/json; charset=utf-8",
+              data: JSON.stringify({ userId: '@userId', dashboardId: tblData[0].DashboardId, roleId: tblData[0].RoleId }),
+                datatype: "json",
+                success: function(data)
+                {
+                    if (data.type == "success") {
+                        swal({ title: "Success", text: data.msg, type: "success", });
+
+
+                        $('#tblUserDashboards').DataTable().ajax.reload();
+
+
+                    } else {
+                        swal({ title: "Error", text: data.msg, type: "error", });
+                    }
+               },
+               failure: function () {
+               },
+               error: function (data,abc,xyz) {
+
+                    alert("Content load failed.");
+                }
+            });
+
+            return false;
+        });
+
+
+         $("#btnAssignDashboard").click(function () {
+
+            var options = {
+                "backdrop": "static",
+                keyboard: true
+            };
+
+           $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddUserDashboard", "CustomDashboard")',
+               contentType: "application/json; charset=utf-8",
+               data: JSON.stringify({ userId: '@userId' }),
+                datatype: "json",
+                success: function(data)
+                {
+                    $('#myModalContent').html(data);
+                    $('#addEditMappingModal').modal(options);
+                    $('#addEditMappingModal').modal('show');
+               },
+               failure: function () {
+               },
+               error: function (data,abc,xyz) {
+
+                    alert("Content load failed.");
+                }
+            });
+        });
+    });
+
+
+
+</script>
+ 
+<section class="content">
+
+ 
+    <div class="container-fluid">
+
+ 
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+
+                        <div class="card-header">
+
+                            <h4 class="card-title" style="font-weight:bold">User Dashboards</h4>
+                            <div class="card-tools">
+
+                                <input type="button" value="Assign Dashboard" style="float:right;" class="btn btn-success" id="btnAssignDashboard">
+                            </div>
+
+                        </div>
+
+                        <div class="card-body">
+
+                            <table id="tblUserDashboards" class="table table-bordered table-striped" style="width:100%">
+
+                                <thead>
+                                    <tr>
+                                        <th>Id</th>
+                                        <th>User Id</th>
+                                        <th>Role Id</th>
+                                        <th>Dashboard Name</th>
+                                        <th>Inserted By</th>
+                                        <th>Insertion Datetime</th>
+                                        <th>Last Updated By</th>
+                                        <th>Last Updated Datetime</th>
+                                        <th>Default</th>
+                                        <th>Prefered</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                        <div class="card-footer">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</section>
+
+
+<div id='addEditMappingModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}
