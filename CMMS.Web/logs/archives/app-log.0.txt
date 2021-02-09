@@ -1,0 +1,10 @@
+2021-02-08 11:26:22.3293|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-08 11:48:18.4843|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-08 12:04:33.0479|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-08 12:12:37.4524|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-08 12:51:15.9703|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-08 13:09:26.7969|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 1234
+2021-02-08 13:12:48.5796|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 12345
+2021-02-08 13:14:29.7858|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 12345
+2021-02-08 13:15:27.1053|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-08 13:26:40.9099|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456

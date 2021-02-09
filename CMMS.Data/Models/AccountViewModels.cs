@@ -48,20 +48,15 @@ namespace ClassLibrary.Models
 
     public class LoginViewModel
     {
-        [Required]
         [Display(Name = "User Name")]
-        //[RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Only Alphabets and Numbers allowed.")]
-
+        [Required(ErrorMessage ="Username is required.")]
+        [StringLength(10, ErrorMessage = "Username length cannot exceed 10 characters.")]
+        [RegularExpression("^[a-zA-Z0-9]*$", ErrorMessage = "Only numbers and alphabets are allowed.")]
         public string UserName { get; set; }
-        //[Required]
 
-        // I have change Email Validation
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
         [Display(Name = "Password")]
+        [Required(ErrorMessage = "Password is required.")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")]

@@ -1,0 +1,41 @@
+2021-02-09 02:13:55.2583|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:21:42.9025|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:22:52.8539|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:29:11.9803|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:39:04.7663|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:55:38.7310|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:57:10.2595|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 02:57:36.2299|ERROR|WebApplication.Controllers.PMSController|exception
+2021-02-09 09:15:08.4760|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 09:33:56.2105|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 09:45:34.5617|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 10:09:39.2612|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 10:10:25.3057|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 10:10:53.1628|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 10:25:32.3533|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 14:32:28.4530|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 14:38:32.9742|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 14:51:47.2342|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 14:52:44.1334|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 14:52:54.5791|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 14:54:11.3361|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 14:54:25.0353|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 14:59:08.5540|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 15:01:17.4240|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 15:01:51.8984|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 15:05:03.4957|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:05:21.3365|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:06:12.6098|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:08:29.4073|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:09:30.3405|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:10:02.1046|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:12:27.6745|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:12:54.8474|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:13:16.6482|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:13:53.9258|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:14:34.0177|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:16:10.2697|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:16:34.4582|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:17:02.4355|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-09 15:19:03.6855|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-09 15:21:47.8791|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456

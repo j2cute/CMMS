@@ -3,6 +3,7 @@ using ClassLibrary.Models;
 using ClassLibrary.ViewModels;
 using Microsoft.AspNet.Identity;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,51 +18,65 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    //7796 7566
-
-    //[Authorization]
+    [Authorization]
     public partial class MopController : BaseController
     {
-
-        private WebAppDbContext db = new WebAppDbContext();
         // GET: Mop
         public ActionResult Index()
         {
-            var vm = new MopViewModels()
+            string actionName = "Index";
+            MopViewModels vm = new MopViewModels();
+            try
             {
-                _M_PMS = db.M_PMS.ToList(),
-                _tbl_Unit = db.tbl_Unit.ToList(),
-            };
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                using (var db = new WebAppDbContext())
+                {
+                    vm = new MopViewModels()
+                    {
+                        _M_PMS = db.M_PMS.ToList(),
+                        _tbl_Unit = db.tbl_Unit.ToList(),
+                    };
+                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
             return View("Index", vm);
         }
 
         [HttpPost]
         public JsonResult GetSiteConfig(int? siteId)
         {
+            string actionName = "GetSiteConfig";
             var vm = new ConfigViewModel();
             try
             {
-                if (siteId != null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                using (var db = new WebAppDbContext())
                 {
-                    List<TreeViewNode> nodesSite = new List<TreeViewNode>();
-                    foreach (C_Site_Config c in db.C_Site_Config.Where(x => x.SiteId == siteId))
+                    if (siteId != null)
                     {
-                        if (c.PESWBS == "0") { c.PESWBS = "#"; }
-                        nodesSite.Add(new TreeViewNode { id = c.ESWBS.ToString(), parent = c.PESWBS.ToString(), text = (c.ESWBS + " - " + c.Nomanclature), Name = c.Nomanclature });
+                        List<TreeViewNode> nodesSite = new List<TreeViewNode>();
+                        foreach (C_Site_Config c in db.C_Site_Config.Where(x => x.SiteId == siteId))
+                        {
+                            if (c.PESWBS == "0") { c.PESWBS = "#"; }
+                            nodesSite.Add(new TreeViewNode { id = c.ESWBS.ToString(), parent = c.PESWBS.ToString(), text = (c.ESWBS + " - " + c.Nomanclature), Name = c.Nomanclature });
+                        }
+                        vm.JsonSiteConfig = (new JavaScriptSerializer()).Serialize(nodesSite);
                     }
-                    vm.JsonSiteConfig = (new JavaScriptSerializer()).Serialize(nodesSite);
                 }
-                //Serialize to JSON string.                
-                //Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                 return Json(vm, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm, JsonRequestBehavior.AllowGet);
             }
-
         }
 
 
@@ -69,23 +84,30 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult GetMOPData(int? SiteId, string eswbs)
         {
+            string actionName = "GetMOPData";
             try
             {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
                 var vm = new MopViewModels();
-                if (SiteId != null && eswbs != null)
+                if (SiteId != null && !String.IsNullOrWhiteSpace(eswbs))
                 {
                     vm = GetMopData(SiteId, eswbs);
                 }
-
                 else
                 {
+                    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                     Alert("Their is something went wrong!!!", NotificationType.error);
                     return Json(SiteId, JsonRequestBehavior.AllowGet);
                 }
-                return Json(new { msg = "", model = vm.M_MOPModel_List ,pmsNo = vm.pmsNo}, JsonRequestBehavior.AllowGet);
+
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+                return Json(new { msg = "", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(SiteId, JsonRequestBehavior.AllowGet);
@@ -96,35 +118,45 @@ namespace WebApplication.Controllers
 
         public ActionResult GetSelectedData(int? siteId, string pmsNo, string mopNo)
         {
+            string actionName = "GetSelectedData";
             var vm = new MopViewModels();
             try
             {
-                if (pmsNo != null && mopNo != null && siteId !=null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                using (var db = new WebAppDbContext())
                 {
-                    var result = db.M_MOP.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo && x.SiteId==siteId).Select(x => new M_MOPModel
+                    if (!String.IsNullOrWhiteSpace(pmsNo) && !String.IsNullOrWhiteSpace(mopNo) && siteId != null)
                     {
-                        SiteId = x.SiteId,
-                        PMS_No = x.PMS_No,
-                        MOP_No = x.MOP_No,
-                        MOP_Desc = x.MOP_Desc,
-                        By_Whom = x.By_Whom,
-                        Period = x.Period,
-                        Periodicity = x.Periodicity,
-                        Doc = x.Doc,
-                        Task_Procedure = x.Task_Procedure,
-                        Safety_Precautions = x.Safety_Precautions,
-                    }).FirstOrDefault();
-                    vm.M_MOPModel = result;
+                        var result = db.M_MOP.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo && x.SiteId == siteId).Select(x => new M_MOPModel
+                        {
+                            SiteId = x.SiteId,
+                            PMS_No = x.PMS_No,
+                            MOP_No = x.MOP_No,
+                            MOP_Desc = x.MOP_Desc,
+                            By_Whom = x.By_Whom,
+                            Period = x.Period,
+                            Periodicity = x.Periodicity,
+                            Doc = x.Doc,
+                            Task_Procedure = x.Task_Procedure,
+                            Safety_Precautions = x.Safety_Precautions,
+                        }).FirstOrDefault();
+                        vm.M_MOPModel = result;
+                    }
+                    else
+                    {
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                        Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm, JsonRequestBehavior.AllowGet);
+                    }
                 }
-                else
-                {
-                    Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm, JsonRequestBehavior.AllowGet);
-                }
+
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                 return Json(vm, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm, JsonRequestBehavior.AllowGet);
@@ -136,36 +168,43 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult AddMOP(M_MOP model, int? SiteId, string eswbs)
         {
-            using (var transaction = db.Database.BeginTransaction())
+            string actionName = "AddMOP";
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
+            using (var db = new WebAppDbContext())
             {
-                MopViewModels vm = new MopViewModels();
-                try
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    if (!ModelState.IsValid)
+                    MopViewModels vm = new MopViewModels();
+                    try
                     {
-
+                        if (!ModelState.IsValid)
+                        {
+                            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                            Alert("Their is something went wrong!!!", NotificationType.error);
+                            return Json(model, JsonRequestBehavior.AllowGet);
+                        }
+                        if (model.PMS_No != null && model.MOP_No != null && model.SiteId != 0)
+                        {
+                            db.M_MOP.Add(model);
+                            db.SaveChanges();
+                            transaction.Commit();
+                        }
+                        if (SiteId != null && eswbs != null)
+                        {
+                            vm = GetMopData(SiteId, eswbs);
+                        }
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                        //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                        return Json(new { msg = "Data Saved Sucessfully!!!", model = vm.M_MOPModel_List }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        transaction.Rollback();
+                        Exception(ex);
                         Alert("Their is something went wrong!!!", NotificationType.error);
-                        return Json(model, JsonRequestBehavior.AllowGet);
+                        return Json(vm.M_MOPModel_List);
                     }
-                    if (model.PMS_No != null && model.MOP_No != null && model.SiteId != 0)
-                    {
-                        db.M_MOP.Add(model);
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
-                    if (SiteId != null && eswbs != null)
-                    {
-                        vm = GetMopData(SiteId, eswbs);
-                    }
-                    //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(new { msg = "Data Saved Sucessfully!!!", model = vm.M_MOPModel_List}, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm.M_MOPModel_List);
                 }
             }
 
@@ -178,55 +217,60 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult EditMOP(M_MOPModel model, int? SiteId, string eswbs)
         {
-            using (var transaction = db.Database.BeginTransaction())
+            string actionName = "EditMOP";
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
+            using (var db = new WebAppDbContext())
             {
-                MopViewModels vm = new MopViewModels();
-                try
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    if (!ModelState.IsValid)
+                    MopViewModels vm = new MopViewModels();
+                    try
                     {
-
-                        Alert("Their is something went wrong!!!", NotificationType.error);
-                        return Json(model, JsonRequestBehavior.AllowGet);
-                    }
-                    if (model.PMS_No != null && model.MOP_No != null && model.SiteId != 0)
-                    {
-                        var obj = new M_MOP()
+                        if (!ModelState.IsValid)
                         {
-                            SiteId=model.SiteId,
-                            PMS_No = model.PMS_No,
-                            MOP_No = model.MOP_No,
-                            MOP_Desc = model.MOP_Desc,
-                            By_Whom = model.By_Whom,
-                            Periodicity = model.Periodicity,
-                            Period = model.Period,
-                            Doc = model.Doc,
-                            Task_Procedure = model.Task_Procedure,
-                            Safety_Precautions = model.Safety_Precautions,
+                            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                            Alert("Their is something went wrong!!!", NotificationType.error);
+                            return Json(model, JsonRequestBehavior.AllowGet);
+                        }
+                        if (model.PMS_No != null && model.MOP_No != null && model.SiteId != 0)
+                        {
+                            var obj = new M_MOP()
+                            {
+                                SiteId = model.SiteId,
+                                PMS_No = model.PMS_No,
+                                MOP_No = model.MOP_No,
+                                MOP_Desc = model.MOP_Desc,
+                                By_Whom = model.By_Whom,
+                                Periodicity = model.Periodicity,
+                                Period = model.Period,
+                                Doc = model.Doc,
+                                Task_Procedure = model.Task_Procedure,
+                                Safety_Precautions = model.Safety_Precautions,
 
-                        };
-                        db.Entry(obj).State = EntityState.Modified;
+                            };
+                            db.Entry(obj).State = EntityState.Modified;
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
+                        if (SiteId != null && eswbs != null)
+                        {
+                            vm = GetMopData(SiteId, eswbs);
+                        }
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+                        return Json(new { msg = "Data Updated Sucessfully!!!", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
+
                     }
-                    db.SaveChanges();
-                    transaction.Commit();
-                    if (SiteId != null && eswbs != null)
+                    catch (Exception ex)
                     {
-                        vm = GetMopData(SiteId, eswbs);
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        transaction.Rollback();
+                        Exception(ex);
+                        Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm.M_MOPModel_List);
                     }
-                    //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    // return Json(vm.M_MOPModel_List, JsonRequestBehavior.AllowGet);
-                    return Json(new { msg = "Data Updated Sucessfully!!!", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
-
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm.M_MOPModel_List);
                 }
             }
-
         }
         #endregion EditChild
 
@@ -235,34 +279,42 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult DeleteMOP(int? s_siteId, string pmsNo, string mopNo, int? SiteId, string eswbs)
         {
-            using (var transaction = db.Database.BeginTransaction())
+            string actionName = "DeleteMOP";
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
+            using (var db = new WebAppDbContext())
             {
-                var vm = new MopViewModels();
-                try
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    if (pmsNo != null && mopNo != null && s_siteId != null)
+                    var vm = new MopViewModels();
+                    try
                     {
-                        var result = db.M_MOP.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo && x.SiteId == s_siteId).SingleOrDefault();
-                        if (result != null)
+                        if (!String.IsNullOrWhiteSpace(pmsNo) && !String.IsNullOrWhiteSpace(mopNo) && s_siteId != null)
                         {
-                            db.M_MOP.Remove(result);
-                            db.SaveChanges();
-                            transaction.Commit();
+                            var result = db.M_MOP.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo && x.SiteId == s_siteId).SingleOrDefault();
+                            if (result != null)
+                            {
+                                db.M_MOP.Remove(result);
+                                db.SaveChanges();
+                                transaction.Commit();
+                            }
                         }
+                        if (SiteId != null && eswbs != null)
+                        {
+                            vm = GetMopData(SiteId, eswbs);
+                        }
+
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                        // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
+                        return Json(new { msg = "Record Deleted Sucessfully!!!", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
                     }
-                    if (SiteId != null && eswbs != null)
+                    catch (Exception ex)
                     {
-                        vm = GetMopData(SiteId, eswbs);
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        transaction.Rollback();
+                        Exception(ex);
+                        Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm.M_MOPModel_List);
                     }
-                    // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                    return Json(new { msg = "Record Deleted Sucessfully!!!", model = vm.M_MOPModel_List, pmsNo = vm.pmsNo }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Exception(ex);
-                    Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm.M_MOPModel_List);
                 }
             }
         }
@@ -271,22 +323,28 @@ namespace WebApplication.Controllers
         #region MOP_ITEMS
         public ActionResult TaskMaterialList()
         {
-            var vm = new MopViewModels()
+            using (var db = new WebAppDbContext())
             {
-                _tbl_Unit = db.tbl_Unit.ToList(),
-                _M_PMS = db.M_PMS.ToList(),
-                tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
-            };
-            return View("TaskMaterialList", vm);
+                var vm = new MopViewModels()
+                {
+                    _tbl_Unit = db.tbl_Unit.ToList(),
+                    _M_PMS = db.M_PMS.ToList(),
+                    tbl_Parts_list = db.tbl_Parts.Where(x => x.Status == "Active").ToList(),
+                };
+                return View("TaskMaterialList", vm);
+            }
         }
 
 
         [HttpPost]
         public ActionResult GetMOP(string PMS_No)
         {
-            List<M_MOP> M_MOP = db.M_MOP.Where(x => x.PMS_No == PMS_No).ToList();
-            ViewBag.M_MOP = new SelectList(M_MOP, "MOP_No", "MOP_No");
-            return PartialView("_DisplayMOPs");
+            using (var db = new WebAppDbContext())
+            {
+                List<M_MOP> M_MOP = db.M_MOP.Where(x => x.PMS_No == PMS_No).ToList();
+                ViewBag.M_MOP = new SelectList(M_MOP, "MOP_No", "MOP_No");
+                return PartialView("_DisplayMOPs");
+            }
         }
 
         [HttpPost]
@@ -295,57 +353,60 @@ namespace WebApplication.Controllers
             var vm = new MopViewModels();
             try
             {
-                if (siteId!= null && pmsNo != null && mopNo != null)
+                if (siteId != null && !String.IsNullOrWhiteSpace(pmsNo) && !String.IsNullOrWhiteSpace(mopNo))
                 {
                     vm = GetMopItemData(siteId, pmsNo, mopNo);
                 }
-                return Json(  new { model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
+                return Json(new { model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 Exception(ex);
-               // Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm);
             }
-
         }
         #endregion MOP_ITEMS
-
- 
-
 
         #region GetSelectedMopItemData
 
         public ActionResult GetMopItemSelectedData(string pmsNo, string mopNo)
         {
+            string actionName = "GetMopItemSelectedData";
             var vm = new MopViewModels();
             try
             {
-                if (pmsNo != null && mopNo != null)
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                using (var db = new WebAppDbContext())
                 {
-                    var result = db.M_MOP.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo).Select(x => new M_MOPModel
+                    if (!String.IsNullOrWhiteSpace(pmsNo) && !String.IsNullOrWhiteSpace(mopNo))
                     {
-                        PMS_No = x.PMS_No,
-                        MOP_No = x.MOP_No,
-                        MOP_Desc = x.MOP_Desc,
-                        By_Whom = x.By_Whom,
-                        Period = x.Period,
-                        Periodicity = x.Periodicity,
-                        Doc = x.Doc,
-                        Task_Procedure = x.Task_Procedure,
-                        Safety_Precautions = x.Safety_Precautions,
-                    }).FirstOrDefault();
-                    vm.M_MOPModel = result;
+                        var result = db.M_MOP.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo).Select(x => new M_MOPModel
+                        {
+                            PMS_No = x.PMS_No,
+                            MOP_No = x.MOP_No,
+                            MOP_Desc = x.MOP_Desc,
+                            By_Whom = x.By_Whom,
+                            Period = x.Period,
+                            Periodicity = x.Periodicity,
+                            Doc = x.Doc,
+                            Task_Procedure = x.Task_Procedure,
+                            Safety_Precautions = x.Safety_Precautions,
+                        }).FirstOrDefault();
+                        vm.M_MOPModel = result;
+                    }
+                    else
+                    {
+                        _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+                        Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm, JsonRequestBehavior.AllowGet);
+                    }
                 }
-                else
-                {
-                    Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm, JsonRequestBehavior.AllowGet);
-                }
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
                 return Json(vm, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm, JsonRequestBehavior.AllowGet);
@@ -359,40 +420,42 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult AddMOPItem(M_MOP_ITEMS model, int? siteId, string pmsNo, string mopNo)
         {
-            using (var transaction = db.Database.BeginTransaction())
+            using (var db = new WebAppDbContext())
             {
-                MopViewModels vm = new MopViewModels();
-                try
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    if (!ModelState.IsValid)
+                    MopViewModels vm = new MopViewModels();
+                    try
                     {
-                        Alert("Their is something went wrong!!!", NotificationType.error);
-                        return Json(model, JsonRequestBehavior.AllowGet);
-                    }
-                    if (model != null)
-                    {
-                        db.M_MOP_ITEMS.Add(model);
-                        db.SaveChanges();
-                        transaction.Commit();
-                    }
+                        if (!ModelState.IsValid)
+                        {
+                            Alert("Their is something went wrong!!!", NotificationType.error);
+                            return Json(model, JsonRequestBehavior.AllowGet);
+                        }
+                        if (model != null)
+                        {
+                            db.M_MOP_ITEMS.Add(model);
+                            db.SaveChanges();
+                            transaction.Commit();
+                        }
 
-                    if (siteId != null && pmsNo != null && mopNo != null)
-                    {
-                        vm = GetMopItemData(siteId, pmsNo, mopNo);
-                    }
+                        if (siteId != null && pmsNo != null && mopNo != null)
+                        {
+                            vm = GetMopItemData(siteId, pmsNo, mopNo);
+                        }
 
-                    //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(new { msg = "Data Saved Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Exception(ex);
-                    //Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm);
+                        //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                        return Json(new { msg = "Data Saved Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        Exception(ex);
+                        //Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm);
+                    }
                 }
             }
-
         }
         #endregion AddMOPItem
 
@@ -402,50 +465,53 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult EditMOPItem(M_MOP_ItemsModel model, int? siteId, string pmsNo, string mopNo)
         {
-            using (var transaction = db.Database.BeginTransaction())
+            using (var db = new WebAppDbContext())
             {
-                MopViewModels vm = new MopViewModels();
-                try
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    if (!ModelState.IsValid)
+                    MopViewModels vm = new MopViewModels();
+                    try
                     {
-                        Alert("Their is something went wrong!!!", NotificationType.error);
-                        return Json(model, JsonRequestBehavior.AllowGet);
-                    }
-                    if (model != null)
-                    {
-                        var obj = new M_MOP_ITEMS()
+                        if (!ModelState.IsValid)
                         {
-                            MOP_ItemsId = model.MOP_ItemsId,
-                            SiteId=Convert.ToInt32(model.SiteId),
-                            SR_Qty = model.SR_Qty,
-                            PMS_No = model.PMS_No,
-                            MOP_No = model.MOP_No,
-                            Part_No = model.Part_No,
-                        };
-                        if (model.NewSelectedPart_No != null)
-                        {
-                            obj.Part_No = model.NewSelectedPart_No.Trim();
+                            Alert("Their is something went wrong!!!", NotificationType.error);
+                            return Json(model, JsonRequestBehavior.AllowGet);
                         }
-                        db.Entry(obj).State = EntityState.Modified;
-                    }
-                    db.SaveChanges();
-                    transaction.Commit();
+                        if (model != null)
+                        {
+                            var obj = new M_MOP_ITEMS()
+                            {
+                                MOP_ItemsId = model.MOP_ItemsId,
+                                SiteId = Convert.ToInt32(model.SiteId),
+                                SR_Qty = model.SR_Qty,
+                                PMS_No = model.PMS_No,
+                                MOP_No = model.MOP_No,
+                                Part_No = model.Part_No,
+                            };
+                            if (model.NewSelectedPart_No != null)
+                            {
+                                obj.Part_No = model.NewSelectedPart_No.Trim();
+                            }
+                            db.Entry(obj).State = EntityState.Modified;
+                        }
+                        db.SaveChanges();
+                        transaction.Commit();
 
-                    if (siteId != null && pmsNo != null && mopNo != null)
+                        if (siteId != null && pmsNo != null && mopNo != null)
+                        {
+                            vm = GetMopItemData(siteId, pmsNo, mopNo);
+                        }
+
+                        //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                        return Json(new { msg = "Record Updated Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception ex)
                     {
-                        vm = GetMopItemData(siteId, pmsNo, mopNo);
+                        transaction.Rollback();
+                        Exception(ex);
+                        //Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm);
                     }
-
-                    //  Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return Json(new { msg = "Record Updated Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Exception(ex);
-                    //Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm);
                 }
             }
         }
@@ -457,34 +523,37 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult DeleteMOPItem(int? mopItemId, int? siteId, string pmsNo, string mopNo)
         {
-            using (var transaction = db.Database.BeginTransaction())
+            using (var db = new WebAppDbContext())
             {
-                var vm = new MopViewModels();
-                try
+                using (var transaction = db.Database.BeginTransaction())
                 {
-                    if (mopItemId != null)
+                    var vm = new MopViewModels();
+                    try
                     {
-                        var result = db.M_MOP_ITEMS.Where(x => x.MOP_ItemsId == mopItemId).SingleOrDefault();
-                        if (result != null)
+                        if (mopItemId != null)
                         {
-                            db.M_MOP_ITEMS.Remove(result);
-                            db.SaveChanges();
-                            transaction.Commit();
+                            var result = db.M_MOP_ITEMS.Where(x => x.MOP_ItemsId == mopItemId).SingleOrDefault();
+                            if (result != null)
+                            {
+                                db.M_MOP_ITEMS.Remove(result);
+                                db.SaveChanges();
+                                transaction.Commit();
+                            }
                         }
+                        if (siteId != null && pmsNo != null && mopNo != null)
+                        {
+                            vm = GetMopItemData(siteId, pmsNo, mopNo);
+                        }
+                        // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
+                        return Json(new { msg = "Record Deleted Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
                     }
-                    if (siteId !=null && pmsNo != null && mopNo != null)
+                    catch (Exception ex)
                     {
-                        vm = GetMopItemData(siteId, pmsNo, mopNo);
+                        transaction.Rollback();
+                        Exception(ex);
+                        //Alert("Their is something went wrong!!!", NotificationType.error);
+                        return Json(vm);
                     }
-                    // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                    return Json(new { msg = "Record Deleted Sucessfully!!!", model = vm.M_MOP_ItemsModelList }, JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    Exception(ex);
-                    //Alert("Their is something went wrong!!!", NotificationType.error);
-                    return Json(vm);
                 }
             }
 
@@ -496,62 +565,71 @@ namespace WebApplication.Controllers
 
         public MopViewModels GetMopData(int? SiteId, string eswbs)
         {
-            var vm = new MopViewModels();
-            if (SiteId != null && eswbs != null)
+            using (var db = new WebAppDbContext())
             {
-                var data = db.C_Site_Config.Where(x => x.SiteId == SiteId && x.ESWBS == eswbs).FirstOrDefault();
-                
-
-                if (data.PMS_No != null)
+                var vm = new MopViewModels();
+                if (SiteId != null && eswbs != null)
                 {
-                    var result = db.M_MOP.Where(x => x.PMS_No == data.PMS_No).ToList().Select(x => new M_MOPModel
-                    {
-                        SiteId=x.SiteId,
-                        PMS_No = x.PMS_No,
-                        MOP_No = x.MOP_No,
-                        MOP_Desc = x.MOP_Desc,
-                        By_Whom = x.By_Whom,
-                        PeriodMonth = x.Periodicity + " " + x.Period,
-                        mmsDoc = "MMS " + x.Doc,
-                    });
-                    vm.M_MOPModel_List = result.ToList();
-                    vm.pmsNo = data.PMS_No;
-                }
+                    var data = db.C_Site_Config.Where(x => x.SiteId == SiteId && x.ESWBS == eswbs).FirstOrDefault();
 
+
+                    if (data.PMS_No != null)
+                    {
+                        var result = db.M_MOP.Where(x => x.PMS_No == data.PMS_No).ToList().Select(x => new M_MOPModel
+                        {
+                            SiteId = x.SiteId,
+                            PMS_No = x.PMS_No,
+                            MOP_No = x.MOP_No,
+                            MOP_Desc = x.MOP_Desc,
+                            By_Whom = x.By_Whom,
+                            PeriodMonth = x.Periodicity + " " + x.Period,
+                            mmsDoc = "MMS " + x.Doc,
+                        });
+                        vm.M_MOPModel_List = result.ToList();
+                        vm.pmsNo = data.PMS_No;
+                    }
+
+                }
+                return vm;
             }
-            return vm;
         }
 
         public MopViewModels GetMopItemData(int? siteId, string pmsNo, string mopNo)
         {
-            var vm = new MopViewModels();
-            if (pmsNo != null && mopNo != null)
+            using (var db = new WebAppDbContext())
             {
-                var mopItems = db.M_MOP_ITEMS.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo && x.SiteId ==siteId).ToList().Select(x => new M_MOP_ItemsModel
+                var vm = new MopViewModels();
+                if (pmsNo != null && mopNo != null)
                 {
-                    MOP_ItemsId = x.MOP_ItemsId,
-                    SiteId= x.SiteId,
-                    PMS_No = x.PMS_No,
-                    MOP_No = x.MOP_No,
-                    SR_Qty = x.SR_Qty,
-                    Part_No = x.Part_No,
+                    var mopItems = db.M_MOP_ITEMS.Where(x => x.PMS_No == pmsNo && x.MOP_No == mopNo && x.SiteId == siteId).ToList().Select(x => new M_MOP_ItemsModel
+                    {
+                        MOP_ItemsId = x.MOP_ItemsId,
+                        SiteId = x.SiteId,
+                        PMS_No = x.PMS_No,
+                        MOP_No = x.MOP_No,
+                        SR_Qty = x.SR_Qty,
+                        Part_No = x.Part_No,
 
-                });
+                    });
 
-                vm.M_MOP_ItemsModelList = mopItems.ToList();
+                    vm.M_MOP_ItemsModelList = mopItems.ToList();
+                }
+                return vm;
             }
-            return vm;
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
+            using (var db = new WebAppDbContext())
             {
-                db.Dispose();
+                if (disposing)
+                {
+                    db.Dispose();
+                }
+                base.Dispose(disposing);
             }
-            base.Dispose(disposing);
         }
-      
+
         #endregion utility
     }
 

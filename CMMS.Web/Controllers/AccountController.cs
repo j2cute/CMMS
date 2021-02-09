@@ -112,13 +112,15 @@ namespace WebApplication.Controllers
 
         //
         // POST: /Account/LogOff
-        [HttpPost]
+ 
         [Authorization]
-        [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
+            string actionName = "LogOff";
             try
             {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
                 Session.Clear();
@@ -129,10 +131,12 @@ namespace WebApplication.Controllers
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
                 Response.Cache.SetNoStore();
 
+                _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, ex.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
             }
 
             return RedirectToAction("Login", "Account");

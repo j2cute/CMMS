@@ -42,7 +42,7 @@ namespace WebApplication.Controllers
             try
             {
                 _logger.Log(LogLevel.Trace, actionName + " :: started.");
-                using (var context = new WebAppDbContext())
+                using (var db = new WebAppDbContext())
                 {
                     //search value
                     string searchvalue = Request.Form["search[value]"];
@@ -181,72 +181,75 @@ namespace WebApplication.Controllers
             if (plan.SelectedDate != null)
             {
                 _logger.Log(LogLevel.Trace, actionName + " :: started.");
-                using (var transaction = db.Database.BeginTransaction())
+                using (var db = new WebAppDbContext())
                 {
-                    try
+                    using (var transaction = db.Database.BeginTransaction())
                     {
-                        using (var context = new WebAppDbContext())
+                        try
                         {
-                            var data = context.M_MOP_PLAN.Where(x => x.SiteId == plan.SiteId && x.PMS_No == plan.PMS_No
-                                                            && x.MOP_No == plan.MOP_No && x.ESWBS == plan.ESWBS).FirstOrDefault();
+                            using (var context = new WebAppDbContext())
+                            {
+                                var data = context.M_MOP_PLAN.Where(x => x.SiteId == plan.SiteId && x.PMS_No == plan.PMS_No
+                                                                && x.MOP_No == plan.MOP_No && x.ESWBS == plan.ESWBS).FirstOrDefault();
 
-                            if (data.NextDueDate == null && data.DoneDate == null)
-                            {
-                                data.NextDueDate = plan.SelectedDate;
-                            }
-                            else
-                            {
-                                if (!String.IsNullOrWhiteSpace(plan.Status))
+                                if (data.NextDueDate == null && data.DoneDate == null)
                                 {
-                                    if (plan.Status == "Deferred")
+                                    data.NextDueDate = plan.SelectedDate;
+                                }
+                                else
+                                {
+                                    if (!String.IsNullOrWhiteSpace(plan.Status))
                                     {
-                                        data.NextDueDate = plan.SelectedDate;
-                                    }
-                                    else if (plan.Status == "Done")
-                                    {
-                                        var mop = context.M_MOP.Where(x => x.MOP_No == plan.MOP_No && x.PMS_No == plan.PMS_No && x.SiteId == plan.SiteId).FirstOrDefault();
-
-                                        data.DoneDate = plan.SelectedDate;
-                                        data.NextDueDate = DateTime.Now.AddDays(GetDaysViaPeriod(mop.Period, Convert.ToInt32(mop.Periodicity)));
-
-                                        db.M_MOP_PLAN_HISTORY.Add(new M_MOP_PLAN_HISTORY()
+                                        if (plan.Status == "Deferred")
                                         {
-                                            SiteId = plan.SiteId,
-                                            PMS_No = plan.PMS_No,
-                                            MOP_No = plan.MOP_No,
-                                            ESWBS = plan.ESWBS,
-                                            DoneBy = Session[SessionKeys.UserId]?.ToString(),
-                                            DoneDate = plan.SelectedDate,
-                                            NextDueDate = data.NextDueDate
-                                        });
+                                            data.NextDueDate = plan.SelectedDate;
+                                        }
+                                        else if (plan.Status == "Done")
+                                        {
+                                            var mop = context.M_MOP.Where(x => x.MOP_No == plan.MOP_No && x.PMS_No == plan.PMS_No && x.SiteId == plan.SiteId).FirstOrDefault();
+
+                                            data.DoneDate = plan.SelectedDate;
+                                            data.NextDueDate = DateTime.Now.AddDays(GetDaysViaPeriod(mop.Period, Convert.ToInt32(mop.Periodicity)));
+
+                                            db.M_MOP_PLAN_HISTORY.Add(new M_MOP_PLAN_HISTORY()
+                                            {
+                                                SiteId = plan.SiteId,
+                                                PMS_No = plan.PMS_No,
+                                                MOP_No = plan.MOP_No,
+                                                ESWBS = plan.ESWBS,
+                                                DoneBy = Session[SessionKeys.UserId]?.ToString(),
+                                                DoneDate = plan.SelectedDate,
+                                                NextDueDate = data.NextDueDate
+                                            });
+                                        }
+                                        else
+                                        {
+                                            type = "error";
+                                            msg = "Invalid data entered.";
+                                        }
                                     }
                                     else
                                     {
                                         type = "error";
-                                        msg = "Invalid data entered.";
+                                        msg = "Please fill complete data.";
                                     }
                                 }
-                                else
-                                {
-                                    type = "error";
-                                    msg = "Please fill complete data.";
-                                }
+
+                                db.Entry(data).State = System.Data.Entity.EntityState.Modified;
+                                db.SaveChanges();
+
+                                transaction.Commit();
+
                             }
-
-                            db.Entry(data).State = System.Data.Entity.EntityState.Modified;
-                            db.SaveChanges();
-
-                            transaction.Commit();
-
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        catch (Exception ex)
+                        {
+                            _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
 
-                        type = "failure";
-                        msg = "Internal server error.";
-                        transaction.Rollback();
+                            type = "failure";
+                            msg = "Internal server error.";
+                            transaction.Rollback();
+                        }
                     }
                 }
             }

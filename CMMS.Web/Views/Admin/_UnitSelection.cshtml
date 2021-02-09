@@ -1,26 +1,26 @@
 ﻿@model ClassLibrary.Models.DashboardViewModel
 @{
-    ViewBag.Title = "EditUser";
+    ViewBag.Title = "Unit Selection";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <script src="~/Scripts/jquery-3.5.1.js"></script>
 <script src="~/Scripts/bootstrap.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $("#myModal").modal('show');
     });
+
+ 
 </script>
 <div id="myModal" class="modal fade">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h class="modal-title">Select Unit</h>
-
-
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-
+                <h class="modal-title">Unit Selection</h>
+                <button type="button" class="close" data-dismiss="modal"></button>
             </div>
-         
+
             @using (Html.BeginForm("Dashboard", "Admin", FormMethod.Post, new { @id = "myForm" }))
             {
                 @Html.AntiForgeryToken()
@@ -29,31 +29,26 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                     
-                                <div class="col-sm-2">
-                                <label>Select Unit</label>
-                                    </div>
 
-                                <div class="col-sm-6">
-                                    @Html.DropDownListFor(model => model.tbl_Unit.Id, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
-                                    @Html.ValidationMessageFor(model => model.tbl_Unit.Id, "", new { @class = "text-danger" })
-                                </div>
-                                <div class="col-sm-4">
-                                    <input type="hidden" name="siteId" id="siteId" />
-                                    <input type="submit" onclick="goToDashboard()" id="Proceed" value="Proceed" class="btn btn-primary btn-sm" />
-                                </div>
-                          
+                            <div class="col-sm-2">
+                                <label>Select Unit</label>
+                            </div>
+
+                            <div class="col-sm-6">
+                                @Html.DropDownListFor(model => model.tbl_Unit.Id, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
+                                @Html.ValidationMessageFor(model => model.tbl_Unit.Id, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-sm-4">
+                                <input type="hidden" name="siteId" id="siteId" />
+                                <input type="submit" onclick="goToDashboard()" id="Proceed" value="Proceed" class="btn btn-primary btn-sm" />
+                            </div>
                         </div>
                     </div>
                 </div>
-
             }
         </div>
-
-                <!-- /.row (main row) -->
-
-            </div>
-        </div>
+    </div>
+</div>
 <script>
 
     function goToDashboard() {

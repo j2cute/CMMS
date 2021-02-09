@@ -12,6 +12,8 @@ using static ClassLibrary.Common.Enums;
 using ILS.UserManagement.Models;
 using CMMS.Web.Helper;
 using WebApplication.Helpers;
+using System.Text.RegularExpressions;
+using NLog;
 
 namespace WebApplication.Controllers
 {
@@ -21,8 +23,14 @@ namespace WebApplication.Controllers
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
         private WebAppDbContext db;
+
+        private static Logger _logger;
         // Controllers
 
+        public AdminController()
+        {
+            _logger = LogManager.GetCurrentClassLogger();
+        }
         #region Dashboard
 
         public ActionResult UnitSelection()
@@ -39,7 +47,7 @@ namespace WebApplication.Controllers
                         using (Entities _context = new Entities())
                         {
                             var data = _context.tbl_User.Where(x => x.UserId == userId).FirstOrDefault();
-                            
+
                             if (data != null)
                             {
                                 Session[SessionKeys.UserUnitId] = data.UnitId;
@@ -83,69 +91,163 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorization]
         public ActionResult Dashboard(string siteId, string inRoleId = null)
         {
-
             if (!string.IsNullOrWhiteSpace(siteId))
             {
-                db = new WebAppDbContext();
-                DashboardViewModel dashboard = new DashboardViewModel();
-                List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-                dashboard._tbl_Unit = db.tbl_Unit.ToList();
-                string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
-                var loginUserId = Session[SessionKeys.UserId]?.ToString();
-                dashboard.datetime = DateTime.Now.ToString();
-
-                using (Entities _context = new Entities())
+                if (Regex.IsMatch(siteId, RegexHelper.NumberOnly))
                 {
-                    if (string.IsNullOrWhiteSpace(defaultRoleId))
-                    {
-                        defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
-                    }
-                    else
-                    {
-                        defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId)?.FirstOrDefault().RoleId;
-                    }
+                    var applicableUnits = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.ApplicableUnits]);
+                    int intSiteId = Convert.ToInt32(siteId);
 
-                    if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                    if (applicableUnits != null && applicableUnits.Where(x => x.Id == intSiteId).Any())
                     {
-                        var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
-
-                        foreach (var item in permissions)
+                        using (var db = new WebAppDbContext())
                         {
-                            PermissionViewModel permissionViewModel = new PermissionViewModel()
-                            {
-                                PermissionId = item.PermissionId,
-                                DisplayName = item.tbl_Permission.DisplayName,
-                                Level = item.tbl_Permission.PermissionLevel.ToString(),
-                                ParentId = item.tbl_Permission.ParentId,
-                                URL = item.tbl_Permission.URL,
-                                IconPath = item.tbl_Permission.IconPath
-                            };
+                            DashboardViewModel dashboard = new DashboardViewModel();
+                            List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
 
-                            ListPermissionViewModel.Add(permissionViewModel);
+                            dashboard._tbl_Unit = db.tbl_Unit.ToList();
+
+                            string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
+
+                            dashboard.datetime = DateTime.Now.ToString();
+                            string loginUserId = Session[SessionKeys.UserId]?.ToString();
+                            
+                            using (Entities _context = new Entities())
+                            {
+                                if (string.IsNullOrWhiteSpace(defaultRoleId))
+                                {
+                                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
+                                }
+                                else
+                                {
+                                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId)?.FirstOrDefault().RoleId;
+                                }
+
+                                if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                                {
+                                    var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
+
+                                    foreach (var item in permissions)
+                                    {
+                                        PermissionViewModel permissionViewModel = new PermissionViewModel()
+                                        {
+                                            PermissionId = item.PermissionId,
+                                            DisplayName = item.tbl_Permission.DisplayName,
+                                            Level = item.tbl_Permission.PermissionLevel.ToString(),
+                                            ParentId = item.tbl_Permission.ParentId,
+                                            URL = item.tbl_Permission.URL,
+                                            IconPath = item.tbl_Permission.IconPath
+                                        };
+
+                                        ListPermissionViewModel.Add(permissionViewModel);
+                                    }
+                                }
+                                else
+                                {
+                                    // Show some error
+                                }
+                            }
+
+                            Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId, loginUserId, defaultRoleId, ListPermissionViewModel);
+
+                            dashboard.DashboardId = GetDashboardId();
+                            return View(dashboard);
                         }
                     }
                     else
                     {
-                        // Show some error
+                        // Please select valid site id
                     }
                 }
-
-                Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId, loginUserId, defaultRoleId, ListPermissionViewModel);
-
-
-                dashboard.DashboardId = GetDashboardId();
-
-
-                return View(dashboard);
+                else
+                {
+                    // Invalid SiteId
+                }
             }
 
             return RedirectToAction("UnitSelection");
         }
 
+        [HttpGet]
+        [Authorization]
+        public ActionResult Dashboard()
+        {
+            string actionName = "Get Dashboard";
+            try
+            {
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
 
+                var sessionVariables = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]);
+                if (sessionVariables != null)
+                {
+                    using (var db = new WebAppDbContext())
+                    {
+                        DashboardViewModel dashboard = new DashboardViewModel();
+                        List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+
+                        dashboard._tbl_Unit = db.tbl_Unit.ToList();
+
+                        dashboard.datetime = DateTime.Now.ToString();
+                        string loginUserId = Session[SessionKeys.UserId]?.ToString();
+
+                        string defaultRoleId = string.Empty;
+
+                        using (Entities _context = new Entities())
+                        {
+                            if (string.IsNullOrWhiteSpace(sessionVariables.CurrentRoleId))
+                            {
+                                defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1)?.FirstOrDefault().RoleId;
+                            }
+                            else
+                            {
+                                defaultRoleId = sessionVariables.CurrentRoleId;
+                            }
+
+                            if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                            {
+                                var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == defaultRoleId).ToList();
+
+                                foreach (var item in permissions)
+                                {
+                                    PermissionViewModel permissionViewModel = new PermissionViewModel()
+                                    {
+                                        PermissionId = item.PermissionId,
+                                        DisplayName = item.tbl_Permission.DisplayName,
+                                        Level = item.tbl_Permission.PermissionLevel.ToString(),
+                                        ParentId = item.tbl_Permission.ParentId,
+                                        URL = item.tbl_Permission.URL,
+                                        IconPath = item.tbl_Permission.IconPath
+                                    };
+
+                                    ListPermissionViewModel.Add(permissionViewModel);
+                                }
+                            }
+                            else
+                            {
+                                // Show some error
+                            }
+                        }
+
+                        Session[SessionKeys.SessionHelperInstance] = new SessionHelper(sessionVariables.SelectedSiteId, loginUserId, defaultRoleId, ListPermissionViewModel);
+
+                        dashboard.DashboardId = GetDashboardId();
+                        return View(dashboard);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+            return RedirectToAction("UnitSelection");
+        }
         public string GetDashboardId()
         {
             UserDashboardMapping dashboard = null;

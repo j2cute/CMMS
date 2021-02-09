@@ -38,9 +38,7 @@ namespace CMMS.Web.Helper
                 {
                     UserRoles = roles?.Select(x => new RolesVM() { RoleId = x.RoleId,RoleName = x.Name, RoleDescription = x.Description }).ToList();
                 }
-            }
-
-          
+            }      
         }
 
 
@@ -82,5 +80,13 @@ namespace CMMS.Web.Helper
     {
         Add = 1,
         Edit = 2
+    }
+
+    public static class RegexHelper
+    {
+        public static string NumberOnly = "[0-9]";
+        public static string AlphabetsOnly = "";
+        public static string Alphanumeric = "";
+        public static string AlphanumericSpecialCharacter = "";
     }
 }
