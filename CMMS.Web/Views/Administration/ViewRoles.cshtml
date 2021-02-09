@@ -12,11 +12,14 @@
             padding: 4px 4px !important;
         }
     </style>
-<section class="content-header">
-    <h1>
-        Role Management
-    </h1>
-</section>
+    <section class="content-header">
+        <div class="container-fluid">
+
+            <h1>
+                Role Management
+            </h1>
+            </div>
+    </section>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
@@ -39,29 +42,29 @@
                             <tbody>
                                 @foreach (var item in Model.tbl_Role_list)
                                 {
-                                    <tr>
-                                        <td>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                                                        <i class="fa fa-cog"></i> Actions
-                                                        <span class="caret ng-tns-c275-7"></span>
-                                                    </button>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item btn primary" data-modal='' href="@Url.Action("Edit", "Administration", new { id = item.RoleId })"><i class="fas fa-pencil-alt fa-lg"></i> Edit</a><br />
-                                                        <a class="dropdown-item btn danger" data-modal='' href="@Url.Action("Delete", "Administration", new { id = item.RoleId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
+                                <tr>
 
-                                                    </div>
+                                    <td> @item.Name</td>
+                                    <td>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i> Actions
+                                                    <span class="caret ng-tns-c275-7"></span>
+                                                </button>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item btn primary" data-modal='' href="@Url.Action("Edit", "Administration", new { id = item.RoleId })"><i class="fas fa-pencil-alt fa-lg"></i> Edit</a><br />
+                                                    <a class="dropdown-item btn danger" data-modal='' href="@Url.Action("Delete", "Administration", new { id = item.RoleId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
+
                                                 </div>
-                                                <!-- /btn-group -->
-
                                             </div>
-                                        </td>
-                                        <td> @item.Name</td>
+                                            <!-- /btn-group -->
 
+                                        </div>
+                                    </td>
 
-                                    </tr>
+                                </tr>
                                 }
                             </tbody>
                         </table>

@@ -34,112 +34,76 @@
     }
 </style>
 
+<section class="content-header">
+    <h1>
+        Child Parts
+    </h1>
+
+</section>
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
     <input type="hidden" name="parentPartId" id="parentPartId" />
     <!-- Small boxes (Stat box) -->
-    <div class="row" id="ConfigEquipment">
-        <div class="col-md-7">
-            <div class="row" id="ConfigBox" style="margin-right:0px">
-                <div class="box box-primary box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Parts</h3>
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-12">
-
-
-                                <table id="example1" class="display" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Part Id</th>
-                                            <th>Part No</th>
-                                            <th>Cage Code</th>
-                                            <th>Part Name</th>
-                                            <th>Manufacturer</th>
-
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @*@if (Model.tbl_Parts_list != null)
-                                            {*@
-
-                                        @foreach (var item in Model.tbl_Parts_list)
-                                        {
-                                            <tr>
-                                                <td></td>
-                                                <td> @item.PartId</td>
-                                                <td> @item.Part_No</td>
-                                                <td> @item.CageCode</td>
-                                                <td> @item.PART_NAME</td>
-
-                                                <td> @item.tbl_Cage.CageName</td>
-
-
-
-                                            </tr>
-                                        }
-
-                                    </tbody>
-                                </table>
-
-
-                                <br />
-
+    <div class="container-fluid">
+        <div class="row" id="ConfigEquipment">
+          
+                <div class="col-md-7">
+                    <div class="row" id="ConfigBox" style="margin-right:0px">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Parts</h3>
+                                <div class="card-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-
-                    </div>
-
-
-                </div>
-            </div>
-
-        </div>
-
-        @*Eswbs Detail- Start*@
-        <div class="col-md-5" id="AllDetails">
-            <div class="row" id="ConfigBox" style="margin-right:0px">
-                <div class="box box-primary box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">Child Parts</h3>
-                        <div class="box-tools pull-right">
-                            <a data-toggle="modal" data-target="#addMOP" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add New Child Part</a>
-
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-12">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
 
 
-                                <table id="childTable" class="display" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Part Id</th>
-                                            <th>Child Part Id</th>
-                                            <th>Part Name</th>
-                                            <th>Part No.</th>
-                                            <th>Qty</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-
-                                </table>
+                                        <table id="example1" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Part Id</th>
+                                                    <th>Part No</th>
+                                                    <th>Cage Code</th>
+                                                    <th>Part Name</th>
+                                                    @*<th>Manufacturer</th>*@
 
 
-                                <br />
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @*@if (Model.tbl_Parts_list != null)
+                                        {*@
+
+                                                @foreach (var item in Model.tbl_Parts_list)
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td> @item.PartId</td>
+                                                        <td> @item.Part_No</td>
+                                                        <td> @item.CageCode</td>
+                                                        <td> @item.PART_NAME</td>
+
+                                                        @*<td> @item</td>*@
+
+
+
+                                                    </tr>
+                                                }
+
+                                            </tbody>
+                                        </table>
+
+
+                                        <br />
+
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -149,10 +113,56 @@
 
                 </div>
 
-            </div>
+                @*Eswbs Detail- Start*@
+                <div class="col-md-5" id="AllDetails">
+                    <div class="row" id="ConfigBox" style="margin-right:0px">
+                        <div class="card">
+                            <div class="card-header with-border">
+                                <h3 class="box-title">Child Parts</h3>
+                                <div class="box-tools pull-right">
+                                    <a data-toggle="modal" data-target="#addMOP" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Add New Child Part</a>
 
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+
+                                        <table id="childTable" class="display" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Part Id</th>
+                                                    <th>Child Part Id</th>
+                                                    <th>Part Name</th>
+                                                    <th>Part No.</th>
+                                                    <th>Qty</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                        </table>
+
+
+                                        <br />
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            
         </div>
-    </div>
+        </div>
 </section>
 
 
@@ -173,15 +183,15 @@
                 <div class="modal-body">
                     @*@Html.HiddenFor(model => model.C_Site_Config.Part_No)
                         @Html.HiddenFor(model => model.C_Site_Config.CageCode)*@
-                    <div class="box box-primary box-solid">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><b>Add MOP</b></h3>
+                    <div class="card">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"><b>Add MOP</b></h3>
                         </div>
                         <br />
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <div class="box-body" id="InputFields">
+                        <div class="card-body" id="InputFields">
                             <div class="row">
                                 @Html.HiddenFor(model => model.tbl_ChildParts.ChildPartId)
                                 <div class="col-md-4">
@@ -213,7 +223,7 @@
                                         <th>Part No</th>
                                         <th>Cage Code</th>
                                         <th>Part Name</th>
-                                        <th>Manufacturer</th>
+                                        @*<th>Manufacturer</th>*@
 
 
                                     </tr>
@@ -229,7 +239,7 @@
                                         <td> @item.Part_No</td>
                                         <td> @item.CageCode</td>
                                         <td> @item.PART_NAME</td>
-                                        <td> @item.tbl_Cage.CageName</td>
+                                        @*<td> @item.tbl_Cage.CageName</td>*@
 
 
 
@@ -244,7 +254,7 @@
 
                     </div>
 
-                    <div class="box-footer" id="footer">
+                    <div class="card-footer" id="footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <input type="button" onclick="AddChildData()" value="Submit" class="btn btn-primary pull-right" />
                     </div>
@@ -275,15 +285,15 @@
                 <div class="modal-body">
                     @*@Html.HiddenFor(model => model.C_Site_Config.Part_No)
                         @Html.HiddenFor(model => model.C_Site_Config.CageCode)*@
-                    <div class="box box-primary box-solid">
-                        <div class="box-header with-border">
-                            <h3 class="box-title"><b>Edit MOP</b></h3>
+                    <div class="card">
+                        <div class="card-header with-border">
+                            <h3 class="card-title"><b>Edit MOP</b></h3>
                         </div>
                         <br />
 
                         <!-- /.card-header -->
                         <!-- form start -->
-                        <div class="box-body" id="InputFields">
+                        <div class="card-body" id="InputFields">
 
                             <div class="row">
                                 <div class="col-md-4">
@@ -319,7 +329,7 @@
 
                     </div>
 
-                    <div class="box-footer" id="footer">
+                    <div class="card-footer" id="footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <input type="button" onclick="EditChildData()" value="Submit" class="btn btn-primary pull-right" />
                     </div>
@@ -520,7 +530,6 @@
                 swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
             },
         });
-
     };
         function OnSuccess(response) {
         $("#addMOP").modal('hide'); $("#editMOP").modal('hide'); $("#delMOP").modal('hide');

@@ -541,7 +541,7 @@ namespace WebApplication.Controllers
 
 
 
-        #region AddMOPItem  
+        #region AddChildPart 
         [HttpPost]
         public ActionResult AddChildPart(tbl_ChildParts model)
         {

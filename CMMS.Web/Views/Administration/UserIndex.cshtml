@@ -41,11 +41,13 @@
 
 </script>
 <section class="content-header">
-    <h1>
-        User Management
+    <div class="container-fluid">
 
-    </h1>
-   
+        <h1>
+            User Management
+
+        </h1>
+    </div>
 </section>
 
 <section class="content">
@@ -73,43 +75,30 @@
                             <tbody>
                                 @foreach (var item in Model.tbl_User_list)
                                 {
-                                    <tr>
+                                <tr>
 
-                                        <td>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                                                        <i class="fa fa-cog"></i> Actions
-                                                        <span class="caret ng-tns-c275-7"></span>
-                                                    </button>
-                                                    <span class="sr-only">Toggle Dropdown</span>
-                                                    <div class="dropdown-menu">
-                                                        <a class="dropdown-item btn primary" id="editUser" data-modal='' href="@Url.Action("EditUser", "Administration", new { id = item.UserId })"><i class="fas fa-pencil-alt fa-lg"></i> Edit</a><br />
-                                                        <a class="dropdown-item btn danger" id="delUser" data-modal='' href="@Url.Action("DeleteUser", "Administration", new { id = item.UserId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
-                                                    </div>
+
+                                    <td> @item.UserId</td>
+                                    <td>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                                    <i class="fa fa-cog"></i> Actions
+                                                    <span class="caret ng-tns-c275-7"></span>
+                                                </button>
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item btn primary" id="editUser" data-modal='' href="@Url.Action("EditUser", "Administration", new { id = item.UserId })"><i class="fas fa-pencil-alt fa-lg"></i> Edit</a><br />
+                                                    <a class="dropdown-item btn danger" id="delUser" data-modal='' href="@Url.Action("DeleteUser", "Administration", new { id = item.UserId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
                                                 </div>
-                                                <!-- /btn-group -->
-
                                             </div>
-                                        </td>
-                                        <td> @item.UserId</td>
-                                        @*<td>
-                                    @if (item.RoleName.ToLower() != "administrator")
-                                    {
-                                        @Html.ActionLink("Delete", "DeleteUserRole",
-                                       new { RoleName = item.RoleName },
-                                       new
-                                       {
-                                           onclick =
-                                       "return confirm('Are you sure you wish to delete this role?');"
-                                       })
-                                    }
-                                </td>*@
-                                        @*<td>
-                                </td>*@
+                                            <!-- /btn-group -->
+
+                                        </div>
+                                    </td>
 
 
-                                    </tr>
+                                </tr>
                                 }
                             </tbody>
                         </table>

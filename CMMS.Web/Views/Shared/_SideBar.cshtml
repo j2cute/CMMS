@@ -10,7 +10,6 @@
              style="opacity: .8">
         <span class="brand-text font-weight-light">CMMS</span>
     </a>
-
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
@@ -33,9 +32,11 @@
                     <li class="nav-item has-treeview">
                         <a href="#" class="nav-link">
                             @if (parentPermission.IconPath != null)
-                            { <i class="nav-icon  @parentPermission.IconPath"></i>  }
+                            {
+                                <i class="nav-icon  @parentPermission.IconPath"></i>  
+                            }
                             else
-                            {  <i class="nav-icon  fas fa-chart-pie"></i>   }
+                            { <i class="nav-icon  fas fa-chart-pie"></i>}
                             <p>
                                 @parentPermission.DisplayName
                                 <i class="right fas fa-angle-left"></i>
