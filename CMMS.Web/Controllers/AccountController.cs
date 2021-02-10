@@ -270,11 +270,12 @@ namespace WebApplication.Controllers
                     using (Entities _context = new Entities())
                     {
                         var loginId = Session[SessionKeys.UserId].ToString();
-                        var currentRole = _context.tbl_UserRole.Where(x => x.UserId == loginId && x.RoleId == roleId)?.FirstOrDefault().RoleId;
+                        var currentRole = _context.tbl_UserRole.Where(x => x.UserId == loginId && x.RoleId == roleId && x.IsDeleted != 1 && x.IsActive != 0)?.FirstOrDefault().RoleId;
 
                         if (!string.IsNullOrWhiteSpace(currentRole))
                         {
-                            var permissions = _context.tbl_RolePermission.Where(x => x.RoleId == currentRole).ToList();
+                            SessionKeys.LoadTablesInSession(SessionKeys.RolePermissions, "", currentRole);
+                            var permissions = ((List<tbl_RolePermission>)Session[SessionKeys.RolePermissions]);
 
                             foreach (var item in permissions)
                             {
