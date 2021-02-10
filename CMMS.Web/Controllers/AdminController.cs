@@ -625,7 +625,7 @@ namespace WebApplication.Controllers
         // Roles *****************************
 
         // GET: /Admin/ViewAllRoles
-
+        [Authorization]
         #region public ActionResult ViewAllRoles()
         public ActionResult ViewAllRoles()
         {

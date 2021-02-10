@@ -144,7 +144,6 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [Authorization]
-        [ValidateAntiForgeryToken]
         public ActionResult SwitchRole(string roleId = "")
         {
             try
