@@ -14,145 +14,187 @@ using WebApplication.Helpers;
 using Microsoft.AspNet.Identity.Owin;
 using static ClassLibrary.Common.Enums;
 using Microsoft.AspNet.Identity;
+using NLog;
 
 namespace WebApplication.Controllers
 {
     [Authorization]
     public class AdministrationController : Controller
     {
-        private Entities _context = new Entities();
+        private static Logger _logger;
+        private Entities _context;
+
+        public AdministrationController()
+        {
+            _logger = LogManager.GetCurrentClassLogger();
+        }
+
         #region UserCheck
 
         public JsonResult CheckUserName(string Pno)
         {
-                var SearchData = _context.tbl_User.Where(x => x.Pno == Pno).SingleOrDefault();
-                if (SearchData != null)
+            string actionName = "CheckUserName";
+            try
+            {
+                using (var _context = new Entities())
                 {
-                    return Json(1);
+                    _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                    var SearchData = _context.tbl_User.Where(x => x.Pno == Pno);
+                    if (SearchData.Any())
+                    {
+                        return Json(1);
+                    }
                 }
-                else
-                {
-                    return Json(0);
-                }
- 
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+            return Json(0);
         }
+
         #endregion UserCheck
-
-
 
         #region roles
       
         // GET: Roles
         public ActionResult ViewRoles()
         {
-            RolesViewModel vm = new RolesViewModel()
+            string actionName = "CheckUserName";
+            RolesViewModel vm = new RolesViewModel();
+            try
             {
-                tbl_Role_list = _context.tbl_Role.ToList(),
-            };
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+                using (var _context = new Entities())
+                {
+                    vm = new RolesViewModel()
+                    {
+                        tbl_Role_list = GetActiveRoles(),
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
 
             return View(vm);
         }
 
-        // GET: Roles/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Roles/Create
         public ActionResult Create()
         {
+            string actionName = "Create";
             RolesViewModel vm = new RolesViewModel();
-
-            List<TreeViewNode> nodesMaster = new List<TreeViewNode>();
-            foreach (tbl_Permission p in _context.tbl_Permission)
+            try
             {
-                //State checkState = new State();
-                //if (p.PermissionId == "ViewRole")
-                //{
-                //    checkState.selected = true;
-                //}
-                if (p.ParentId == "0") { p.ParentId = "#"; }
-                nodesMaster.Add(new TreeViewNode { id = p.PermissionId, parent = p.ParentId, text = p.DisplayName });
+                _logger.Log(LogLevel.Trace, actionName + " :: started.");
+                List<TreeViewNode> nodesMaster = new List<TreeViewNode>();
+
+                using (var _context = new Entities())
+                {
+                    foreach (var p in _context.tbl_Permission)
+                    {
+                        if (p.ParentId == "0") 
+                        {
+                            p.ParentId = "#"; 
+                        }
+                        nodesMaster.Add(new TreeViewNode { id = p.PermissionId, parent = p.ParentId, text = p.DisplayName });
+                    }
+                    vm.PermissionsList = (new JavaScriptSerializer()).Serialize(nodesMaster);
+                }
             }
-            //Serialize to string.
-            vm.PermissionsList = (new JavaScriptSerializer()).Serialize(nodesMaster);
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+            }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             return PartialView("_CreateRole", vm);
         }
 
-        // POST: Roles/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(tbl_Role tbl_Role, string selectedItems)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var _context = new Entities())
             {
-                List<TreeViewNode> parentItems = new List<TreeViewNode>();
-
-                var vm = new RolesViewModel();
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    if (tbl_Role != null)
-                    {
-                        _context.tbl_Role.Add(tbl_Role);
-                        _context.SaveChanges();
-                    }
-                    List<TreeViewNode> items = (new JavaScriptSerializer()).Deserialize<List<TreeViewNode>>(selectedItems);
-                    List<string> newListOfParent = new List<string>();
-                    foreach (var temp in items.Select(x => x.parents))
-                    {
-                        newListOfParent = newListOfParent.Concat(temp).ToList();
-                    }
-                    newListOfParent = newListOfParent.Distinct().ToList();
+                    List<TreeViewNode> parentItems = new List<TreeViewNode>();
 
-                    foreach (var selected in items)
+                    var vm = new RolesViewModel();
+                    try
                     {
-                        if (selected.parent == "#")
+                        if (tbl_Role != null)
                         {
-                            selected.parent = "0";
+                            _context.tbl_Role.Add(tbl_Role);
+                            _context.SaveChanges();
                         }
-
-                        if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected.id))
+                        List<TreeViewNode> items = (new JavaScriptSerializer()).Deserialize<List<TreeViewNode>>(selectedItems);
+                        List<string> newListOfParent = new List<string>();
+                        foreach (var temp in items.Select(x => x.parents))
                         {
-                            var model = new tbl_RolePermission
+                            newListOfParent = newListOfParent.Concat(temp).ToList();
+                        }
+                        newListOfParent = newListOfParent.Distinct().ToList();
+
+                        foreach (var selected in items)
+                        {
+                            if (selected.parent == "#")
                             {
-                                PermissionId = selected.id,
-                                RoleId = tbl_Role.RoleId,
-                            };
-                            _context.tbl_RolePermission.Add(model);
-                        }
-                    }
+                                selected.parent = "0";
+                            }
 
-                    foreach (var selected in newListOfParent)
-                    {
-                        if (!items.Where(x => x.id == selected).Any() && selected != "#")
-                        {
-                            tbl_Permission permission = _context.tbl_Permission.Where(x => x.PermissionId == selected).FirstOrDefault();
-
-                            if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected))
+                            if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected.id))
                             {
                                 var model = new tbl_RolePermission
                                 {
-                                    PermissionId = selected,
+                                    PermissionId = selected.id,
                                     RoleId = tbl_Role.RoleId,
                                 };
                                 _context.tbl_RolePermission.Add(model);
                             }
                         }
+
+                        foreach (var selected in newListOfParent)
+                        {
+                            if (!items.Where(x => x.id == selected).Any() && selected != "#")
+                            {
+                                tbl_Permission permission = _context.tbl_Permission.Where(x => x.PermissionId == selected).FirstOrDefault();
+
+                                if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected))
+                                {
+                                    var model = new tbl_RolePermission
+                                    {
+                                        PermissionId = selected,
+                                        RoleId = tbl_Role.RoleId,
+                                    };
+                                    _context.tbl_RolePermission.Add(model);
+                                }
+                            }
+                        }
+
+                        _context.SaveChanges();
+                        transaction.Commit();
+
+                        //Serialize to JSON string.                
+                        // Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                        return RedirectToAction("ViewRoles");
                     }
-
-                    _context.SaveChanges();
-                    transaction.Commit();
-
-                    //Serialize to JSON string.                
-                    // Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    return RedirectToAction("ViewRoles");
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    //   Exception(ex);
-                    //  Alert("Their is something went wrong!!!", NotificationType.error);
-                    return RedirectToAction("ViewRoles");
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        //   Exception(ex);
+                        //  Alert("Their is something went wrong!!!", NotificationType.error);
+                        return RedirectToAction("ViewRoles");
+                    }
                 }
             }
         }
@@ -630,6 +672,14 @@ namespace WebApplication.Controllers
                     //   Alert("Their is something went wrong!!!", NotificationType.error);
                     return RedirectToAction("UserIndex");
                 }
+            }
+        }
+
+        private List<tbl_Role> GetActiveRoles()
+        {
+            using(_context = new Entities())
+            {
+                return _context.tbl_Role.Where(x => x.IsDeleted != 1).ToList();
             }
         }
 

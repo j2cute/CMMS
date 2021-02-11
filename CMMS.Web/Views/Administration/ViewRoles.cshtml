@@ -1,70 +1,86 @@
 ﻿@model ILS.UserManagement.ViewModels.RolesViewModel
+@using ClassLibrary.Models
+@using CMMS.Web.Helper
+
 @{
-    ViewBag.Title = "ViewARoles";
+    ViewBag.Title = "View Roles";
     Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
+    var isAddAllowed = permissions.Any(obj => obj.PermissionId == "RoleAdd") ? true : false;
+    var isEditAllowed = permissions.Any(obj => obj.PermissionId == "RoleEdit") ? true : false;
+    var isDeleteAllowed = permissions.Any(obj => obj.PermissionId == "RoleDel") ? true : false;
 }
-    <style>
-        td {
-            font-size: 12px !important;
-        }
 
-        table.dataTable tbody th, table.dataTable tbody td {
-            padding: 4px 4px !important;
-        }
-    </style>
-    <section class="content-header">
-        <div class="container-fluid">
+<style>
+    td {
+        font-size: 12px !important;
+    }
 
-            <h1>
-                Role Management
-            </h1>
-            </div>
-    </section>
+    table.dataTable tbody th, table.dataTable tbody td {
+        padding: 4px 4px !important;
+    }
+</style>
+<section class="content-header">
+    <div class="container-fluid">
+        <h1>
+            Role Management
+        </h1>
+    </div>
+</section>
+
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-default">
                     <div class="card-header">
-                        <a class="btn btn-success" data-modal='' href="@Url.Action("Create","Administration")"><i class="fa fa-plus"></i> Create new role</a>
-
+                        @if (isAddAllowed)
+                        {
+                            <a class="btn btn-success" data-modal='' href="@Url.Action("Create", "Administration")"><i class="fa fa-plus"></i> Create new role</a>
+                        }
                     </div>
                     <!-- /.box-header -->
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>Actions</th>
                                     <th>Role Name</th>
+                                    <th>Actions</th>
                                     @*<th>Operations</th>*@
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var item in Model.tbl_Role_list)
                                 {
-                                <tr>
+                                    <tr>
 
-                                    <td> @item.Name</td>
-                                    <td>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
-                                                    <i class="fa fa-cog"></i> Actions
-                                                    <span class="caret ng-tns-c275-7"></span>
-                                                </button>
-                                                <span class="sr-only">Toggle Dropdown</span>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item btn primary" data-modal='' href="@Url.Action("Edit", "Administration", new { id = item.RoleId })"><i class="fas fa-pencil-alt fa-lg"></i> Edit</a><br />
-                                                    <a class="dropdown-item btn danger" data-modal='' href="@Url.Action("Delete", "Administration", new { id = item.RoleId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
+                                        <td> @item.Name</td>
+                                        <td>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <button type="button" class="btn-sm btn-primary dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
+                                                        <i class="fa fa-cog"></i> Actions
+                                                        <span class="caret ng-tns-c275-7"></span>
+                                                    </button>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                    <div class="dropdown-menu">
+                                                        @if (isEditAllowed)
+                                                        {
+                                                            <a class="dropdown-item btn primary" data-modal='' href="@Url.Action("Edit", "Administration", new { id = item.RoleId })"><i class="fas fa-pencil-alt fa-lg"></i> Edit</a><br />
+                                                        }
 
+                                                        @if (isDeleteAllowed)
+                                                        {
+                                                            <a class="dropdown-item btn danger" data-modal='' href="@Url.Action("Delete", "Administration", new { id = item.RoleId })"><i class="fa fa-trash fa-lg"></i> Delete</a>
+                                                        }
+                                                    </div>
                                                 </div>
+                                                <!-- /btn-group -->
+
                                             </div>
-                                            <!-- /btn-group -->
+                                        </td>
 
-                                        </div>
-                                    </td>
-
-                                </tr>
+                                    </tr>
                                 }
                             </tbody>
                         </table>

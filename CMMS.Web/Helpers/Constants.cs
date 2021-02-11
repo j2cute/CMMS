@@ -2,8 +2,10 @@
 using ILS.UserManagement.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Linq;
 using System.Linq;
 using System.Web;
+using System.Web.SessionState;
 
 namespace CMMS.Web.Helper
 {
@@ -14,6 +16,47 @@ namespace CMMS.Web.Helper
         public static string UserUnitId = "UserUnitId";
         public static string ApplicableUnits = "ApplicableUnits";
 
+        public static  string AllUnits = "AllUnits";
+        public static string UnitTypes = "UnitTypes";
+        public static string RolePermissions = "RolePermissions";
+
+        public static void LoadTablesInSession(string tableName,string userId = null,string roleId = null)
+        {
+            using (var db = new WebAppDbContext())
+            {
+                switch (tableName)
+                {
+                    case "AllUnits":
+                        if (HttpContext.Current.Session[AllUnits] == null)
+                        {
+                            HttpContext.Current.Session[AllUnits] = db.tbl_Unit.ToList();
+                        }
+                       
+                    break;
+
+                    case "UnitTypes":
+                        if (HttpContext.Current.Session[UnitTypes] == null)
+                        {
+                            HttpContext.Current.Session[UnitTypes] = db.tbl_UnitType.ToList(); 
+                        }
+
+                        break;
+
+                    case "RolePermissions":
+                        if (HttpContext.Current.Session[RolePermissions] == null)
+                        {
+                            using (var _context = new Entities())
+                            {
+                                HttpContext.Current.Session[RolePermissions] = (from permission in _context.tbl_Permission
+                                                                               join rolePermission in _context.tbl_RolePermission on permission.PermissionId equals rolePermission.PermissionId
+                                                                               where rolePermission.RoleId == roleId
+                                                                               select permission).ToList();
+                            }
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     public class SessionHelper
