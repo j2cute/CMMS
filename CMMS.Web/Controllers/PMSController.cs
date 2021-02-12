@@ -11,7 +11,7 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    [CustomAuthorization]
     public class PMSController : BaseController
     {
         private static Logger _logger;
@@ -38,7 +38,7 @@ namespace WebApplication.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             return View(response);
@@ -69,7 +69,7 @@ namespace WebApplication.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             return PartialView("_Details", response);
@@ -113,7 +113,7 @@ namespace WebApplication.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }
@@ -142,7 +142,7 @@ namespace WebApplication.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             return PartialView("_Edit", response);
@@ -184,7 +184,7 @@ namespace WebApplication.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }
@@ -212,7 +212,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             return PartialView("_Delete", response);
@@ -255,7 +255,7 @@ namespace WebApplication.Controllers
             }
             catch(Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return RedirectToAction("Index");
             }

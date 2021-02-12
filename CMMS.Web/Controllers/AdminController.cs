@@ -111,7 +111,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
             _logger.Log(LogLevel.Trace, actionName + " :: ended.");
             return PartialView("_UnitSelection", vm);
@@ -119,7 +119,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorization]
+        [CustomAuthorization]
         public ActionResult Dashboard(string siteId, string inRoleId = null)
         { 
             string actionName = "Dashboard";
@@ -207,13 +207,13 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
             return RedirectToAction("UnitSelection");
         }
 
         [HttpGet]
-        [Authorization]
+        [CustomAuthorization]
         public ActionResult Dashboard()
         {
             string actionName = "Get Dashboard";
@@ -285,7 +285,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             _logger.Log(LogLevel.Trace, actionName + " :: ended.");
@@ -327,7 +327,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
             _logger.Log(LogLevel.Trace, actionName + " :: ended");
             return id;
@@ -337,7 +337,7 @@ namespace WebApplication.Controllers
 
         #region UserCheck
 
-        [Authorization]
+        [CustomAuthorization]
         public JsonResult CheckUserName(string UserName)
         {
             string actionName = "CheckUserName";
@@ -363,7 +363,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             _logger.Log(LogLevel.Trace, actionName + " :: ended.");
@@ -693,7 +693,7 @@ namespace WebApplication.Controllers
         // Roles *****************************
 
         // GET: /Admin/ViewAllRoles
-        [Authorization]
+        [CustomAuthorization]
         #region public ActionResult ViewAllRoles()
         public ActionResult ViewAllRoles()
         {

@@ -18,7 +18,7 @@ using NLog;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    [CustomAuthorization]
     public class AdministrationController : Controller
     {
         private static Logger _logger;
@@ -49,7 +49,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             _logger.Log(LogLevel.Trace, actionName + " :: ended.");
@@ -80,7 +80,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             _logger.Log(LogLevel.Trace, actionName + " :: ended.");
@@ -112,7 +112,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             _logger.Log(LogLevel.Trace, actionName + " :: ended.");
@@ -372,7 +372,7 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
-        [Authorization]
+        [CustomAuthorization]
         public ActionResult CreateUser()
         {
             UserRoleViewModel vm = new UserRoleViewModel()

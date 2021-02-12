@@ -1,24 +1,25 @@
 ﻿@model ClassLibrary.ViewModels.CageViewModels
 @using CMMS.Web.Helper
-@*@{ 
-    var permissions = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
+@{ 
+    var msg = TempData["notification"] != null ? TempData["notification"].ToString() : string.Empty;
+}
 
-}*@
 <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
 <script src="~/Content/Digitalscript.js"></script>
 <script src="~/Scripts/moment.min.js"></script>
 <script src="~/Scripts/raphael.min.js"></script>
 
- 
- 
+
 <style>
     a {
         cursor: pointer;
     }
+
     td {
         font-size: 12px !important;
     }
+
     table.dataTable tbody th, table.dataTable tbody td {
         padding: 4px 4px !important;
     }
@@ -26,132 +27,101 @@
 
 <script>
     var permissions;
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-            console.log(permissions);
-            if (!permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
+ 
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+        if (!permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
                 $("#addCage").addClass('disabled')
             }
-                    var table;
-       // $('#example1').DataTable().destroy();
-       table= $('#example1').DataTable(
+
+            var table;
+
+            table= $('#example1').DataTable(
             {
-                "bServerSide": true,
-                "processing": true,
-               // "searchable": true,
-                "scrollX": true,
-                "paging": true,
-                "filter": true,
-               // "destroy": true,
-                "order": [[1, 'asc']],
-                "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+            "bServerSide": true,
+            "processing": true,
+            "scrollX": true,
+            "paging": true,
+            "filter": true,
+            "destroy": true,
+            "order": [[1, 'asc']],
+            "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
+            ajax: {
+                type: 'POST',
+                url: '@Url.Action("LoadData")',
+                dataType: 'json',
+                dataSrc: 'data',
+            },
+            columns: [
+                {
+                    'data': function (data, type, row, meta) {
+                        var actions = '';
 
+                        if (permissions.filter(obj => obj.PermissionId == "ManEdit").length > 0) {
+                            actions = '<a id="editCage" class="btn btn-primary btn-xs select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                        }
+                        else {
+                            actions = '<a id="editCage" class="btn btn-primary btn-xs select disabled" data-toggle="modal" data-target="myModal"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                        }
 
-                ajax: {
-                      //cache: 'false',
-                    type: 'POST',
-                    url: '@Url.Action("LoadData")',
+                        actions = actions + " " + '|' + " ";
 
-                    dataType: 'json',
-                    dataSrc: 'data',
-                   // contentType: "application/json; charset=utf-8",
+                        if (permissions.filter(obj => obj.PermissionId == "ManDel").length > 0) {
+                            actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
+                        }
+                        else {
+                            actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select disabled" data-toggle="modal">' + 'Delete' + '</a>';
+                        }
 
+                        return actions;
+                    }
                 },
-         // add this line
-
-
-                           @* <a class="btn-primary btn-sm" data-modal='' href="@Url.Action(" Edit", "Parts", new { id = item.Part_No, c_code =item.CageCode })" > <i class="fa fa-pencil"></i></a > |*@
-
-                columns: [
-                    {
-                        'data': function (data, type, row, meta) {
-                            var actions = '';
-
-                            if (permissions.filter(obj => obj.PermissionId == "ManEdit").length > 0) {
-                                actions = '<a id="editCage" class="btn btn-primary btn-xs select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
-                            }
-                            else {
-                                actions = '<a id="editCage" class="btn btn-primary btn-xs select disabled" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
-                            }
-
-                            actions = actions + " " + '|' + " ";
-
-                            if (permissions.filter(obj => obj.PermissionId == "ManDel").length > 0) {
-                                actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
-                            }
-                            else {
-                                actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select disabled" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
-                            }
-
-                            return actions;
-                        }
-                    },
-                    { 'data': 'CageCode', "name": "CageCode", },
-                    { 'data': 'CageName', "name": "CageName", },
-                    { 'data': 'Country', "name": "Country", },
-                    { 'data': 'Status', "name": "Status", },
-                    {
-                        'data': function (data, type, row, meta) {
-                            return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
-                        }
-                    },
-
-            //},
-
-            //'<a href="Delete/Cage/' + data.MOP_No + '">' + 'Delete' + '</a>';
-               ],
-               "rowCallback": function (row, data, dataIndex) {
-                   if (data["Status"] == "InActive") {
-                       $('td', row).css('background-color', 'red');
-                     //  $('td', row).addClass("warning");
-                   }
-
-
-               },
-            //   "createdRow": function (row, data, dataIndex) {
-                 //  if (data[1] = "12345") {
-                 //      $(row).css('background-color', '#F39B9B');
-                  // }
-                   //else if (data[5] <= 70) {
-                   //    $(row).css('background-color', '#A497E5');
-                   //}
-                   //else {
-                   //    $(row).css('background-color', '#9EF395');
-                   //}
-
-              // }
-        //   '<a data-modal="" class="btn-primary btn-sm"  href="Edit/' + data.MOP_No + '">' + 'Edit' + '</a>' + " " + '|' + " " + '<a  class="btn-danger btn-sm" data-modal="" href="Delete/' + data.MOP_No + '">' + 'Delete' + '</a>';
+                { 'data': 'CageCode', "name": "CageCode", },
+                { 'data': 'CageName', "name": "CageName", },
+                { 'data': 'Country', "name": "Country", },
+                { 'data': 'Status', "name": "Status", },
+                {
+                    'data': function (data, type, row, meta) {
+                        return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
+                    }
+                },
+            ],
+            "rowCallback": function (row, data, dataIndex) {
+                if (data["Status"] == "InActive") {
+                    $('td', row).css('background-color', 'red');
+                }
+            },
 
             });
 
         $('#example1 tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
-            //var siteId = $(this).closest('tr').find("td:eq(0)").text();
             var data = $('#myModalContent').load(this.href, function () {
                 $('#myModal').modal({
                     keyboard: true
                 }, 'show');
-                bindForm(this);
             });
             return false;
         });
     });
 
 </script>
+
+ 
 <section class="content-header">
     <div class="container-fluid">
-
         <h1>
             Manufactures
-
         </h1>
-        </div>
+    </div>
 </section>
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
-    <div class="container-fluid">
 
+    @Html.Partial("_NotificationPanel");
+
+    <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
             <div class="col-lg-4 col-xs-6">
@@ -198,27 +168,22 @@
 
                 </div>
             </div>
-            <!-- ./col -->
-            <!-- ./col -->
+
         </div>
-        <!-- /.row -->
-        <!-- Main row -->
+
         <div class="row">
-            <!-- Left col -->
-            <!-- /.Left col -->
-            <!-- right col (We are only adding the ID to make the widgets sortable)-->
-            <!-- right col -->
+
         </div>
-        </div>
-        <!-- /.row (main row) -->
+    </div>
+
 </section>
 <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">                    
-                            <a id="addCage" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>                      
+                    <div class="card-header">
+                        <a id="addCage" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>
                     </div>
                     <!-- /.box-header -->
                     <div class="card-body">
@@ -267,13 +232,7 @@
     </div>
 </section>
 
-@*<script>
-  
-    $(document).ready(function () {
-
-    });
-</script>*@
-
+ 
 <div id='myModal' class='modal fade'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -292,7 +251,7 @@
 <script>
     var dataSource = @Html.Raw(Json.Encode(Model.dataList));
     var donut = new Morris.Donut({
-   
+
         element: 'sales-chart',
         resize: true,
         colors: ["#ff0000", "#54a460", "#1f67a5", "#54a460", "#008b8b", "#c0c0c0", "#8b4513", "#ff6347", "#bdb76b", "#000000", "#4169e1"],

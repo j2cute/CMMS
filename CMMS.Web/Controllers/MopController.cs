@@ -18,7 +18,7 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    [CustomAuthorization]
     public partial class MopController : BaseController
     {
         // GET: Mop
@@ -41,7 +41,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
             return View("Index", vm);
         }
@@ -72,7 +72,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm, JsonRequestBehavior.AllowGet);
@@ -107,7 +107,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(SiteId, JsonRequestBehavior.AllowGet);
@@ -156,7 +156,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm, JsonRequestBehavior.AllowGet);
@@ -199,7 +199,7 @@ namespace WebApplication.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                         transaction.Rollback();
                         Exception(ex);
                         Alert("Their is something went wrong!!!", NotificationType.error);
@@ -263,7 +263,7 @@ namespace WebApplication.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                         transaction.Rollback();
                         Exception(ex);
                         Alert("Their is something went wrong!!!", NotificationType.error);
@@ -309,7 +309,7 @@ namespace WebApplication.Controllers
                     }
                     catch (Exception ex)
                     {
-                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                         transaction.Rollback();
                         Exception(ex);
                         Alert("Their is something went wrong!!!", NotificationType.error);
@@ -406,7 +406,7 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Exception(ex);
                 Alert("Their is something went wrong!!!", NotificationType.error);
                 return Json(vm, JsonRequestBehavior.AllowGet);

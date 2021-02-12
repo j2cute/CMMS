@@ -16,9 +16,9 @@ namespace ClassLibrary.ViewModels
         public List<tbl_Cage> tbl_Cage_list { get; set; }
         public List<CageViewModels> CageViewModels_list { get; set; }
 
-        public int cageCount { get; set; }
-        public int cageActiveCount { get; set; }
-        public int CageCountryCount { get; set; }
+        public int? cageCount { get; set; }
+        public int? cageActiveCount { get; set; }
+        public int? CageCountryCount { get; set; }
         public GraphData GraphData { get; set; }
         public List<GraphData> dataList { get; set; }
     }

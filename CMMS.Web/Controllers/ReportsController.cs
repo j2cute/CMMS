@@ -13,7 +13,7 @@ using NLog;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    [CustomAuthorization]
     public class ReportsController : Controller
     {
         private static Logger _logger;

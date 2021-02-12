@@ -9,7 +9,7 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    [CustomAuthorization]
     public class BaseController : Controller
     {
         private WebAppDbContext db = new WebAppDbContext();
@@ -51,9 +51,9 @@ namespace WebApplication.Controllers
         // Save Exception log in database
         public void Exception(Exception errorLogs)
         {
-            ex.Message = errorLogs.Message.ToString();
-            ex.StackTrace = errorLogs.StackTrace.ToString();
-            ex.ExceptionType = errorLogs.GetType().Name.ToString();
+            ex.Message = errorLogs.Message?.ToString();
+            ex.StackTrace = errorLogs.StackTrace?.ToString();
+            ex.ExceptionType = errorLogs.GetType()?.Name?.ToString();
             ex.LogTime = DateTime.Now;
             db.tbl_ErrorLogs.Add(ex);
             db.SaveChanges();

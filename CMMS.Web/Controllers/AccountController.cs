@@ -113,7 +113,7 @@ namespace WebApplication.Controllers
         //
         // POST: /Account/LogOff
  
-        [Authorization]
+        [CustomAuthorization]
         public ActionResult LogOff()
         {
             string actionName = "LogOff";
@@ -136,14 +136,14 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException.ToString());
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
 
             return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]
-        [Authorization]
+        [CustomAuthorization]
         public ActionResult SwitchRole(string roleId = "")
         {
             try

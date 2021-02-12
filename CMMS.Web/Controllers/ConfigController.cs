@@ -17,7 +17,7 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [Authorization]
+    [CustomAuthorization]
     public class ConfigController : BaseController
     {
         // GET: IndexConfig

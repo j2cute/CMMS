@@ -9,6 +9,6 @@ namespace ClassLibrary.Common
     public class GraphData
     {
         public string label { get; set; }
-        public int value { get; set; }
+        public int? value { get; set; }
     }
 }

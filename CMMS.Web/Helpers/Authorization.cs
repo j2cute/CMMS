@@ -10,10 +10,11 @@ using System.Web.Routing;
 
 namespace WebApplication.Helpers
 {
-    public class AuthorizationAttribute : AuthorizeAttribute, IAuthorizationFilter
+    public class CustomAuthorizationAttribute : AuthorizeAttribute
     {
         private static string ReturnUrlToUnitSelection = "~/Admin/UnitSelection";
         private static string ReturnUrlToLogin = "~/Account/Login";
+
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             try
@@ -30,36 +31,45 @@ namespace WebApplication.Helpers
                 {
                     filterContext.Result = new RedirectResult(ReturnUrlToLogin);
                 }
-
-                if (HttpContext.Current.Request.FilePath.Contains("/Admin/UnitSelection"))
-                {
-
-                }
                 else
-                { 
-                    if (!HttpContext.Current.Request.FilePath.Contains("/Admin/Dashboard"))
+                {
+                    if (HttpContext.Current.Request.FilePath.Contains("/Admin/UnitSelection"))
                     {
-                        // Check for authorization  
-                        if (HttpContext.Current.Session[SessionKeys.SessionHelperInstance] != null)
+
+                    }
+                    else
+                    {
+                        if (!HttpContext.Current.Request.FilePath.Contains("/Admin/Dashboard"))
                         {
-                            if (String.IsNullOrWhiteSpace(((SessionHelper)(HttpContext.Current.Session[SessionKeys.SessionHelperInstance])).SelectedSiteId))
+                            // Check for authorization  
+                            if (HttpContext.Current.Session[SessionKeys.SessionHelperInstance] != null)
+                            {
+                                if (String.IsNullOrWhiteSpace(((SessionHelper)(HttpContext.Current.Session[SessionKeys.SessionHelperInstance])).SelectedSiteId))
+                                {
+                                    filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
+                                }
+                                else
+                                {
+                                    //if (!AuthorizeCore(filterContext.HttpContext))
+                                    //{
+                                    //    HandleUnauthorizedRequest(filterContext);
+                                    //}
+                                }
+                            }
+                            else
                             {
                                 filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
                             }
                         }
-                        else
-                        {
-                            filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
-                        }
                     }
                 }
-            
             }
             catch
             {
                 filterContext.Result = new RedirectResult(ReturnUrlToLogin);
             }
         }
+
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             bool result = false;
@@ -68,7 +78,7 @@ namespace WebApplication.Helpers
                 var rolePermission = ((SessionHelper)httpContext.Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
                 if (rolePermission != null)
                 {
-                    if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]));
+                    if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]))
                     {
                         result = true;
                     }
@@ -81,6 +91,7 @@ namespace WebApplication.Helpers
 
             return result;
         }
+
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
             if (filterContext.HttpContext.Request.IsAjaxRequest())

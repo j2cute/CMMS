@@ -30,7 +30,7 @@ namespace WebApplication
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
-                AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Active,
+ 
                 ExpireTimeSpan = TimeSpan.FromMinutes(expirationTime),
                 Provider = new CookieAuthenticationProvider
                 {
