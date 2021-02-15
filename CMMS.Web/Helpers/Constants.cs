@@ -16,6 +16,8 @@ namespace CMMS.Web.Helper
         public static string UserUnitId = "UserUnitId";
         public static string ApplicableUnits = "ApplicableUnits";
 
+
+        public static string Countries = "Countries";
         public static  string AllUnits = "AllUnits";
         public static string UnitTypes = "UnitTypes";
         public static string RolePermissions = "RolePermissions";
@@ -38,6 +40,14 @@ namespace CMMS.Web.Helper
                         if (HttpContext.Current.Session[UnitTypes] == null)
                         {
                             HttpContext.Current.Session[UnitTypes] = db.tbl_UnitType.ToList(); 
+                        }
+
+                        break;
+
+                    case "Countries":
+                        if (HttpContext.Current.Session[Countries] == null)
+                        {
+                            HttpContext.Current.Session[Countries] = db.tbl_Country.ToList();
                         }
 
                         break;

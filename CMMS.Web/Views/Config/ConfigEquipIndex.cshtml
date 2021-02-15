@@ -1,18 +1,16 @@
 ﻿@model ClassLibrary.ViewModels.ConfigViewModel
 @using CMMS.Web.Helper
+
 <link href="~/Content/morris.css" rel="stylesheet" />
 <link href="~/Content/Digtalstyle.css" rel="stylesheet" />
-<script src="~/Content/Digitalscript.js"></script>
-<script src="~/Scripts/moment.min.js"></script>
-<link href="~/Scripts/themes/default/style.min.css" rel="stylesheet" />
-<script src="~/Scripts/jstree.min.js"></script>
-<link href="~/Content/select.dataTables.min.css" rel="stylesheet" />
-<script src="~/Scripts/dataTables.select.min.js"></script>
-<link href="~/Content/sweetalert.css" rel="stylesheet" />
-<script src="~/Scripts/sweetalert.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 
+<link href="~/Scripts/themes/default/style.min.css" rel="stylesheet" />
+<link href="~/Content/select.dataTables.min.css" rel="stylesheet" />
+
+<script src="~/Content/Digitalscript.js"></script>
+<script src="~/Scripts/jstree.min.js"></script>
+<script src="~/Scripts/dataTables.select.min.js"></script>
+ 
 <style>
     .modal-dialog {
         width: 80% !important;
@@ -32,26 +30,27 @@
 </style>
 
 <script>
+
     var table;
     var editTable;
     var permissions;
     var siteId;
+
     $(document).ready(function () {
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
         siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
 
         $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
-        //$("#ConfigEquipment").hide();C_Site_Config_SiteId
+ 
         $("#addFooter").hide();
         $("#editFooter").hide();
         $("#AddChild").attr('disabled', true);
         $("#editChild").attr('disabled', true);
         $("#delChild").attr('disabled', true);
-        //$("#Proceed").click(function () {
-        //    resetFormInputs();
-            $("#ConfigEquipment").show();
-        //});
+
+        $("#ConfigEquipment").show();
+      
 
         $("#AddChild").click(function () {
             $('#C_Site_Config_ESWBS').val("");
@@ -107,13 +106,23 @@
                     { 'data': 'CageId', "name": "CageId", },
                    ],
 
-                   'columnDefs': [{
+                   'columnDefs': [
+                       {
                        targets: 0,
                        data: null,
                        defaultContent: '',
                        orderable: false,
                        className: 'select-checkbox'
-                   }],
+                       },
+                       {
+                           "targets": [1],
+                           "visible": false,
+                       },
+                       {
+                           "targets": [6],
+                           "visible": false,
+                       },
+                   ],
                    select: {
                        style: 'os',
                        selector: 'td:first-child'
@@ -127,11 +136,11 @@
             $.each(tblData, function (i, val) {
                 selectedData = tblData[i];
             });
-            console.log("selected....///",selectedData);
+  
             var partId = selectedData.PartId;
-            console.log(partId);
+ 
             var cageId = selectedData.CageId;
-            console.log(cageId);
+ 
             $('#C_Site_Config_PartId').val(partId);
             $('#C_Site_Config_CageId').val(cageId);
 
@@ -149,75 +158,88 @@
 
             dataType: 'json',  // add this line
             data: {
-                siteId: siteId,
                 eswbs: eswbs
             },
             success: function (data) {
 
-                if (((eswbs.toString().length) = 4) && (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0)   ) {
-                    $("#AddChild").removeAttr('disabled');
-                }
-                if ((eswbs.toString().length) != 4) {
-                    $("#AddChild").attr('disabled', true);
-                }
+                if (data.type == "success") {
 
-                if ((eswbs.toString().length) > 4) {
-
-                    if ((permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) && (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0))  {
-                        $("#editChild").removeAttr('disabled');
-                        $("#delChild").removeAttr('disabled');
+                    if (((eswbs.toString().length) = 4) && (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0)) {
+                        $("#AddChild").removeAttr('disabled');
                     }
-                    else if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
-                        $("#editChild").removeAttr('disabled');
+                    if ((eswbs.toString().length) != 4) {
+                        $("#AddChild").attr('disabled', true);
                     }
-                    else {
-                        $("#delChild").removeAttr('disabled');
+
+                    if ((eswbs.toString().length) > 4) {
+
+                        if ((permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) && (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0)) {
+                            $("#editChild").removeAttr('disabled');
+                            $("#delChild").removeAttr('disabled');
+                        }
+                        else if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
+                            $("#editChild").removeAttr('disabled');
+                        }
+                        else {
+                            $("#delChild").removeAttr('disabled');
+                        }
+                    }
+
+                    else if ((eswbs.toString().length) <= 4) {
+                        $("#editChild").attr('disabled', true);
+                        $("#delChild").attr('disabled', true);
+
+                    }
+
+
+                    // eswbs Detail
+
+                    $("#tbEswbs").val(data.vm.C_SiteConfigModel.ESWBS);
+                    $("#tbPEswbs").val(data.vm.C_SiteConfigModel.PESWBS);
+                    $("#tbEswbsName").val(data.vm.C_SiteConfigModel.Nomanclature);
+                    $("#tbSmr").val(data.vm.C_SiteConfigModel.SMR_Code);
+                    $("#tbPms").val(data.vm.C_SiteConfigModel.PMS_No);
+                    $("#tbQpa").val(data.vm.C_SiteConfigModel.Qty);
+                    $("#tbPartId").val(data.vm.C_SiteConfigModel.PartId);
+                    $("#tbCageId").val(data.vm.C_SiteConfigModel.CageId);
+                    //Parts Details
+
+                    if (data.vm.PartsModel) {
+                        $("#WizardPicturePreview").attr('src', data.vm.PartsModel.base64Pic);
+
+                        $("#tbPartNo").val(data.vm.PartsModel.Part_No);
+                        $("#tbPartName").val(data.vm.PartsModel.PART_NAME);
+                        $("#tbCage").val(data.vm.PartsModel.CageCode);
+                        $("#tbNsn").val(data.vm.PartsModel.NSN);
+                        $("#tbType").val(data.vm.PartsModel.PartTypeID);
+                        $("#tbCat").val(data.vm.PartsModel.MCAT_ID);
+                        $("#tbLength").val(data.vm.PartsModel.LENGTH);
+                        $("#tbWidth").val(data.vm.PartsModel.WIDTH);
+                        $("#tbHeight").val(data.vm.PartsModel.HEIGHT);
+                        $("#WEIGHT").val(data.vm.PartsModel.WEIGHT);
+                        $("#tbDetails").val(data.vm.PartsModel.PART_CHARACTERISTIC);
+                        $("#tbMtbf").val(data.vm.PartsModel.MTBF);
+                        $("#tbMttr").val(data.vm.PartsModel.MTTR);
+                    }
+
+                    if (data.vm.CageModel)
+                    {
+                        $("#tbManufacturer").val(data.vm.CageModel.CageName);
                     }
                 }
-
-                else if ((eswbs.toString().length) <= 4) {
-                    $("#editChild").attr('disabled', true);
-                    $("#delChild").attr('disabled', true);
-
+                else
+                {
+                    swal({ title: "ERROR", text: data.msg, type: "error", });
                 }
-
-
-                // eswbs Detail
-
-                $("#tbEswbs").val(data.C_SiteConfigModel.ESWBS);
-                $("#tbPEswbs").val(data.C_SiteConfigModel.PESWBS);
-                $("#tbEswbsName").val(data.C_SiteConfigModel.Nomanclature);
-                $("#tbSmr").val(data.C_SiteConfigModel.SMR_Code);
-                $("#tbPms").val(data.C_SiteConfigModel.PMS_No);
-                $("#tbQpa").val(data.C_SiteConfigModel.Qty);
-                $("#tbPartId").val(data.C_SiteConfigModel.PartId);
-                $("#tbCageId").val(data.C_SiteConfigModel.CageId);
-                //Parts Details
-                $("#WizardPicturePreview").attr('src', data.PartsModel.base64Pic);
-                $("#tbPartNo").val(data.PartsModel.Part_No);
-                $("#tbPartName").val(data.PartsModel.PART_NAME);
-                $("#tbCage").val(data.PartsModel.CageCode);
-                $("#tbManufacturer").val(data.CageModel.CageName);
-                $("#tbNsn").val(data.PartsModel.NSN);
-                $("#tbType").val(data.PartsModel.PartTypeID);
-                $("#tbCat").val(data.PartsModel.MCAT_ID);
-                $("#tbLength").val(data.PartsModel.LENGTH);
-                $("#tbWidth").val(data.PartsModel.WIDTH);
-                $("#tbHeight").val(data.PartsModel.HEIGHT);
-                $("#WEIGHT").val(data.PartsModel.WEIGHT);
-                $("#tbDetails").val(data.PartsModel.PART_CHARACTERISTIC);
-                $("#tbMtbf").val(data.PartsModel.MTBF);
-                $("#tbMttr").val(data.PartsModel.MTTR);
-
             },
             failure: function (data) {
 
-                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+                swal({ title: "ERROR", text: "Something Went Wrong!!!", type: "error", });
 
             },
             error: function (data) {
 
-                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+                swal({ title: "ERROR", text: "Something Went Wrong!!!", type: "error", });
 
             },
         });
@@ -225,48 +247,57 @@
     };
 
     function OnSuccess(response) {
-        $("#myModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
-        $("#AddChild").attr('disabled', true);  $("#editChild").attr('disabled', true); $("#delChild").attr('disabled', true);
-        resetFormInputs();
-        if (response.vm.JsonSiteConfig != null) {
-            swal({
-                title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
-            });
-            $("#jstree").jstree('destroy').empty();
-            $("#jstree").jstree({
+    
+        if (response.type == "success") {
 
-                "core": {
-                    "themes": {
-                        "variant": "large"
+            $("#myModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
+            $("#AddChild").attr('disabled', true); $("#editChild").attr('disabled', true); $("#delChild").attr('disabled', true);
+            resetFormInputs();
+            if (response.vm.JsonSiteConfig != null) {
+                swal({
+                    title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
+                });
+                $("#jstree").jstree('destroy').empty();
+                $("#jstree").jstree({
+
+                    "core": {
+                        "themes": {
+                            "variant": "large"
+                        },
+                        "data": JSON.parse(response.vm.JsonSiteConfig)
                     },
-                    "data": JSON.parse(response.vm.JsonSiteConfig)
-                },
 
-                "plugins": ["wholerow"],
-            });
-            $('#jstree').on('changed.jstree', function (e, data) {
-                resetFormInputs();
-                $('#SiteId').val(""); $('#Eswbs').val("");
-                var data = data.instance.get_node(data.selected[0]);
-                var eswbs = data.id;
-                var name = data.text;
-                var parent = data.parent;
-                console.log(data);
-                // use for addChild eswbs becomes peswbs
-                $('#Eswbs').val(eswbs);
-                $('#C_Site_Config_PESWBS').val(eswbs);
-                $('#C_Site_Config_Title').val(name);
+                    "plugins": ["wholerow"],
+                });
+                $('#jstree').on('changed.jstree', function (e, data) {
+                    resetFormInputs();
+                    $('#SiteId').val(""); $('#Eswbs').val("");
+                    var data = data.instance.get_node(data.selected[0]);
+                    var eswbs = data.id;
+                    var name = data.text;
+                    var parent = data.parent;
 
-                // use for editChild
-                GetSelectedConfiguration();
+                    // use for addChild eswbs becomes peswbs
+                    $('#Eswbs').val(eswbs);
+                    $('#C_Site_Config_PESWBS').val(eswbs);
+                    $('#C_Site_Config_Title').val(name);
 
-            });
+                    // use for editChild
+                    GetSelectedConfiguration();
+
+                });
+            }
+            else {
+                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+
+            }
         }
         else {
-            swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
 
+            swal({ title: "ERROR", text: response.msg, type: "error", });
         }
     };
+
 
     function AddChildData() {
         $.ajax({
@@ -287,17 +318,16 @@
             },
             success: OnSuccess,
             failure: function (vm) {
-
+             
                 var finalError = ''
                 for (i = 0; i < vm.responseJSON.length; i++) {
                     finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
                 }
 
-                swal({ title: "ERROR", text: finalError, type: "error", });
+                swal({ title: "ERROR", text: "Something Went Wrong !!! ", type: "error", });
             },
             error: function (vm) {
-                console.log(vm);
-
+          
                 var finalError = ''
                 for (i = 0; i < vm.responseJSON.length; i++)
                 {
@@ -406,7 +436,7 @@
                     var eswbs = data.id;
                     var name = data.text;
                     var parent = data.parent;
-                    console.log(data);
+                   
                     // use for addChild eswbs becomes peswbs
                     $('#Eswbs').val(eswbs);
                     $('#C_Site_Config_PESWBS').val(eswbs);
@@ -458,6 +488,10 @@
     };
 
     function GetEditChild() {
+
+
+        $("#C_Site_Config_ESWBS").attr("disabled", true);
+
         $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
         $("#C_Site_Config_Title").val($("#tbtitle").val());
         $("#C_Site_Config_ESWBS").val($("#tbEswbs").val());
@@ -477,14 +511,12 @@
         }
     }
 
-
 </script>
 
 <section class="content-header">
     <h1>
         Configure Site
     </h1>
-
 </section>
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
@@ -503,8 +535,7 @@
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-sm-7">
-                                        @*<input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />*@
-                                    </div>
+                                                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -805,7 +836,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
+         
                 <form id="addChildForm">
                     <div class="modal-body">
                         @Html.HiddenFor(model => model.C_Site_Config.PartId)
@@ -967,101 +998,3 @@
 @section scripts{
     @Scripts.Render("~/Scripts/Common/ModalPopup.js")
 }
-
-
-
-
-
-             @*//table = $('#example11').DataTable({
-        //    'columnDefs': [{
-        //        targets: 0,
-        //        data: null,
-        //        defaultContent: '',
-        //        orderable: false,
-        //        className: 'select-checkbox'
-        //    }],
-        //    select: {
-        //        style: 'os',
-        //        selector: 'td:first-child'
-        //    },
-        //    order: [[1, 'asc']]
-        //});
-
-
-        ///...............Edit child table............//////
-
-        //editTable = $('#editChildTable').DataTable({
-        //    'columnDefs': [{
-        //        targets: 0,
-        //        data: null,
-        //        defaultContent: '',
-        //        orderable: false,
-        //        className: 'select-checkbox'
-        //    }],
-        //    select: {
-        //        style: 'os',
-        //        selector: 'td:first-child'
-        //    },
-        //    order: [[1, 'asc']]
-        //});*@
-
-@*editTable = $('#editChildTable').DataTable(
-        {
-            "bServerSide": true,
-            "processing": true,
-           // "searchable": true,
-            "scrollX": true,
-            "paging": true,
-            "filter": true,
-            "destroy": true,
-            "order": [[1, 'asc']],
-            "lengthMenu": [[10, 25, 50,100,-1], [10, 25,50,100, "All"]],
-
-            ajax: {
-                  //cache: 'false',
-                type: 'POST',
-                url: '@Url.Action("LoadData")',
-
-                dataType: 'json',
-                dataSrc: 'data',
-               // contentType: "application/json; charset=utf-8",
-
-            },
-
-            columns: [
-                { 'data': "<td></td>" },
-                { 'data': 'PartId', "name": "PartId", },
-                { 'data': 'Part_No', "name": "Part_No", },
-                { 'data': 'PART_NAME', "name": "PART_NAME", },
-                { 'data': 'PartTypeID', "name": "PartTypeID", },
-                { 'data': 'CageCode', "name": "CageCode", },
-                { 'data': 'CageId', "name": "CageId", },
-               ],
-
-               'columnDefs': [{
-                   targets: 0,
-                   data: null,
-                   defaultContent: '',
-                   orderable: false,
-                   className: 'select-checkbox'
-               }],
-               select: {
-                   style: 'os',
-                   selector: 'td:first-child'
-               },
-               order: [[1, 'asc']],
-        });
-
-    $('#editChildTable tbody').on("click", '.select-checkbox', function () {
-        var tblData = editTable.rows($(this).closest('tr')).data();
-        var selectedData;
-        $.each(tblData, function (i, val) {
-            selectedData = tblData[i];
-        });
-        console.log(selectedData);
-        var partId = selectedData[1];
-        var cageId = selectedData[6];
-        $('#editNewPartId').val(partId);
-        $('#editNewCageId').val(cageId);
-
-    });*@

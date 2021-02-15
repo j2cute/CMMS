@@ -175,10 +175,8 @@ namespace WebApplication.Controllers
 
             try
             {
-                using (var db = new WebAppDbContext())
-                {
-                    vm._tbl_Country = db.tbl_Country.ToList();
-                }
+                SessionKeys.LoadTablesInSession(SessionKeys.Countries, "", "");
+                vm._tbl_Country = ((List<ClassLibrary.Models.tbl_Country>)Session[SessionKeys.Countries]);
             }
             catch (Exception ex)
             {
@@ -266,10 +264,9 @@ namespace WebApplication.Controllers
                 else
                 {
                     CageViewModels vm = new CageViewModels();
-                    using (var db = new WebAppDbContext())
-                    {
-                        vm._tbl_Country = db.tbl_Country.ToList();
-                    }
+
+                    SessionKeys.LoadTablesInSession(SessionKeys.Countries, "", "");
+                    vm._tbl_Country = ((List<ClassLibrary.Models.tbl_Country>)Session[SessionKeys.Countries]);
 
                     _logger.Log(LogLevel.Trace, actionName + " :: Model state not valid.");
                     return PartialView("_Create", vm);
@@ -462,12 +459,13 @@ namespace WebApplication.Controllers
 
         private CageViewModels GetCage(int id)
         {
+ 
             using (var db = new WebAppDbContext())
             {
                 var viewModel = new CageViewModels()
                 {
                     tbl_Cage = db.tbl_Cage.FirstOrDefault(x => x.CageId == id),
-                    _tbl_Country = db.tbl_Country.ToList(),
+                    _tbl_Country = ((List<ClassLibrary.Models.tbl_Country>)Session[SessionKeys.Countries]),
                 };
                 return viewModel;
             }
