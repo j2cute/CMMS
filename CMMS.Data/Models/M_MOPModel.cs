@@ -31,6 +31,7 @@ namespace ClassLibrary.Models
         public string Doc { get; set; }
         [Required(ErrorMessage = "This field is required.")]
         public string Task_Procedure { get; set; }
+
         public string Safety_Precautions { get; set; }
         public string PeriodMonth { get; set; }
         public string mmsDoc { get; set; }

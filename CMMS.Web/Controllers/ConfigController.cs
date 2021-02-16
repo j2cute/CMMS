@@ -538,50 +538,84 @@ namespace WebApplication.Controllers
         [HttpPost]
         public ActionResult DeleteChild(int? siteId, string eswbs)
         {
-            using (var db = new WebAppDbContext())
-            {
-                using (var transaction = db.Database.BeginTransaction())
-                {
-                    var vm = new ConfigViewModel();
-                    try
-                    {
-                        if (siteId != null && eswbs != null)
-                        {
-                            var result = db.C_Site_Config.Where(x => x.SiteId == siteId && x.ESWBS == eswbs).SingleOrDefault();
-                            if (result != null)
-                            {
-                                db.C_Site_Config.Remove(result);
-                                db.SaveChanges();
-                                transaction.Commit();
+            var type = "error";
+            var msg = string.Empty;
+            string actionName = "DeleteChild";
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
 
-                                if (siteId != 0)
+            ConfigViewModel vm = new ConfigViewModel();
+          
+            try
+            {
+                var selectedSiteId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.SelectedSiteId;
+                if (siteId == Convert.ToInt64(selectedSiteId))
+                {
+                    using (var db = new WebAppDbContext())
+                    {
+
+                        if (siteId != 0 && !String.IsNullOrWhiteSpace(eswbs))
+                        {
+                            if (db.C_Site_Config.Any(x => x.SiteId == siteId && x.ESWBS == eswbs))
+                            {
+                                var result = db.C_Site_Config.Where(x => x.SiteId == siteId && x.ESWBS == eswbs).SingleOrDefault();
+                                if (result != null)
                                 {
+                                    db.C_Site_Config.Remove(result);
+                                    db.SaveChanges();
                                     vm = GetSiteConfigTree(siteId);
+                                    type = "success";
+                                    msg = "Record Deleted Successfully !! ";
                                 }
                             }
+                            else
+                            {
+                                msg = "ESWBS : " + eswbs + " Not Found.";
+                                _logger.Log(LogLevel.Trace, actionName + " :: " + msg);
+                            }
                         }
-
-                        // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                        return Json(new
+                        else
                         {
-                            msg = "Record Deleted Sucessfully!!!",
-                            vm = vm
-                        }, JsonRequestBehavior.AllowGet);
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        Exception(ex);
-                        Alert("Their is something went wrong!!!", NotificationType.error);
-                        return Json(vm);
+                            _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
+                            msg = "Required Data Missing !!!";
+                        }
                     }
                 }
+                else
+                {
+                    msg = "Invalid Site Selected !!!";
+                }
+            }
+            catch (Exception ex)
+            {
+                type = "error";
+                Exception(ex);
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
+
+                msg = "Something Went Wrong !!!";
+            }
+            if (type == "success")
+            {
+                return Json(new
+                {
+                    type = type,
+                    msg = msg,
+                    vm = vm
+                }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new
+                {
+                    type = type,
+                    msg = msg,
+                    vm = siteId
+                }, JsonRequestBehavior.AllowGet);
             }
         }
+
         #endregion delChild
 
         #endregion ConfigurationEquipment
-
 
         #region ConfigurationSystem
 

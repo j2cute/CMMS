@@ -11,17 +11,21 @@ namespace ClassLibrary.Models
     {
         public int PartId { get; set; }
         public int? CageId { get; set; }
+
         [MaxLength(50, ErrorMessage = "Maximum Length Should be Equal to 50 Characters")]
         public string Part_No { get; set; }
+
         //[RegularExpression("^[a-zA-Z0-9]{5}$", ErrorMessage = "Max length should be 5, Alphanumeric Characters")]
         [Required(ErrorMessage = "This field is required.")]
-
         public string CageCode { get; set; }
+
         [Required(ErrorMessage = "This field is required.")]
         [MaxLength(100, ErrorMessage = "Maximum Length Should be Equal to 100 Characters")]
         public string PART_NAME { get; set; }
-        [RegularExpression("^[a-zA-Z0-9]{11}$", ErrorMessage = "Max length should be 11, Alphanumeric Characters")]
+
+        [RegularExpression("^[a-zA-Z0-9]{13}$", ErrorMessage = "Max length should be 13, Alphanumeric Characters")]
         public string NSN { get; set; }
+
         public Nullable<decimal> UNIT_PRICE { get; set; }
         public string CurrencyID { get; set; }
         public string MCAT_ID { get; set; }
@@ -38,6 +42,7 @@ namespace ClassLibrary.Models
         [MaxLength(6, ErrorMessage = "Maximum Length Should be Equal to 6"), MinLength(5, ErrorMessage = " Minimum Length Should be Equal to 5")]
         [RegularExpression("^[a-zA-Z]*$", ErrorMessage = "Please Enter Alphabets only")]
         public string SMR { get; set; }
+
         public Nullable<decimal> BRF { get; set; }
         public string PART_CHARACTERISTIC { get; set; }
         public string PICTURE_FILE_NAME { get; set; }

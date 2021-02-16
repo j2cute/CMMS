@@ -54,6 +54,7 @@
     <div class="wrapper">
         @Html.Partial("_NavBar", userRoles)
         @Html.Partial("_SideBar", permissions)
+        @Html.Partial("_NotificationPanel");
         <div id="idContent" class="content-wrapper">
             @RenderBody()
         </div>

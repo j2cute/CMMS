@@ -53,6 +53,7 @@
       
 
         $("#AddChild").click(function () {
+    
             $('#C_Site_Config_ESWBS').val("");
             $('#C_Site_Config_Nomanclature').val("");
             Qty: $('#C_Site_Config_Qty').val("");
@@ -61,6 +62,7 @@
             table.$('tr.selected').removeClass('selected');
             $("#addFooter").show();
             $("#editFooter").hide();
+            $("#C_Site_Config_ESWBS").attr("readonly", false);
 
         });
 
@@ -68,7 +70,7 @@
             table.$('tr.selected').removeClass('selected');
             $("#editFooter").show();
             $("#addFooter").hide();
-
+            $("#C_Site_Config_ESWBS").attr("readonly", true);
         });
         
         GetConfig();
@@ -490,7 +492,7 @@
     function GetEditChild() {
 
 
-        $("#C_Site_Config_ESWBS").attr("disabled", true);
+       
 
         $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
         $("#C_Site_Config_Title").val($("#tbtitle").val());
@@ -881,7 +883,7 @@
                                                 <label>ESWBS No.<span style="color:red">*</span></label>
 
                                                 @Html.EditorFor(model => model.C_Site_Config.ESWBS, new { htmlAttributes = new { @class = "form-control", @required = true } })
-                                                @Html.ValidationMessageFor(model => model.C_Site_Config.PESWBS, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.C_Site_Config.ESWBS, "", new { @class = "text-danger" })
 
                                             </div>
                                         </div>

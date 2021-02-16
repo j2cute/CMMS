@@ -8,7 +8,11 @@
 
 <script>
     $(document).ready(function () {
-        $("#myModal").modal('show');
+        $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: true,
+            show: true
+        })
     });
 </script>
 
