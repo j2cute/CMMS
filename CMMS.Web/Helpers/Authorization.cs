@@ -50,10 +50,10 @@ namespace WebApplication.Helpers
                                 }
                                 else
                                 {
-                                    //if (!AuthorizeCore(filterContext.HttpContext))
-                                    //{
-                                    //    HandleUnauthorizedRequest(filterContext);
-                                    //}
+                                    if (!AuthorizeCore(filterContext.HttpContext))
+                                    {
+                                        HandleUnauthorizedRequest(filterContext);
+                                    }
                                 }
                             }
                             else
