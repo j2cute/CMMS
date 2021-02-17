@@ -1,33 +1,39 @@
 ﻿@using System.Web.UI.WebControls;
 
-
+<style>
+    .dx-dashboard-widget-container{
+        min-height:100vh !important;
+    }
+</style>
 <script src="~/Scripts/CustomDashboard/DeleteExtension.js"></script>
 <script src="~/Scripts/CustomDashboard/SaveAsExtension.js"></script>
 
+<div id="dashWrapper">
 
-<div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
-    @Html.DevExpress().Button(settings =>
+    <div id="#Dashboard" style="height:100%;">
+        @Html.DevExpress().Button(settings =>
+        {
+           settings.Name = "SwitchWorkingModesButton";
+           settings.Text = "Switch to Viewer";
+           settings.UseSubmitBehavior = true;
+           settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
+        }).GetHtml()
+
+
+        @Html.DevExpress().Dashboard(settings =>
     {
-       settings.Name = "SwitchWorkingModesButton";
-       settings.Text = "Switch to Viewer";
-       settings.UseSubmitBehavior = true;
-       settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
+        settings.Name = "Dashboard";
+        settings.Width = Unit.Percentage(100);
+        settings.Height = Unit.Percentage(100);
+        settings.EnableSqlDataSource = true;
+        settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
+        settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Designer;
+        settings.MobileLayoutEnabled = DevExpress.DashboardWeb.MobileLayoutMode.Auto;
+
+
     }).GetHtml()
-
-
-    @Html.DevExpress().Dashboard(settings =>
-{
-    settings.Name = "Dashboard";
-    settings.Width = Unit.Percentage(100);
-    settings.Height = Unit.Percentage(100);
-    settings.EnableSqlDataSource = true;
-    settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
-    settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Designer;
-    settings.MobileLayoutEnabled = DevExpress.DashboardWeb.MobileLayoutMode.Auto;
-
-}).GetHtml()
+    </div>
 </div>
-
 <script>
 
     function switchWorkingModes(s, e) {

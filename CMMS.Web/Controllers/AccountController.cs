@@ -85,8 +85,7 @@ namespace WebApplication.Controllers
                 }
 
                 var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-                result = SignInStatus.Success;
-               
+                
                 switch (result)
                 {
                     case SignInStatus.Success:
