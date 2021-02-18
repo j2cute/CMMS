@@ -22,6 +22,7 @@ using static ClassLibrary.Common.Enums;
 namespace WebApplication.Controllers
 {
 
+    [HandleError]
     public class CageController : BaseController
     {
         private static Logger _logger;
@@ -465,7 +466,7 @@ namespace WebApplication.Controllers
 
         private CageViewModels GetCage(int id)
         {
- 
+            SessionKeys.LoadTablesInSession(SessionKeys.Countries);
             using (var db = new WebAppDbContext())
             {
                 var viewModel = new CageViewModels()

@@ -94,9 +94,27 @@ namespace WebApplication.Helpers
                     }
                     else
                     {
-                        if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]))
+
+                        var requestParts = httpContext.Request.Path.Split('?')[0]?.Split('/');
+
+                        // Previous was a ajax Request
+                        if (requestParts.Length > 3)
                         {
-                            result = true;
+                            string url = "/" + (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[0] : requestParts[1]) + "/" +
+                                        (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[1] : requestParts[2]);
+
+                            if (rolePermission.Any(x => !String.IsNullOrWhiteSpace(x.URL) && x.URL.Contains(url)))
+                            {
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+
+                            if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]))
+                            {
+                                result = true;
+                            }
                         }
                     }
                 }
