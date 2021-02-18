@@ -468,3 +468,113 @@
 2021-02-18 11:39:14.7501|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
 2021-02-18 11:39:16.4245|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
 2021-02-18 11:39:16.4245|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
+2021-02-18 13:56:30.0295|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:39.7592|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:46.9978|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:51.6586|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:53.1285|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:54.8570|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:55.4776|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:55.6593|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:55.8433|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:56.4880|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:57.4141|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:57.9493|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:58.1325|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:58.3184|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:58.6694|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:56:59.4992|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:57:04.0966|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:57:05.6106|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:58:00.8342|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 13:58:58.1153|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:03:07.4997|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:04:56.8932|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:05:03.7089|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:08:30.2671|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:10:50.7969|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:13:20.9589|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 12
+2021-02-18 14:13:35.2293|TRACE|WebApplication.Controllers.AccountController|Login attempted for : ftjufy
+2021-02-18 14:13:45.0932|TRACE|WebApplication.Controllers.AccountController|Login attempted for : rf65r6r
+2021-02-18 14:13:53.2610|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456yu
+2021-02-18 14:14:06.2273|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:20:03.8662|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:20:49.9757|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:21:25.1487|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456hg
+2021-02-18 14:21:37.6522|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:22:03.1378|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 14:22:07.8519|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
+2021-02-18 14:22:08.2785|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
+2021-02-18 14:22:19.5220|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
+2021-02-18 14:22:19.7414|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-02-18 14:22:19.8032|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-02-18 14:22:41.6713|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
+2021-02-18 14:22:41.8005|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
+2021-02-18 14:23:01.6132|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
+2021-02-18 14:23:01.6132|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
+2021-02-18 14:23:12.3090|ERROR|WebApplication.Controllers.ConfigController|Index :: started.
+2021-02-18 14:23:12.3090|ERROR|WebApplication.Controllers.ConfigController|Index :: Ended.
+2021-02-18 14:23:51.3234|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
+2021-02-18 14:23:51.3344|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
+2021-02-18 14:39:28.7503|ERROR|WebApplication.Controllers.CageController|Index :: started.
+2021-02-18 14:39:28.8892|TRACE|WebApplication.Controllers.CageController|Index :: ended.
+2021-02-18 14:39:34.6014|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:34.6523|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:39:36.5608|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:36.5608|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:39:37.6301|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:37.6391|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:39:39.0793|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:39.0793|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:39:41.2782|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:41.2892|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:39:42.0353|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:42.0353|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:39:42.6343|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:39:42.6503|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:24.3248|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:24.3378|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:25.2133|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:25.2213|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:27.1450|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:27.1550|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:28.2433|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:28.2543|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:30.1823|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:30.1912|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:32.1121|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:32.1121|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:33.6695|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:33.6815|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:35.0463|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:35.0463|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:35.7427|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:35.7524|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:37.3588|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:37.3588|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:38.7755|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:38.7845|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:40.8752|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:40.8752|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:47.8338|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:47.8428|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:48.5593|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:48.5732|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:50.7280|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:50.7399|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:51.7511|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:51.7511|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:53.1908|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:53.1908|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:55.6955|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:55.7025|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:57.5513|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:57.5513|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:58.0372|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:58.0372|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:40:59.8952|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:40:59.8952|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:41:00.8388|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:41:00.8478|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
+2021-02-18 14:41:10.7764|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
+2021-02-18 14:41:10.7884|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.

@@ -7,23 +7,30 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<style>
-        /*
-    *
-    * ==========================================
-    * CUSTOM UTIL CLASSES
-    * ==========================================
-    *
-    */
-        .login,
-        .image {
-            min-height: 100vh;
-        }
+    <style>
+            /*
+        *
+        * ==========================================
+        * CUSTOM UTIL CLASSES
+        * ==========================================
+        *
+        */
+            .login,
+            .image {
+                min-height: 100vh;
+            }
 
-.bg-image { /* background-image: url('https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg');
-       */ background-image: url('../../Content/Img/loghead.png');
-          background-size: cover;
-          background-position: center center; }
+            .bg-image { /* background-image: url('https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg');
+           */
+                background-image: url('../../Content/Img/loghead.png');
+                background-size: cover;
+                background-position: center center;
+            }
+
+        #test ul {
+            text-decoration: none;
+            list-style: none;
+        }
 </style>
 <div class="container-fluid">
     <div class="row no-gutter">
@@ -39,7 +46,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-10 col-xl-8 mx-auto">
-                   
+
                             <h3 class="display-4">
                                 <img src="~/Content/LoginPage/logo.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                                      style="opacity: .8;width:110px"><b>CMMS</b>
@@ -85,3 +92,6 @@
 
     </div>
 </div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

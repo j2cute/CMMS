@@ -97,11 +97,11 @@ namespace WebApplication.Controllers
 
                     case SignInStatus.Failure:
                         ModelState.AddModelError("", "Invalid login attempt.");
-                        return RedirectToAction("Login", "Account");
+                        return View(model);
 
                     default:
                         ModelState.AddModelError("", "Invalid login attempt.");
-                        return RedirectToAction("Login", "Account");
+                        return View(model);
 
                 }
             }
