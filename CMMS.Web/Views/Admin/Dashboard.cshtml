@@ -5,26 +5,33 @@
 <script src="~/Scripts/CustomDashboard/DeleteExtension.js"></script>
 <script src="~/Scripts/CustomDashboard/SaveAsExtension.js"></script>
 
+<style>
+    .dx-dashboard-widget-container {
+        min-height: 100vh !important;
+    }
+</style>
 @*<div class="card card-default">
     <div class="card-body">
         <div class="row">
             <div class="col-md-12">*@
- 
-                    <div id="#Dashboard" style=" position:absolute;left:18%;   right: 6px; top:8%; bottom:0;">
 
-                        @Html.DevExpress().Dashboard(settings =>
-                    {
-                        settings.Name = Model.DashboardId;
-                        settings.Width = Unit.Percentage(100);
-                        settings.Height = Unit.Percentage(100);
-                        settings.EnableSqlDataSource = true;
-                        settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.ViewerOnly;
-                        settings.InitialDashboardId = Model.DashboardId;
-                    }).GetHtml()
-                    </div>
-              
+<div id="dashWrapper">
 
-            @*</div>
-        </div>
+    <div id="#Dashboard" style="height:100%;">
+
+        @Html.DevExpress().Dashboard(settings =>
+    {
+        settings.Name = Model.DashboardId;
+        settings.Width = Unit.Percentage(100);
+        settings.Height = Unit.Percentage(100);
+        settings.EnableSqlDataSource = true;
+        settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.ViewerOnly;
+        settings.InitialDashboardId = Model.DashboardId;
+    }).GetHtml()
     </div>
-</div>*@
+
+    </div>
+    @*</div>
+                </div>
+            </div>
+        </div>*@

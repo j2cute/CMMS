@@ -21,7 +21,8 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
+
+    [HandleError]
     public class CageController : BaseController
     {
         private static Logger _logger;
@@ -31,6 +32,7 @@ namespace WebApplication.Controllers
             _logger = LogManager.GetCurrentClassLogger();
         }
 
+        [CustomAuthorization]
         public ActionResult Index()
         {
             string actionName = "Index";
@@ -224,6 +226,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorization]
         public ActionResult Create(tbl_Cage tbl_Cage)
         {
             string actionName = "Create";
@@ -284,7 +287,7 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index");
         }
 
-
+        [CustomAuthorization]
         public ActionResult Details(int id)
         {
             string actionName = "Details";
@@ -308,7 +311,8 @@ namespace WebApplication.Controllers
 
             return PartialView("_Details", objCageViewModels);
         }
-
+        
+        [CustomAuthorization]
         public ActionResult Edit(int id)
         {
             string actionName = "Edit";
@@ -335,6 +339,7 @@ namespace WebApplication.Controllers
 
 
         [HttpPost]
+        [CustomAuthorization]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, tbl_Cage tbl_Cage)
         {
@@ -396,6 +401,7 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index");
         }
 
+        [CustomAuthorization]
         public ActionResult Delete(string id)
         {
             if (String.IsNullOrWhiteSpace(id))
@@ -406,6 +412,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, FormCollection collection)
         {
@@ -459,7 +466,7 @@ namespace WebApplication.Controllers
 
         private CageViewModels GetCage(int id)
         {
- 
+            SessionKeys.LoadTablesInSession(SessionKeys.Countries);
             using (var db = new WebAppDbContext())
             {
                 var viewModel = new CageViewModels()

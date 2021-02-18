@@ -8,6 +8,13 @@
         disableServerControl = true;
     }
 }
+
+<style>
+    .dx-dashboard-widget-container {
+        min-height: 100vh !important;
+    }
+</style>
+
 <script src="~/Scripts/CustomDashboard/DeleteExtension.js"></script>
 <script src="~/Scripts/CustomDashboard/SaveAsExtension.js"></script>
 
@@ -19,33 +26,34 @@
 
 </script>
 
+<div id="dashWrapper">
 
-<div id="#Dashboard" style="position: absolute; left: 7%; right: 0; top:8%; bottom:0;">
+    <div id="#Dashboard" style="height:100%;">
 
-@Html.DevExpress().Button(settings =>
-{
-    settings.Name = "SwitchWorkingModesButton";
-    settings.Text = "Switch to Designer";
-    settings.UseSubmitBehavior = true;
-    settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
-}).GetHtml()
+        @Html.DevExpress().Button(settings =>
+        {
+            settings.Name = "SwitchWorkingModesButton";
+            settings.Text = "Switch to Designer";
+            settings.UseSubmitBehavior = true;
+            settings.ClientSideEvents.Click = "function(s, e) { switchWorkingModes(s, e); }";
+        }).GetHtml()
 
 
 
-@Html.DevExpress().Dashboard(settings =>
-{
-    settings.Name = "Dashboard";
-    settings.Width = Unit.Percentage(100);
-    settings.Height = Unit.Percentage(100);
-    settings.EnableSqlDataSource = true;
-    settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
-    settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Viewer;
-    settings.InitialDashboardId = Model.DashboardId;
+        @Html.DevExpress().Dashboard(settings =>
+        {
+            settings.Name = "Dashboard";
+            settings.Width = Unit.Percentage(100);
+            settings.Height = Unit.Percentage(100);
+            settings.EnableSqlDataSource = true;
+            settings.ClientSideEvents.BeforeRender = "function(s, e) { customizeMenu(s, e); }";
+            settings.WorkingMode = DevExpress.DashboardWeb.WorkingMode.Viewer;
+            settings.InitialDashboardId = Model.DashboardId;
 
-}).GetHtml()
-</div>
-
-<script>
+        }).GetHtml()
+    </div>
+    </div>
+    <script>
 
     function switchWorkingModes(s, e) {
         var workingMode = Dashboard.GetWorkingMode();
@@ -63,10 +71,10 @@
     function customizeMenu(s, e) {
 
         var control = s.GetDashboardControl();
- 
+
         if (!@Html.Encode(disableServerControl).ToLower()) {
             control.registerExtension(new DeleteDashboardExtension(s));
-        }  
+        }
         control.registerExtension(new SaveAsDashboardExtension(control, '@Model.UserId', '@Model.RoleId'));
 
         control.unregisterExtension("create-dashboard");
@@ -76,5 +84,5 @@
     }
 
 
-</script>
+    </script>
 

@@ -18,7 +18,7 @@ using NLog;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
+     //[CustomAuthorization]
     public class AdministrationController : Controller
     {
         private static Logger _logger;
@@ -371,7 +371,7 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
-        [CustomAuthorization]
+         //[CustomAuthorization]
         public ActionResult CreateUser()
         {
             UserRoleViewModel vm = new UserRoleViewModel()

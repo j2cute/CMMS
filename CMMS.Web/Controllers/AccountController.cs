@@ -85,20 +85,24 @@ namespace WebApplication.Controllers
                 }
 
                 var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
-                result = SignInStatus.Success;
-               
+                
                 switch (result)
                 {
                     case SignInStatus.Success:
                         Session[SessionKeys.UserId] = model.UserName;
                         return RedirectToAction("UnitSelection", "Admin");
 
+               
+                        //return RedirectToAction("Login", "Account");
+
                     case SignInStatus.Failure:
-                        return View("Login","Account");
+                        ModelState.AddModelError("", "Invalid login attempt.");
+                        return RedirectToAction("Login", "Account");
 
                     default:
                         ModelState.AddModelError("", "Invalid login attempt.");
-                        return View(model);
+                        return RedirectToAction("Login", "Account");
+
                 }
             }
             catch(Exception ex)
@@ -113,7 +117,7 @@ namespace WebApplication.Controllers
         //
         // POST: /Account/LogOff
  
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public ActionResult LogOff()
         {
             string actionName = "LogOff";
@@ -143,7 +147,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public ActionResult SwitchRole(string roleId = "")
         {
             try

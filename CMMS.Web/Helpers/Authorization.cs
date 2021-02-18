@@ -50,10 +50,10 @@ namespace WebApplication.Helpers
                                 }
                                 else
                                 {
-                                    //if (!AuthorizeCore(filterContext.HttpContext))
-                                    //{
-                                    //    HandleUnauthorizedRequest(filterContext);
-                                    //}
+                                    if (!AuthorizeCore(filterContext.HttpContext))
+                                    {
+                                        HandleUnauthorizedRequest(filterContext);
+                                    }
                                 }
                             }
                             else
@@ -78,9 +78,44 @@ namespace WebApplication.Helpers
                 var rolePermission = ((SessionHelper)httpContext.Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
                 if (rolePermission != null)
                 {
-                    if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]))
+
+                    if (httpContext.Request.IsAjaxRequest())
                     {
-                        result = true;
+                     
+                        var requestParts = httpContext.Request.Path.Split('?')[0]?.Split('/');
+
+                        string url = "/" + (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[0] : requestParts[1]) + "/" + 
+                                           (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[1] : requestParts[2]);
+
+                        if (rolePermission.Any(x => !String.IsNullOrWhiteSpace(x.URL) && x.URL.Contains(url)))
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+
+                        var requestParts = httpContext.Request.Path.Split('?')[0]?.Split('/');
+
+                        // Previous was a ajax Request
+                        if (requestParts.Length > 3)
+                        {
+                            string url = "/" + (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[0] : requestParts[1]) + "/" +
+                                        (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[1] : requestParts[2]);
+
+                            if (rolePermission.Any(x => !String.IsNullOrWhiteSpace(x.URL) && x.URL.Contains(url)))
+                            {
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+
+                            if (rolePermission.Any(x => x.URL == httpContext.Request.RawUrl.Split('?')[0]))
+                            {
+                                result = true;
+                            }
+                        }
                     }
                 }
             }

@@ -2,11 +2,22 @@
  
     $.ajaxSetup({ cache: false });
     $("a[data-modal]").on("click", function (e) {
-        
+         
         $('#myModalContent').load(this.href, function (response,status,xhr) {
 
             if (status == "error") {
-                alert("You are not authorized to perform this operation.");
+
+                if (xhr) {
+                    if (xhr.status == "403") {
+                        alert("You are not authorized to perform this operation.");
+                    }
+                    else {
+                        alert("Something went wrong.Please contact your system Administartor.");
+                    }
+                }
+                else {
+                    alert("Something went wrong.Please contact your system Administartor.");
+                }
             } else {
 
                 $('#myModal').modal({
