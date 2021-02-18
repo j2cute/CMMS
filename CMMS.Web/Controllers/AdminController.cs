@@ -119,7 +119,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public ActionResult Dashboard(string siteId, string inRoleId = null)
         { 
             string actionName = "Dashboard";
@@ -213,7 +213,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpGet]
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public ActionResult Dashboard()
         {
             string actionName = "Get Dashboard";
@@ -337,7 +337,7 @@ namespace WebApplication.Controllers
 
         #region UserCheck
 
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public JsonResult CheckUserName(string UserName)
         {
             string actionName = "CheckUserName";
@@ -372,6 +372,11 @@ namespace WebApplication.Controllers
 
         #endregion UserCheck
 
+
+        public ActionResult Test()
+        {
+            return View("TestView");
+        }
 
         #region public ActionResult Index(string searchStringUserNameOrEmail)
         public ActionResult Index()
@@ -693,7 +698,7 @@ namespace WebApplication.Controllers
         // Roles *****************************
 
         // GET: /Admin/ViewAllRoles
-        [CustomAuthorization]
+       // [CustomAuthorization]
         #region public ActionResult ViewAllRoles()
         public ActionResult ViewAllRoles()
         {

@@ -9,7 +9,6 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
     public class BaseController : Controller
     {
         private WebAppDbContext db = new WebAppDbContext();

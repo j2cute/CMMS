@@ -92,12 +92,12 @@ namespace WebApplication.Controllers
                         Session[SessionKeys.UserId] = model.UserName;
                         return RedirectToAction("UnitSelection", "Admin");
 
-                    case SignInStatus.Failure:
-                        return View("Login","Account");
+               
+                        //return RedirectToAction("Login", "Account");
 
-                    default:
+                    case SignInStatus.Failure:
                         ModelState.AddModelError("", "Invalid login attempt.");
-                        return View(model);
+                        return RedirectToAction("Login", "Account");
                 }
             }
             catch(Exception ex)
@@ -112,7 +112,7 @@ namespace WebApplication.Controllers
         //
         // POST: /Account/LogOff
  
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public ActionResult LogOff()
         {
             string actionName = "LogOff";
@@ -142,7 +142,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public ActionResult SwitchRole(string roleId = "")
         {
             try
