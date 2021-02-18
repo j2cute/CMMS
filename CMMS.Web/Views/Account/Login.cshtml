@@ -38,16 +38,16 @@
                 <!-- Demo content-->
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-10 col-xl-7 mx-auto">
-
-                            
-                            <h3 class="display-4"> <img src="~/Content/Images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-     style="opacity: .8"> CMMS</h3>
-                            <p class="text-muted mb-4">Configuration & Maintenance Management System</p>
+                        <div class="col-lg-10 col-xl-8 mx-auto">
+                   
+                            <h3 class="display-4">
+                                <img src="~/Content/LoginPage/logo.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                                     style="opacity: .8;width:110px"><b>CMMS</b>
+                            </h3>
+                            <p class="text-muted mb-4">PN Configuration & Maintenance Management System</p>
                             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                             {
                                 @Html.AntiForgeryToken()
-
 
                                 <div class="form-group mb-3">
                                     @Html.TextBoxFor(m => m.UserName, new { @class = "form-control rounded-pill border-0 shadow-sm px-4", @autofocus = "", @placeholder = "User name" })

@@ -415,6 +415,7 @@
     <Content Include="Content\LoginPage\bootstrap.min.css" />
     <Content Include="Content\LoginPage\font-awesome.min.css" />
     <Content Include="Content\LoginPage\jquery-3.3.1.slim.min.js" />
+    <Content Include="Content\LoginPage\logo.gif" />
     <Content Include="Content\material-bootstrap-wizard.css" />
     <Content Include="Content\MaterialDesign.css" />
     <Content Include="Content\morris.css" />
@@ -1761,6 +1762,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Config\_AddEditConfig.cshtml" />
     <Content Include="Views\Account\LoginCopy.cshtml" />
+    <Content Include="Views\Shared\_LayoutUnit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\DashBoards\" />

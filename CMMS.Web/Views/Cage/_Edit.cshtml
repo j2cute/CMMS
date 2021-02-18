@@ -64,12 +64,11 @@
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">Country<span style="color:red">*</span></label>
                     <div class="col-md-10">
+                   
                         @Html.DropDownListFor(model => model.tbl_Cage.Country, new SelectList(Model._tbl_Country, "CountryName", "CountryName"), "Select", new { @class = "form-control", @required = "true" })
                         @Html.ValidationMessageFor(model => model.tbl_Cage.Country, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-
 
                 <div class="form-group row">
                     <label class="col-md-2 col-form-label">Postal Code</label>
