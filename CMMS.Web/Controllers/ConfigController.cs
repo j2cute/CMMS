@@ -19,7 +19,7 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
+
     public class ConfigController : BaseController
     {
         private static Logger _logger;
@@ -31,6 +31,7 @@ namespace WebApplication.Controllers
 
         #region ConfigurationEquipment
 
+        [CustomAuthorization]
         public ActionResult ConfigEquipIndex()
         {
             var vm = new ConfigViewModel();
@@ -73,6 +74,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        //[CustomAuthorization]
         public JsonResult LoadData(int length, int start)
         {
             using (var db = new WebAppDbContext())
@@ -166,6 +168,7 @@ namespace WebApplication.Controllers
 
         }
 
+        //[CustomAuthorization]
         public JsonResult GetConfigEquipment(int? siteId)
         {
             try
@@ -186,6 +189,7 @@ namespace WebApplication.Controllers
 
         #region GetConfigData
         [HttpPost]
+        [CustomAuthorization]
         public JsonResult GetSelectedConfigData(string eswbs)
         {
             string actionName = "GetSelectedConfigData";
@@ -316,6 +320,7 @@ namespace WebApplication.Controllers
         #region AddCHILD
 
         [HttpPost]
+        [CustomAuthorization]
         [ValidateAjax]
         public ActionResult AddChild(C_SiteConfigModel model)
         {
@@ -425,6 +430,7 @@ namespace WebApplication.Controllers
         #region EditChild   
 
         [HttpPost]
+        [CustomAuthorization]
         [ValidateAjax]
         public ActionResult EditChild(C_SiteConfigModel model)
         {
@@ -536,6 +542,7 @@ namespace WebApplication.Controllers
 
         #region delChild
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult DeleteChild(int? siteId, string eswbs)
         {
             using (var db = new WebAppDbContext())
@@ -584,7 +591,7 @@ namespace WebApplication.Controllers
 
 
         #region ConfigurationSystem
-
+        [CustomAuthorization]
         public ActionResult Index()
         {
             string actionName = "Index";
@@ -606,6 +613,7 @@ namespace WebApplication.Controllers
             return View("Index", vm);
         }
 
+        [CustomAuthorization]
         public JsonResult GetConfig(int unitId)
         {
             string actionName = "GetConfig";
@@ -655,6 +663,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         public JsonResult GetSiteConfig(string selectedItems, int unitId)
         {
             using (var db = new WebAppDbContext())
@@ -742,7 +751,8 @@ namespace WebApplication.Controllers
         #endregion ConfigurationSystem
 
 
-        #region EquipmentRequest
+        #region EquipmentRequest    
+        [CustomAuthorization]
         public ActionResult RequestForm()
         {
             using (var db = new WebAppDbContext())
@@ -855,6 +865,7 @@ namespace WebApplication.Controllers
 
 
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult GetSelectedRequestForm(int? reqId)
         {
             using (var db = new WebAppDbContext())
@@ -924,6 +935,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult ReturnRequest(int? reqId, string remarks)
         {
             using (var db = new WebAppDbContext())
@@ -967,6 +979,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult RegisterRequest(int? reqId)
         {
             using (var db = new WebAppDbContext())
@@ -1013,6 +1026,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult ReturnRequestSubmit(int? reqId)
         {
             using (var db = new WebAppDbContext())

@@ -3,6 +3,7 @@ using ClassLibrary.Models;
 using ClassLibrary.ViewModels;
 using CMMS.Web.Helper;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.DataProtection;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -112,7 +113,7 @@ namespace WebApplication.Controllers
                             break;
                     }
 
-                    if (sortColumnDir == "asc")
+                     if (sortColumnDir == "asc")
                     {
                         Cagedata = db.tbl_Cage.Where(x => x.CageCode.Contains(searchvalue)
                      || x.CageName.Contains(searchvalue)
@@ -145,6 +146,7 @@ namespace WebApplication.Controllers
                        }).ToList();
                     }
 
+              
                     recordcount = db.tbl_Cage.Count();
 
                     if (searchvalue != "")
