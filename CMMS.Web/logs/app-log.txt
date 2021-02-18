@@ -409,3 +409,62 @@
 2021-02-18 09:51:43.1755|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
 2021-02-18 09:52:26.1499|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
 2021-02-18 09:52:26.1499|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
+2021-02-18 11:24:01.8595|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 11:24:04.2919|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
+2021-02-18 11:24:04.7302|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
+2021-02-18 11:24:13.1208|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
+2021-02-18 11:24:13.3426|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-02-18 11:24:13.3965|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-02-18 11:24:20.2595|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
+2021-02-18 11:24:20.3562|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
+2021-02-18 11:24:23.4669|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:24:23.4669|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:24:28.1540|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:24:28.2079|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:24:29.6343|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:24:29.6343|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:24:29.9249|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:24:29.9358|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:24:30.1794|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:24:30.1794|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:25:49.6033|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:25:49.6033|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:35:00.6420|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
+2021-02-18 11:35:00.8769|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-02-18 11:35:00.8889|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-02-18 11:35:19.7509|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
+2021-02-18 11:35:19.7509|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
+2021-02-18 11:35:27.6990|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:35:27.7120|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:35:28.2964|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:35:28.2964|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:35:28.7763|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
+2021-02-18 11:35:28.7803|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
+2021-02-18 11:35:32.8057|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
+2021-02-18 11:35:32.8057|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
+2021-02-18 11:37:11.3148|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456yyrtyr
+2021-02-18 11:37:19.1659|TRACE|WebApplication.Controllers.AccountController|Login attempted for : vgdfgds
+2021-02-18 11:37:25.9832|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 11:37:26.0361|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
+2021-02-18 11:37:26.0490|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
+2021-02-18 11:37:32.9602|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
+2021-02-18 11:37:32.9772|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-02-18 11:37:32.9772|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-02-18 11:37:34.6562|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
+2021-02-18 11:37:34.6562|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
+2021-02-18 11:37:49.9269|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 11:37:49.9548|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
+2021-02-18 11:37:49.9548|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
+2021-02-18 11:37:55.6015|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
+2021-02-18 11:37:55.6135|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-02-18 11:37:55.6135|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-02-18 11:37:57.2217|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
+2021-02-18 11:37:57.2217|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
+2021-02-18 11:39:11.9616|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
+2021-02-18 11:39:11.9925|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
+2021-02-18 11:39:11.9925|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
+2021-02-18 11:39:14.7501|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
+2021-02-18 11:39:14.7501|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-02-18 11:39:14.7501|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-02-18 11:39:16.4245|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
+2021-02-18 11:39:16.4245|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.

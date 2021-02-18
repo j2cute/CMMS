@@ -346,7 +346,6 @@ namespace WebApplication.Controllers
         #endregion roles
 
         private ApplicationUserManager _userManager;
-
         public ApplicationUserManager UserManager
         {
             get
@@ -478,7 +477,6 @@ namespace WebApplication.Controllers
                 }
             }
         }
-
 
         public ActionResult EditUser(string id)
         {
@@ -616,7 +614,6 @@ namespace WebApplication.Controllers
                 }
             }
         }
-
 
         // GET: Parts/Delete/id
         public ActionResult DeleteUser(string id)
