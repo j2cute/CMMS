@@ -2,6 +2,7 @@
 @using CMMS.Web.Helper
 @{ 
     var msg = TempData["notification"] != null ? TempData["notification"].ToString() : string.Empty;
+
 }
 
 <link href="~/Content/morris.css" rel="stylesheet" />
@@ -97,14 +98,36 @@
 
         $('#example1 tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
-            var data = $('#myModalContent').load(this.href, function () {
-                $('#myModal').modal({
-                    keyboard: true
-                }, 'show');
+
+            $('#myModalContent').load(this.href, function (response, status, xhr) {
+
+
+                if (status == "error") {
+                 
+                    if (xhr) {
+                        if (xhr.status == "403") {
+                            alert("You are not authorized to perform this operation.");
+                        }
+                        else {
+                            alert("Something went wrong.Please contact your system Administartor.");
+                        }
+                    }
+                    else
+                    {
+                        alert("Something went wrong.Please contact your system Administartor.");
+                    }
+                } else {
+
+                    $('#myModal').modal({
+
+                        keyboard: true
+                    }, 'show');
+                }
+            });
             });
             return false;
         });
-    });
+   
 
 </script>
 
@@ -118,6 +141,8 @@
 </section>
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
+
+    @Html.Partial("_NotificationPanel")
 
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->

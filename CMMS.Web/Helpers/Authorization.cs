@@ -19,6 +19,7 @@ namespace WebApplication.Helpers
         {
             try
             {
+                //return;
                 if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true)
                    || filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
                 {
