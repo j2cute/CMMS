@@ -9,7 +9,7 @@ namespace ClassLibrary.Models
 {
     public class CageModel
     {
-        public string id { get; set; }
+ 
         public int CageId { get; set; }
         [Required(ErrorMessage = "This field is required.")]
         [StringLength(5,MinimumLength =5,ErrorMessage = "Cage Code length should be 5")]

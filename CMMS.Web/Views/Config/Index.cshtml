@@ -5,7 +5,7 @@
 <script src="~/Content/Digitalscript.js"></script>
 <script src="~/Scripts/moment.min.js"></script>
 <link href="~/Scripts/themes/default/style.min.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
 <script src="~/Scripts/jstree.min.js"></script>
 <style>
     .slimScrollBar {
@@ -15,6 +15,14 @@
 <script>
     var siteId;
     $(document).ready(function () {
+
+        permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
+
+        if (!permissions.filter(obj => obj.PermissionId == "AddSystem").length > 0) {
+            $("#items").addClass('disabled')
+        }  
+
+
      siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
         $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
 
@@ -234,7 +242,7 @@
                selectedData.push(selectedIndexes[index]);
            });
 
-           console.log("Hello");
+   
            selectedData = JSON.stringify(selectedData);
            console.log(selectedData);
 
@@ -242,7 +250,7 @@
                 // cache: 'false',
                 type: "Post",
                 //  contentType: "application/json; charset=utf-8",
-                url: '@Url.Action("GetSiteConfig", "Config")',
+                url: '@Url.Action("AddSystem", "Config")',
 
                 dataType: 'json',  // add this line
                 data: {
@@ -250,6 +258,7 @@
                     unitId: unitId
                 },
                 success: function (vm) {
+                   
                     $("#jstreeSiteConfig").jstree('destroy').empty();
                     $("#jstreeSiteConfig").jstree({
 
@@ -263,8 +272,18 @@
                     "keep_selected_style": false
                 },
                 "plugins": ["wholerow", "checkbox"],
-            });
+                    });
+
+                    swal({ title: "SUCCESS", text: "Data Saved Successfully", type: "success", });
+
                 },
+
+                failure: function (vm) {
+                    swal({ title: "Error", text: "Something went wrong.", type: "error", });
+                },
+                error: function (vm) {
+                    swal({ title: "Error", text: "Something went wrong.", type: "error", });
+                }
             });
     };
 

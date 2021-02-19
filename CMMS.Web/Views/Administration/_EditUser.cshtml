@@ -177,7 +177,7 @@
         // Getting  All roles for RoleMaster Array
 
         data = @Html.Raw(Json.Encode(Model.RolesModel_list));
-        console.log("dddddddddddd", data);
+ 
         userRole = @Html.Raw(Json.Encode(Model.userRoleModel_list));
         roleMaster = data;
         //// get each role from User role table and push in Role added from Master role after id compare with user role's table
@@ -263,16 +263,16 @@
         //});
 
 
-        $('#userRoles tbody').on('click', '.checkbox', function () {
-            if ($(userRoleTable).rows().td().hasAttr('checked')) {
-                console.log("ifffff");
-                $(this).parent().parent().removeAttr('checked');
-            } else {
-                console.log("ifffff elseeee");
-                userRoleTable.$('.checkbox').removeAttr('checked');
-                $(this).parent().parent().attr('checked');
-            }
-        });
+        //$('#userRoles tbody').on('click', '.checkbox', function () {
+        //    if ($(userRoleTable).rows().td().hasAttr('checked')) {
+        //        console.log("ifffff");
+        //        $(this).parent().parent().removeAttr('checked');
+        //    } else {
+        //        console.log("ifffff elseeee");
+        //        userRoleTable.$('.checkbox').removeAttr('checked');
+        //        $(this).parent().parent().attr('checked');
+        //    }
+        //});
 
 
         var simple_checkbox = function (roleAdded, type, full, meta) {
@@ -414,6 +414,10 @@
             var $tds = $(this).find('td');
             roleId = $tds.eq(0).text(),
                 roleName = $tds.eq(1).text();
+
+            defaultCheck = $tds.eq(2).text();
+            console.log(defaultCheck);
+
             if (roleId == defaultRoleId) {
                 selectedData.push(
                     {

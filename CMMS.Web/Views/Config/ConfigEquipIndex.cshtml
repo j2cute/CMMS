@@ -166,25 +166,25 @@
 
                 if (data.type == "success") {
 
-                    if (((eswbs.toString().length) = 4) && (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0)) {
+                    if (((eswbs.toString().length) >= 4) && (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0)) {
                         $("#AddChild").removeAttr('disabled');
                     }
-                    if ((eswbs.toString().length) != 4) {
+                    if ((eswbs.toString().length) < 4) {
                         $("#AddChild").attr('disabled', true);
                     }
 
                     if ((eswbs.toString().length) > 4) {
 
-                        if ((permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) && (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0)) {
-                            $("#editChild").removeAttr('disabled');
-                            $("#delChild").removeAttr('disabled');
-                        }
-                        else if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
+
+                        if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
                             $("#editChild").removeAttr('disabled');
                         }
-                        else {
+
+                        if (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0) {
                             $("#delChild").removeAttr('disabled');
                         }
+ 
+
                     }
 
                     else if ((eswbs.toString().length) <= 4) {
@@ -248,55 +248,72 @@
 
     };
 
-    function OnSuccess(response) {
-    
-        if (response.type == "success") {
+    function OnSuccess(response , status, xhr) {
 
-            $("#myModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
-            $("#AddChild").attr('disabled', true); $("#editChild").attr('disabled', true); $("#delChild").attr('disabled', true);
-            resetFormInputs();
-            if (response.vm.JsonSiteConfig != null) {
-                swal({
-                    title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
-                });
-                $("#jstree").jstree('destroy').empty();
-                $("#jstree").jstree({
+       
+        if (status != "error")
+        {
+            if (response.type == "success") {
 
-                    "core": {
-                        "themes": {
-                            "variant": "large"
+                $("#myModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
+                $("#AddChild").attr('disabled', true); $("#editChild").attr('disabled', true); $("#delChild").attr('disabled', true);
+                resetFormInputs();
+                if (response.vm.JsonSiteConfig != null) {
+                    swal({
+                        title: response.msg, type: "success", timer: 1500, showConfirmButton: false,
+                    });
+                    $("#jstree").jstree('destroy').empty();
+                    $("#jstree").jstree({
+
+                        "core": {
+                            "themes": {
+                                "variant": "large"
+                            },
+                            "data": JSON.parse(response.vm.JsonSiteConfig)
                         },
-                        "data": JSON.parse(response.vm.JsonSiteConfig)
-                    },
 
-                    "plugins": ["wholerow"],
-                });
-                $('#jstree').on('changed.jstree', function (e, data) {
-                    resetFormInputs();
-                    $('#SiteId').val(""); $('#Eswbs').val("");
-                    var data = data.instance.get_node(data.selected[0]);
-                    var eswbs = data.id;
-                    var name = data.text;
-                    var parent = data.parent;
+                        "plugins": ["wholerow"],
+                    });
+                    $('#jstree').on('changed.jstree', function (e, data) {
+                        resetFormInputs();
+                        $('#SiteId').val(""); $('#Eswbs').val("");
+                        var data = data.instance.get_node(data.selected[0]);
+                        var eswbs = data.id;
+                        var name = data.text;
+                        var parent = data.parent;
 
-                    // use for addChild eswbs becomes peswbs
-                    $('#Eswbs').val(eswbs);
-                    $('#C_Site_Config_PESWBS').val(eswbs);
-                    $('#C_Site_Config_Title').val(name);
+                        // use for addChild eswbs becomes peswbs
+                        $('#Eswbs').val(eswbs);
+                        $('#C_Site_Config_PESWBS').val(eswbs);
+                        $('#C_Site_Config_Title').val(name);
 
-                    // use for editChild
-                    GetSelectedConfiguration();
+                        // use for editChild
+                        GetSelectedConfiguration();
 
-                });
+                    });
+                }
+                else {
+                    swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+
+                }
             }
             else {
-                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
 
+                swal({ title: "ERROR", text: response.msg, type: "error", });
             }
-        }
-        else {
-
-            swal({ title: "ERROR", text: response.msg, type: "error", });
+        } else
+        {
+            if (xhr) {
+                if (xhr.status == "403") {
+                    alert("You are not authorized to perform this operation.");
+                }
+                else {
+                    alert("Something went wrong.Please contact your system Administartor.");
+                }
+            }
+            else {
+                alert("Something went wrong.Please contact your system Administartor.");
+            }
         }
     };
 
@@ -328,16 +345,35 @@
 
                 swal({ title: "ERROR", text: "Something Went Wrong !!! ", type: "error", });
             },
-            error: function (vm) {
-          
-                var finalError = ''
-                for (i = 0; i < vm.responseJSON.length; i++)
-                {
-                    finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
-                }
+            error: function (vm, status) {
 
-                swal({ title: "ERROR", text: finalError, type: "error", });
+                if (status == "error") {
+                    if (vm) {
+                        if (vm.status == "403") {
+                            alert("You are not authorized to perform this operation.");
+                        }
+                        else {
+                            var finalError = ''
 
+                            if (vm.responseJSON) {
+                                for (i = 0; i < vm.responseJSON.length; i++) {
+                                    finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
+                                }
+                            }
+                            swal({ title: "ERROR", text: finalError, type: "error", });
+                        }
+                        }
+                    }
+                 else {
+                    var finalError = ''
+                    if (vm.responseJSON) {
+                        for (i = 0; i < vm.responseJSON.length; i++) {
+                            finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
+                        }
+                    }
+                        swal({ title: "ERROR", text: finalError, type: "error", });
+                    }
+              
             }
         });
     };
@@ -364,21 +400,44 @@
             },
             success: OnSuccess,
             failure: function (vm) {
+
                 var finalError = ''
                 for (i = 0; i < vm.responseJSON.length; i++) {
                     finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
                 }
 
-                swal({ title: "ERROR", text: finalError, type: "error", });
+                swal({ title: "ERROR", text: "Something Went Wrong !!! ", type: "error", });
             },
-            error: function (vm) {
+            error: function (vm, status) {
 
-                var finalError = ''
-                for (i = 0; i < vm.responseJSON.length; i++) {
-                    finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
+                if (status == "error") {
+                    if (vm) {
+                        if (vm.status == "403") {
+                            alert("You are not authorized to perform this operation.");
+                        }
+                        else {
+                            var finalError = ''
+
+                            if (vm.responseJSON) {
+                                for (i = 0; i < vm.responseJSON.length; i++) {
+                                    finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
+                                }
+                            }
+                            swal({ title: "ERROR", text: finalError, type: "error", });
+                        }
+                    }
+                }
+                else {
+                    var finalError = ''
+                    if (vm.responseJSON) {
+                        for (i = 0; i < vm.responseJSON.length; i++) {
+                            finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
+                        }
+                    }
+                    swal({ title: "ERROR", text: finalError, type: "error", });
                 }
 
-                swal({ title: "ERROR", text: finalError, type: "error", }); }
+            }
         });
     };
 
@@ -393,12 +452,38 @@
                  eswbs: $('#Eswbs').val(),
             },
             success: OnSuccess,
-            failure: function (vm) {
-                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
-            },
-            error: function (vm) {
-                swal({ title: "ERROR", text: "Their is something went wrong!!!", type: "error", });
+            failure: function (vm, status) {
+                if (status == "error") {
 
+                    if (vm) {
+                        if (vm.status == "403") {
+                            alert("You are not authorized to perform this operation.");
+                        }
+                        else {
+                            alert("Something went wrong.Please contact your system Administartor.");
+                        }
+                    }
+                    else {
+                        alert("Something went wrong.Please contact your system Administartor.");
+                    }
+                }
+            },
+
+            error: function (vm, status) {
+                if (status == "error") {
+
+                    if (vm) {
+                        if (vm.status == "403") {
+                            alert("You are not authorized to perform this operation.");
+                        }
+                        else {
+                            alert("Something went wrong.Please contact your system Administartor.");
+                        }
+                    }
+                    else {
+                        alert("Something went wrong.Please contact your system Administartor.");
+                    }
+                }
             }
 
         });
@@ -492,7 +577,7 @@
     function GetEditChild() {
 
 
-       
+      
 
         $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
         $("#C_Site_Config_Title").val($("#tbtitle").val());

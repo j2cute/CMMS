@@ -132,6 +132,8 @@
             selectedData = JSON.stringify(selectedData);
             $('#selectedItems').val(selectedData);
 
+
+            console.log(selectedData);
             response = true;
         }
 
@@ -139,7 +141,7 @@
     };
 
     function validateRole() {
-        var isValid = false;
+        var isValid = true;
         var msg;
         
         if ($('#RoleId').val().length <= 0) {
@@ -148,7 +150,7 @@
             msg = "Please input role id";
             isValid = false;
         }
-        else if ($("#Name").length > 0) {
+        else if ($('#Name').val().length <= 0) {
 
             $('#Name').focus();
             msg = "Please input role name";

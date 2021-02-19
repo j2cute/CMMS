@@ -18,7 +18,7 @@ using NLog;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
+    //[CustomAuthorization]
     public class AdministrationController : Controller
     {
         private static Logger _logger;
@@ -202,122 +202,129 @@ namespace WebApplication.Controllers
         // GET: Roles/Edit/5
         public ActionResult Edit(string id)
         {
-            RolesViewModel vm = new RolesViewModel()
-            { tbl_Role = _context.tbl_Role.Where(x => x.RoleId == id).SingleOrDefault() };
-            List<TreeViewNode> nodesMaster = new List<TreeViewNode>();
-            var data = _context.tbl_RolePermission.Where(x => x.RoleId == id).ToList();
-            foreach (tbl_Permission p in _context.tbl_Permission)
+            using (var _context = new Entities())
             {
-                State checkState = new State();
-                checkState.selected = false;
-                foreach (var item in data)
+                RolesViewModel vm = new RolesViewModel()
+                { tbl_Role = _context.tbl_Role.Where(x => x.RoleId == id).SingleOrDefault() };
+                List<TreeViewNode> nodesMaster = new List<TreeViewNode>();
+                var data = _context.tbl_RolePermission.Where(x => x.RoleId == id).ToList();
+                foreach (tbl_Permission p in _context.tbl_Permission)
                 {
+                    State checkState = new State();
+                    checkState.selected = false;
+                    foreach (var item in data)
+                    {
 
-                    if (p.PermissionId == item.PermissionId)
-                    {    // Set Check State.  
-                        var isParent = 0;
-                        foreach (tbl_Permission per in _context.tbl_Permission)
-                        {
-                            if (p.PermissionId == per.ParentId)
+                        if (p.PermissionId == item.PermissionId)
+                        {    // Set Check State.  
+                            var isParent = 0;
+                            foreach (tbl_Permission per in _context.tbl_Permission)
                             {
-                                isParent = 1;
+                                if (p.PermissionId == per.ParentId)
+                                {
+                                    isParent = 1;
+                                }
+
+                            }
+
+                            if (isParent == 0)
+                            {
+                                checkState.selected = true;
                             }
 
                         }
-
-                        if (isParent == 0)
-                        {
-                            checkState.selected = true;
-                        }
-
                     }
+                    if (p.ParentId == "0") { p.ParentId = "#"; }
+                    nodesMaster.Add(new TreeViewNode { id = p.PermissionId, parent = p.ParentId, text = p.DisplayName, state = checkState });
                 }
-                if (p.ParentId == "0") { p.ParentId = "#"; }
-                nodesMaster.Add(new TreeViewNode { id = p.PermissionId, parent = p.ParentId, text = p.DisplayName, state = checkState });
+                //Serialize to string.
+                vm.PermissionsList = (new JavaScriptSerializer()).Serialize(nodesMaster);
+
+                return PartialView("_EditRole", vm);
             }
-            //Serialize to string.
-            vm.PermissionsList = (new JavaScriptSerializer()).Serialize(nodesMaster);
-            return PartialView("_EditRole", vm);
         }
 
         // POST: Roles/Edit/5
         [HttpPost]
         public ActionResult Edit(string id, tbl_Role tbl_Role, string selectedItems)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var _context = new Entities())
             {
-                List<TreeViewNode> parentItems = new List<TreeViewNode>();
-                var vm = new RolesViewModel();
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    if (id != null)
+                    List<TreeViewNode> parentItems = new List<TreeViewNode>();
+                    var vm = new RolesViewModel();
+                    try
                     {
-                        _context.tbl_RolePermission.RemoveRange(_context.tbl_RolePermission.Where(x => x.RoleId == id));
-                        _context.SaveChanges();
-                    }
-                    if (selectedItems != "[]")
-                    {
-                        List<TreeViewNode> items = (new JavaScriptSerializer()).Deserialize<List<TreeViewNode>>(selectedItems);
-                        List<string> newListOfParent = new List<string>();
-                        foreach (var temp in items.Select(x => x.parents))
+                        if (id != null)
                         {
-                            newListOfParent = newListOfParent.Concat(temp).ToList();
+                            _context.tbl_RolePermission.RemoveRange(_context.tbl_RolePermission.Where(x => x.RoleId == id));
+                            _context.SaveChanges();
                         }
-                        newListOfParent = newListOfParent.Distinct().ToList();
-
-                        foreach (var selected in items)
+                        if (selectedItems != "[]")
                         {
-                            if (selected.parent == "#")
+                            List<TreeViewNode> items = (new JavaScriptSerializer()).Deserialize<List<TreeViewNode>>(selectedItems);
+                            List<string> newListOfParent = new List<string>();
+                            foreach (var temp in items.Select(x => x.parents))
                             {
-                                selected.parent = "0";
+                                newListOfParent = newListOfParent.Concat(temp).ToList();
                             }
+                            newListOfParent = newListOfParent.Distinct().ToList();
 
-                            if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected.id))
+                            foreach (var selected in items)
                             {
-                                var model = new tbl_RolePermission
+                                if (selected.parent == "#")
                                 {
-                                    PermissionId = selected.id,
-                                    RoleId = tbl_Role.RoleId,
-                                };
-                                _context.tbl_RolePermission.Add(model);
-                            }
-                        }
+                                    selected.parent = "0";
+                                }
 
-                        foreach (var selected in newListOfParent)
-                        {
-                            if (!items.Where(x => x.id == selected).Any() && selected != "#")
-                            {
-                                tbl_Permission permission = _context.tbl_Permission.Where(x => x.PermissionId == selected).FirstOrDefault();
-
-                                if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected))
+                                if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected.id))
                                 {
                                     var model = new tbl_RolePermission
                                     {
-                                        PermissionId = selected,
+                                        PermissionId = selected.id,
                                         RoleId = tbl_Role.RoleId,
                                     };
                                     _context.tbl_RolePermission.Add(model);
                                 }
                             }
+
+                            foreach (var selected in newListOfParent)
+                            {
+                                if (!items.Where(x => x.id == selected).Any() && selected != "#")
+                                {
+                                    tbl_Permission permission = _context.tbl_Permission.Where(x => x.PermissionId == selected).FirstOrDefault();
+
+                                    if (!_context.tbl_RolePermission.Where(x => x.RoleId == tbl_Role.RoleId).Any(x => x.PermissionId == selected))
+                                    {
+                                        var model = new tbl_RolePermission
+                                        {
+                                            PermissionId = selected,
+                                            RoleId = tbl_Role.RoleId,
+                                        };
+                                        _context.tbl_RolePermission.Add(model);
+                                    }
+                                }
+                            }
+
+                            _context.SaveChanges();
+
+
                         }
 
-                        _context.SaveChanges();
 
-
+                        //Serialize to JSON string.                
+                        // Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                        transaction.Commit();
+                        return RedirectToAction("ViewRoles");
                     }
-
-
-                    //Serialize to JSON string.                
-                    // Alert("Data Saved Sucessfully!!!", NotificationType.success);
-                    transaction.Commit();
-                    return RedirectToAction("ViewRoles");
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    //   Exception(ex);
-                    //  Alert("Their is something went wrong!!!", NotificationType.error);
-                    return RedirectToAction("ViewRoles");
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        //   Exception(ex);
+                        //  Alert("Their is something went wrong!!!", NotificationType.error);
+                        return RedirectToAction("ViewRoles");
+                    }
                 }
             }
         }
@@ -363,254 +370,283 @@ namespace WebApplication.Controllers
         #region user
         public ActionResult UserIndex()
         {
-            UserRoleViewModel vm = new UserRoleViewModel()
+            using (var _context = new Entities())
             {
-                tbl_User_list = _context.tbl_User.ToList(),
+                UserRoleViewModel vm = new UserRoleViewModel()
+                {
+                    tbl_User_list = _context.tbl_User.ToList(),
 
-            };
-            return View(vm);
+                };
+                return View(vm);
+            }
+
         }
 
          //[CustomAuthorization]
         public ActionResult CreateUser()
         {
-            UserRoleViewModel vm = new UserRoleViewModel()
+            using (var _context = new Entities())
             {
-               
-                _tbl_Unit = _context.tbl_Unit.ToList(),
-                _tbl_Role = _context.tbl_Role.ToList(),
-            };
-            return PartialView("_CreateUser", vm);
+                UserRoleViewModel vm = new UserRoleViewModel()
+                {
+
+                    _tbl_Unit = _context.tbl_Unit.ToList(),
+                    _tbl_Role = _context.tbl_Role.ToList(),
+                };
+                return PartialView("_CreateUser", vm);
+            }
         }
 
         [HttpGet]
         public ActionResult GetRoles()
         {
-            var roles = _context.tbl_Role.Select(x => new RolesModel
+            using (var _context = new Entities())
             {
-                RoleId = x.RoleId,
-                Name = x.Name,
+                var roles = _context.tbl_Role.Select(x => new RolesModel
+                {
+                    RoleId = x.RoleId,
+                    Name = x.Name,
 
-            }).ToList();
+                }).ToList();
 
-            return new JsonResult() { Data = new { roles = roles }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+                return new JsonResult() { Data = new { roles = roles }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
 
         }
 
         [HttpPost]
         public ActionResult CreateUser(tbl_User tbl_User, tbl_Role tbl_Role)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var _context = new Entities())
             {
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    string password = string.Empty;
-                    if (tbl_User.Pno != null)
+                    try
                     {
-                        password = "Abc@" + tbl_User.Pno.Trim();
-                       
-                    }
+                        string password = string.Empty;
+                        if (tbl_User.Pno != null)
+                        {
+                            password = "Abc@" + tbl_User.Pno.Trim();
+
+                        }
                         if (!ModelState.IsValid)
-                    {
-                        UserRoleViewModel vm = new UserRoleViewModel()
                         {
-                            _tbl_Role = _context.tbl_Role.ToList(),
-                            _tbl_Unit = _context.tbl_Unit.ToList(),
-                        };
-                        return PartialView("_CreateUser", vm);
-                    }
-                  
-                    if (tbl_User.Pno != null)
-                    {
-                        tbl_User.UserId = tbl_User.Pno;
-                        tbl_User.Password = password;
-
-                        _context.tbl_User.Add(tbl_User);
-                        _context.SaveChanges();
-
-                        if (tbl_Role.RoleId != null)
-                        {
-                            var obj = new tbl_UserRole()
+                            UserRoleViewModel vm = new UserRoleViewModel()
                             {
-                                UserId = tbl_User.UserId,
-                                RoleId = tbl_Role.RoleId,
-                                IsDefault = 1,
-                                IsActive = 1,
+                                _tbl_Role = _context.tbl_Role.ToList(),
+                                _tbl_Unit = _context.tbl_Unit.ToList(),
                             };
-                             _context.tbl_UserRole.Add(obj);
-                            _context.SaveChanges();
+                            return PartialView("_CreateUser", vm);
                         }
 
-                
-                    }
-            
-
-                    #region User Injection
-
-                    var UserName = tbl_User.UserId;
-                    var Password = password;
-
-
-                    var objNewAdminUser = new ApplicationUser { UserName = tbl_User.UserId,Email = tbl_User.UserId };
-                    var AdminUserCreateResult = UserManager.Create(objNewAdminUser, Password);
-                    if(AdminUserCreateResult.Succeeded)
-                    {
-
-                        transaction.Commit();
-                    }
-                    else
-                    {
-
-                        transaction.Rollback();
-                    }
-                    
-                    #endregion
-
-                    return RedirectToAction("UserIndex");
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    //   Exception(ex);
-                   // Alert("Their is something went wrong!!!", NotificationType.error);
-                    return RedirectToAction("UserIndex");
-                }
-            }
-        }
-
-        public ActionResult EditUser(string id)
-        {
-            UserRoleViewModel vm = new UserRoleViewModel();
-            var unit = _context.tbl_Unit.ToList();
-            var allRoles = _context.tbl_Role.Select(x => new RolesModel
-            {
-                RoleId = x.RoleId,
-                Name = x.Name,
-                IsDefault = x.IsDefault,
-            }).ToList();
-
-            //  List<RolesModel> roles = new List<RolesModel>();
-            var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
-            if (result.UserId != null)
-            {
-                var userRole = _context.tbl_UserRole.Where(x => x.UserId == id).Select(x => new UserRoleModel
-                {
-                    RoleId = x.RoleId,
-                    UserId = x.UserId,
-                    IsDefault=x.IsDefault
-                }).ToList();
-                vm._tbl_Unit = unit;
-                vm.RolesModel_list = allRoles;
-                vm.tbl_User = result;
-                vm.userRoleModel_list = userRole;
-
-            }
-            return PartialView("_EditUser", vm);
-        }
-
-        // POST: Roles/Edit/5
-        [HttpPost]
-        public ActionResult EditUser(string id, tbl_User tbl_User, string selectedItems)
-        {
-            using (var transaction = _context.Database.BeginTransaction())
-            {
-                try
-                {
-
-                    if (!ModelState.IsValid)
-                    {
-                        UserRoleViewModel vm = new UserRoleViewModel()
+                        if (tbl_User.Pno != null)
                         {
-                            RolesModel_list = _context.tbl_Role.Select(x => new RolesModel
-                            {
-                                RoleId = x.RoleId,
-                                Name = x.Name,
-                            }).ToList(),
-                            _tbl_Unit = _context.tbl_Unit.ToList(),
-                        };
-                        return PartialView("_CreateUser", vm);
-                    }
-                    List<UserRoleModel> items = (new JavaScriptSerializer()).Deserialize<List<UserRoleModel>>(selectedItems);
+                            tbl_User.UserId = tbl_User.Pno;
+                            tbl_User.Password = password;
 
-
-                    if (tbl_User.Pno != null)
-                    {
-                        tbl_User.UserId = tbl_User.Pno;
-
-                        _context.Entry(tbl_User).State = EntityState.Modified;
-                        _context.SaveChanges();
-                        _context.tbl_UserRole.RemoveRange(_context.tbl_UserRole.Where(x => x.UserId == id));
-                        _context.SaveChanges();
-                        if (items[0].RoleId != "")
-                        {
-                            foreach (var data in items)
-                            {
-                                if (data != null)
-                                {
-                                    var obj = new tbl_UserRole()
-                                    {
-                                        UserId = tbl_User.UserId,
-                                        RoleId = data.RoleId,
-                                        IsDefault = data.IsDefault
-                                    };
-                                    _context.tbl_UserRole.Add(obj);
-                                }
-                            }
+                            _context.tbl_User.Add(tbl_User);
                             _context.SaveChanges();
+
+                            if (tbl_Role.RoleId != null)
+                            {
+                                var obj = new tbl_UserRole()
+                                {
+                                    UserId = tbl_User.UserId,
+                                    RoleId = tbl_Role.RoleId,
+                                    IsDefault = 1,
+                                    IsActive = 1,
+                                };
+                                _context.tbl_UserRole.Add(obj);
+                                _context.SaveChanges();
+                            }
+
+
                         }
 
 
                         #region User Injection
 
                         var UserName = tbl_User.UserId;
+                        var Password = password;
 
-                        ApplicationUser result = UserManager.FindByEmail(UserName);
-                        // Was a password sent across?
-                        if (result!=null && !string.IsNullOrEmpty(tbl_User.Password))
+
+                        var objNewAdminUser = new ApplicationUser { UserName = tbl_User.UserId, Email = tbl_User.UserId };
+                        var AdminUserCreateResult = UserManager.Create(objNewAdminUser, Password);
+                        if (AdminUserCreateResult.Succeeded)
                         {
-                            // Remove current password
-                            var removePassword = UserManager.RemovePassword(result.Id);
-                            if (removePassword.Succeeded)
-                            {
-                                // Add new password
-                                var AddPassword =
-                                    UserManager.AddPassword(
-                                        result.Id,
-                                        tbl_User.Password
-                                        );
 
-
-                                if(AddPassword.Succeeded)
-                                {
-                                    transaction.Commit();
-                                }
-                                else
-                                {
-                                    transaction.Rollback();
-                                    throw new Exception(AddPassword.Errors.FirstOrDefault());
-                                }
-                            }
-                            else
-                            {
-                                transaction.Rollback();
-                                throw new Exception("Some error occured.");
-                            }
+                            transaction.Commit();
                         }
                         else
                         {
-                            transaction.Commit();
+
+                            transaction.Rollback();
                         }
 
                         #endregion
 
+                        return RedirectToAction("UserIndex");
                     }
-                    return RedirectToAction("UserIndex");
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        //   Exception(ex);
+                        // Alert("Their is something went wrong!!!", NotificationType.error);
+                        return RedirectToAction("UserIndex");
+                    }
                 }
-                catch (Exception ex)
+            }
+        }
+
+        public ActionResult EditUser(string id)
+        {
+            using (var _context = new Entities())
+            {
+                UserRoleViewModel vm = new UserRoleViewModel();
+                var unit = _context.tbl_Unit.ToList();
+                var allRoles = _context.tbl_Role.Select(x => new RolesModel
                 {
-                    transaction.Rollback();
-    
-                    return RedirectToAction("UserIndex");
+                    RoleId = x.RoleId,
+                    Name = x.Name,
+                    IsDefault = x.IsDefault,
+                }).ToList();
+
+                //  List<RolesModel> roles = new List<RolesModel>();
+                var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
+                if (result.UserId != null)
+                {
+                    var userRole = _context.tbl_UserRole.Where(x => x.UserId == id).Select(x => new UserRoleModel
+                    {
+                        RoleId = x.RoleId,
+                        UserId = x.UserId,
+                        IsDefault = x.IsDefault
+                    }).ToList();
+                    vm._tbl_Unit = unit;
+                    vm.RolesModel_list = allRoles;
+                    vm.tbl_User = result;
+                    vm.userRoleModel_list = userRole;
+
+                }
+                return PartialView("_EditUser", vm);
+            }
+        }
+
+        // POST: Roles/Edit/5
+        [HttpPost]
+        public ActionResult EditUser(string id, tbl_User tbl_User, string selectedItems)
+        {
+            using (var _context = new Entities())
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    try
+                    {
+
+                        if (!ModelState.IsValid)
+                        {
+                            UserRoleViewModel vm = new UserRoleViewModel()
+                            {
+                                RolesModel_list = _context.tbl_Role.Select(x => new RolesModel
+                                {
+                                    RoleId = x.RoleId,
+                                    Name = x.Name,
+                                }).ToList(),
+                                _tbl_Unit = _context.tbl_Unit.ToList(),
+                            };
+                            return PartialView("_CreateUser", vm);
+                        }
+                        List<UserRoleModel> items = (new JavaScriptSerializer()).Deserialize<List<UserRoleModel>>(selectedItems);
+
+
+                        if (tbl_User.Pno != null)
+                        {
+                            string password = string.Empty;
+
+                            using(var newCOntext = new Entities())
+                            {
+                                var previousUser = newCOntext.tbl_User.FirstOrDefault(x => x.UserId == tbl_User.Pno);
+                                password = previousUser.Password;
+                            }
+             
+                            string pwd = password;
+                            tbl_User.UserId = tbl_User.Pno;
+                            tbl_User.Password = pwd;
+
+                            _context.Entry(tbl_User).State = EntityState.Modified;
+                            _context.SaveChanges();
+                            _context.tbl_UserRole.RemoveRange(_context.tbl_UserRole.Where(x => x.UserId == id));
+                            _context.SaveChanges();
+                            if (items[0].RoleId != "")
+                            {
+                                foreach (var data in items)
+                                {
+                                    if (data != null)
+                                    {
+                                        var obj = new tbl_UserRole()
+                                        {
+                                            UserId = tbl_User.UserId,
+                                            RoleId = data.RoleId,
+                                            IsDefault = data.IsDefault
+                                        };
+                                        _context.tbl_UserRole.Add(obj);
+                                    }
+                                }
+                                _context.SaveChanges();
+                            }
+
+
+                            #region User Injection
+
+                            var UserName = tbl_User.UserId;
+
+                            ApplicationUser result = UserManager.FindByEmail(UserName);
+                            // Was a password sent across?
+                            if (result != null && !string.IsNullOrEmpty(tbl_User.Password))
+                            {
+                                // Remove current password
+                                var removePassword = UserManager.RemovePassword(result.Id);
+                                if (removePassword.Succeeded)
+                                {
+                                    // Add new password
+                                    var AddPassword =
+                                        UserManager.AddPassword(
+                                            result.Id,
+                                            tbl_User.Password
+                                            );
+
+
+                                    if (AddPassword.Succeeded)
+                                    {
+                                        transaction.Commit();
+                                    }
+                                    else
+                                    {
+                                        transaction.Rollback();
+                                        throw new Exception(AddPassword.Errors.FirstOrDefault());
+                                    }
+                                }
+                                else
+                                {
+                                    transaction.Rollback();
+                                    throw new Exception("Some error occured.");
+                                }
+                            }
+                            else
+                            {
+                                transaction.Commit();
+                            }
+
+                            #endregion
+
+                        }
+                        return RedirectToAction("UserIndex");
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+
+                        return RedirectToAction("UserIndex");
+                    }
                 }
             }
         }
@@ -630,44 +666,47 @@ namespace WebApplication.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteUser(string id, FormCollection collection)
         {
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var _context = new Entities())
             {
-                try
+                using (var transaction = _context.Database.BeginTransaction())
                 {
-                    if (id == null)
+                    try
                     {
-                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                    }
+                        if (id == null)
+                        {
+                            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        }
 
-                    var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
-                    if (result != null)
+                        var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
+                        if (result != null)
+                        {
+
+                            result.IsActive = 0;
+
+                            _context.tbl_User.Attach(result);
+                            _context.Entry(result).Property(x => x.IsActive).IsModified = true;
+
+                            _context.SaveChanges();
+
+                            #region User Injection 
+
+                            ApplicationUser user = UserManager.FindByEmail(id);
+                            UserManager.Delete(user);
+
+                            #endregion
+
+                            transaction.Commit();
+                        }
+                        // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
+                        return RedirectToAction("UserIndex");
+                    }
+                    catch (Exception ex)
                     {
-                       
-                        result.IsActive = 0;
-
-                        _context.tbl_User.Attach(result);
-                        _context.Entry(result).Property(x => x.IsActive).IsModified = true;
-
-                        _context.SaveChanges();
-
-                        #region User Injection 
-
-                        ApplicationUser user = UserManager.FindByEmail(id);
-                        UserManager.Delete(user);
-
-                        #endregion
-
-                        transaction.Commit();
+                        transaction.Rollback();
+                        //  Exception(ex);
+                        //   Alert("Their is something went wrong!!!", NotificationType.error);
+                        return RedirectToAction("UserIndex");
                     }
-                    // Alert("Record Deleted Sucessfully!!!", NotificationType.success);
-                    return RedirectToAction("UserIndex");
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    //  Exception(ex);
-                    //   Alert("Their is something went wrong!!!", NotificationType.error);
-                    return RedirectToAction("UserIndex");
                 }
             }
         }
