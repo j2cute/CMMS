@@ -1766,6 +1766,7 @@
     <Content Include="Views\Config\_AddEditConfig.cshtml" />
     <Content Include="Views\Account\LoginCopy.cshtml" />
     <Content Include="Views\Shared\_LayoutUnit.cshtml" />
+    <Content Include="Views\Administration\_ChangePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\DashBoards\" />
