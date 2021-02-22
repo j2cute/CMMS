@@ -189,7 +189,7 @@ namespace WebApplication.Controllers
 
         #region GetConfigData
         [HttpPost]
-        [CustomAuthorization]
+       // [CustomAuthorization]
         public JsonResult GetSelectedConfigData(string eswbs)
         {
             string actionName = "GetSelectedConfigData";
@@ -315,6 +315,7 @@ namespace WebApplication.Controllers
             }
 
         }
+
         #endregion  GetConfigData
 
         #region AddCHILD
@@ -647,7 +648,7 @@ namespace WebApplication.Controllers
             return View("Index", vm);
         }
 
-        [CustomAuthorization]
+ 
         public JsonResult GetConfig(int unitId)
         {
             string actionName = "GetConfig";
@@ -698,7 +699,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [CustomAuthorization]
-        public JsonResult GetSiteConfig(string selectedItems, int unitId)
+        public JsonResult AddSystem(string selectedItems, int unitId)
         {
             using (var db = new WebAppDbContext())
             {
@@ -768,14 +769,14 @@ namespace WebApplication.Controllers
                             vm = GetSiteConfigTree(unitId);
                         }
                         //Serialize to JSON string.                
-                        Alert("Data Saved Sucessfully!!!", NotificationType.success);
+                       
                         return Json(vm, JsonRequestBehavior.AllowGet);
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
                         Exception(ex);
-                        Alert("Their is something went wrong!!!", NotificationType.error);
+                        
                         return Json(vm, JsonRequestBehavior.AllowGet);
                     }
                 }
@@ -894,9 +895,6 @@ namespace WebApplication.Controllers
                 return View("Inbox", vm);
             }
         }
-
-        #endregion EquipmentRequest
-
 
         [HttpPost]
         [CustomAuthorization]
@@ -1105,6 +1103,8 @@ namespace WebApplication.Controllers
                 }
             }
         }
+
+        #endregion EquipmentRequest
 
         #region utilities
         public ConfigViewModel GetSiteConfigTree(int? Id)

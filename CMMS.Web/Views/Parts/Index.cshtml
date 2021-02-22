@@ -22,9 +22,8 @@
 </style>
 <section class="content-header">
     <h1>
-        Index
+       Parts
     </h1>
-
 </section>
 
 <!-- Main content -->
@@ -258,15 +257,38 @@
 
         $('#example1 tbody').on("click", '.select', function () {
             var tblData = table.rows($(this).closest('tr')).data();
-            //var siteId = $(this).closest('tr').find("td:eq(0)").text();
-            var data = $('#myModalContent').load(this.href, function () {
-                $('#myModal').modal({
-                    keyboard: true
-                }, 'show');
-                bindForm(this);
+ 
+            var data = $('#myModalContent').load(this.href, function (response, status, xhr) {
+
+                if (status == "error") {
+
+                    if (xhr) {
+                        if (xhr.status == "403") {
+                            alert("You are not authorized to perform this operation.");
+                        }
+                        else {
+                            alert("Something went wrong.Please contact your system Administartor.");
+                        }
+                    }
+                    else {
+                        alert("Something went wrong.Please contact your system Administartor.");
+                    }
+                } else {
+
+                    $('#myModal').modal({
+
+                        keyboard: true
+                    }, 'show');
+
+     
+                }
             });
+
             return false;
         });
+
+
+
     });
 
 

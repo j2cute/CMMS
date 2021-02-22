@@ -1,6 +1,6 @@
 ﻿@model ClassLibrary.ViewModels.CageViewModels
 @using CMMS.Web.Helper
-@{ 
+@{
     var msg = TempData["notification"] != null ? TempData["notification"].ToString() : string.Empty;
 
 }
@@ -30,7 +30,7 @@
     var permissions;
     $(document).ready(function () {
 
- 
+
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
         if (!permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
                 $("#addCage").addClass('disabled')
@@ -63,8 +63,8 @@
                             actions = '<a id="editCage" class="btn btn-primary btn-xs select" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
                         }
                         else {
-                            actions = '<a id="editCage" class="btn btn-primary btn-xs select disabled" data-toggle="modal" data-target="myModal"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
-                        }
+                            actions = '<a id="editCage" class="btn btn-primary btn-xs select disabled" data-toggle="modal" data-target="myModal" href="/Cage/Edit/' + data.CageId + '"><i class="fa fa-pencil"></i >' + 'Edit' + '</a>';
+                       }
 
                         actions = actions + " " + '|' + " ";
 
@@ -72,8 +72,8 @@
                             actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
                         }
                         else {
-                            actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select disabled" data-toggle="modal">' + 'Delete' + '</a>';
-                        }
+                            actions = actions + '<a id="delCage" class="btn btn-danger btn-xs select disabled" data-toggle="modal" href="/Cage/Delete/' + data.CageId + '">' + 'Delete' + '</a>';
+                          }
 
                         return actions;
                     }
@@ -101,9 +101,8 @@
 
             $('#myModalContent').load(this.href, function (response, status, xhr) {
 
-
                 if (status == "error") {
-                 
+
                     if (xhr) {
                         if (xhr.status == "403") {
                             alert("You are not authorized to perform this operation.");
@@ -127,11 +126,11 @@
             });
             return false;
         });
-   
+
 
 </script>
 
- 
+
 <section class="content-header">
     <div class="container-fluid">
         <h1>
@@ -255,7 +254,7 @@
     </div>
 </section>
 
- 
+
 <div id='myModal' class='modal fade'>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

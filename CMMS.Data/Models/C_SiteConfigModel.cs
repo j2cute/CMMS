@@ -24,7 +24,7 @@ namespace ClassLibrary.Models
         
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "This field is required.")]
+   
         [Range(1, 1000, ErrorMessage = "The field {0} must be 1 or greater than {1}.")]
         public Nullable<int> Qty { get; set; }
 

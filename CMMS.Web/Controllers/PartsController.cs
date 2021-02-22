@@ -19,7 +19,6 @@ using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
     public class PartsController : BaseController
     {
         private static Logger _logger;
@@ -58,6 +57,8 @@ namespace WebApplication.Controllers
             return Json(response);
         }
 
+
+        [CustomAuthorization]
         public ActionResult Index()
         {
             string actionName = "Index";
@@ -234,7 +235,10 @@ namespace WebApplication.Controllers
                 return View(vm);
             }
         }
+
+
         // GET: Parts/Edit/id
+        [CustomAuthorization]
         public ActionResult Details(int id)
         {
             string actionName = "Details";
@@ -260,6 +264,7 @@ namespace WebApplication.Controllers
             return PartialView("_Details", objPartsViewModels);
         }
 
+        [CustomAuthorization]
         public ActionResult Create()
         {
             string actionName = "Create";
@@ -291,6 +296,7 @@ namespace WebApplication.Controllers
         //POST: Parts/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorization]
         public ActionResult Create(tbl_Parts tbl_Parts, FileHelper FileHelper)
         {
             string actionName = "Create";
@@ -376,7 +382,10 @@ namespace WebApplication.Controllers
 
             return RedirectToAction("Index");
         }
+
+
         // GET: Parts/Edit/id
+        [CustomAuthorization]
         public ActionResult Edit(int id)
         {
             string actionName = "Edit";
@@ -404,6 +413,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorization]
         public ActionResult Edit(int id, tbl_Parts tbl_Parts, FileHelper FileHelper, PartsViewModels vm)
         {
             string actionName = "Edit";
@@ -491,6 +501,7 @@ namespace WebApplication.Controllers
         }
 
         // GET: Parts/Delete/id
+        [CustomAuthorization]
         public ActionResult Delete(int id)
         {
             if (id <= 0)
@@ -503,6 +514,7 @@ namespace WebApplication.Controllers
         // POST: Parts/Delete/id
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorization]
         public ActionResult Delete(int id, FormCollection collection)
         {
             string actionName = "Delete";
@@ -551,6 +563,7 @@ namespace WebApplication.Controllers
 
 
         // GET: Parts/Delete/id
+        [CustomAuthorization]
         public ActionResult Delete2(int id)
         {
             if (id <= 0)
@@ -563,6 +576,7 @@ namespace WebApplication.Controllers
         // POST: Parts/Delete/id
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorization]
         public ActionResult Delete2(int id, FormCollection collection)
         {
             using (var db = new WebAppDbContext())
@@ -599,6 +613,7 @@ namespace WebApplication.Controllers
         }
 
         //Restore
+        [CustomAuthorization]
         public ActionResult Restore(int id)
         {
             if (id <= 0)
@@ -611,6 +626,7 @@ namespace WebApplication.Controllers
         // POST: Parts/Delete/id
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [CustomAuthorization]
         public ActionResult Restore(int id, FormCollection collection)
         {
             string actionName = "Restore";
@@ -727,10 +743,9 @@ namespace WebApplication.Controllers
             return vm;
         }
 
-
-
         #region AddChildPart 
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult AddChildPart(tbl_ChildParts model)
         {
             string actionName = "AddChildPart";
@@ -780,6 +795,7 @@ namespace WebApplication.Controllers
       
         #region EditChild   
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult EditChildPart(ChildPartsModel model)
         {
             using (var db = new WebAppDbContext())
@@ -830,6 +846,7 @@ namespace WebApplication.Controllers
 
         #region delChild
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult DeleteChildPart(int? childPartId, int? parentPartId)
         {
             using (var db = new WebAppDbContext())
