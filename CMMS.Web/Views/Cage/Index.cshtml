@@ -33,7 +33,9 @@
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
         if (!permissions.filter(obj => obj.PermissionId == "ManAdd").length > 0) {
-                $("#addCage").addClass('disabled')
+            $("#addCage").attr('disabled', 'disabled')
+
+               
             }
 
             var table;

@@ -5,7 +5,7 @@
 
 <link href="~/Content/AdminLTE/tailwind.min.css" rel="stylesheet" />
 <script src="@Url.Content("~/Scripts/AdminLTE/jquery-tailwind-toggle.js")"></script>
-
+ 
 @Html.AntiForgeryToken()
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
@@ -22,9 +22,7 @@
         <!-- Messages Dropdown Menu -->
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-
                 <i class="fas fa-sliders-h"></i>
-
                 <span class="badge badge-danger navbar-badge"></span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -52,11 +50,27 @@
             </div>
         </li>
 
-        <li>
-            <a class="nav-link" href="@Url.Action("LogOff","Account")">
-                <i class="fas fa-sign-out-alt">Logout</i>
+        <li class="nav-item dropdown">
+
+            <a class="nav-link" data-toggle="dropdown" href="#">
+                <i class="fas fa-sliders-h"></i>
                 <span class="badge badge-danger navbar-badge"></span>
             </a>
+
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+
+ 
+                <a class="nav-link"  data-modal='' href="@Url.Action("ChangePassword","Administration")">
+                    <i class="fas fa-sign-out-alt">Change Password</i>
+                    <span class="badge badge-danger navbar-badge"></span>
+                </a>
+
+                <a class="nav-link" href="@Url.Action("LogOff","Account")">
+                    <i class="fas fa-sign-out-alt">Logout</i>
+                    <span class="badge badge-danger navbar-badge"></span>
+                </a>
+            </div>
+
         </li>
     </ul>
 </nav>
@@ -92,3 +106,18 @@
         SwitchRoles("input:checkbox", true);
     });
 </script>
+
+
+<div id='myModal' class='modal fade'>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id='myModalContent'>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
+}

@@ -16,6 +16,7 @@ using NLog;
 namespace WebApplication.Controllers
 {
     [HandleError]
+
     public class AccountController : Controller
     {
         private static Logger _logger;
@@ -117,7 +118,7 @@ namespace WebApplication.Controllers
         //
         // POST: /Account/LogOff
  
-       // [CustomAuthorization]
+        [CheckUserSession]
         public ActionResult LogOff()
         {
             string actionName = "LogOff";
@@ -134,6 +135,7 @@ namespace WebApplication.Controllers
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);
                 Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
                 Response.Cache.SetNoStore();
+                Response.Cookies.Clear();
 
                 _logger.Log(LogLevel.Trace, actionName + " :: ended.");
 
@@ -147,7 +149,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-       // [CustomAuthorization]
+        [CheckUserSession]
         public ActionResult SwitchRole(string roleId = "")
         {
             try

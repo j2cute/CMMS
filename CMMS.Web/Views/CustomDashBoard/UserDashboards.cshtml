@@ -24,7 +24,7 @@
 
         if (!permissions.filter(obj => obj.PermissionId == "AssignDashboard").length > 0)
         {
-            $("#btnAssignDashboard").addClass('disabled')
+            $("#btnAssignDashboard").attr('disabled', 'disabled')
         }
 
         var table;

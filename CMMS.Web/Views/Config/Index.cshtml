@@ -19,7 +19,7 @@
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
 
         if (!permissions.filter(obj => obj.PermissionId == "AddSystem").length > 0) {
-            $("#items").addClass('disabled')
+            $("#items").attr('disabled','disabled')
         }  
 
 

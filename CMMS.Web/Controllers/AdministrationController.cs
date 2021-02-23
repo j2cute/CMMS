@@ -15,10 +15,11 @@ using Microsoft.AspNet.Identity.Owin;
 using static ClassLibrary.Common.Enums;
 using Microsoft.AspNet.Identity;
 using NLog;
+using ClassLibrary.ViewModels;
+using CMMS.Web.Helper;
 
 namespace WebApplication.Controllers
 {
-    [CustomAuthorization]
     public class AdministrationController : Controller
     {
         private static Logger _logger;
@@ -31,6 +32,7 @@ namespace WebApplication.Controllers
 
         #region UserCheck
 
+        [CheckUserSession]
         public JsonResult CheckUserName(string Pno)
         {
             string actionName = "CheckUserName";
@@ -60,11 +62,11 @@ namespace WebApplication.Controllers
         #endregion UserCheck
 
         #region roles
-      
-        // GET: Roles
+
+        [CustomAuthorization]
         public ActionResult ViewRoles()
         {
-            string actionName = "CheckUserName";
+            string actionName = "ViewRoles";
             RolesViewModel vm = new RolesViewModel();
             try
             {
@@ -88,6 +90,7 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
+        [CustomAuthorization]
         public ActionResult Create()
         {
             string actionName = "Create";
@@ -101,9 +104,9 @@ namespace WebApplication.Controllers
                 {
                     foreach (var p in _context.tbl_Permission)
                     {
-                        if (p.ParentId == "0") 
+                        if (p.ParentId == "0")
                         {
-                            p.ParentId = "#"; 
+                            p.ParentId = "#";
                         }
                         nodesMaster.Add(new TreeViewNode { id = p.PermissionId, parent = p.ParentId, text = p.DisplayName });
                     }
@@ -120,6 +123,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         [ValidateAntiForgeryToken]
         public ActionResult Create(tbl_Role tbl_Role, string selectedItems)
         {
@@ -199,7 +203,7 @@ namespace WebApplication.Controllers
             }
         }
 
-        // GET: Roles/Edit/5
+        [CustomAuthorization]
         public ActionResult Edit(string id)
         {
             using (var _context = new Entities())
@@ -244,8 +248,9 @@ namespace WebApplication.Controllers
             }
         }
 
-        // POST: Roles/Edit/5
         [HttpPost]
+        [CustomAuthorization]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, tbl_Role tbl_Role, string selectedItems)
         {
             using (var _context = new Entities())
@@ -329,14 +334,15 @@ namespace WebApplication.Controllers
             }
         }
 
-        // GET: Roles/Delete/5
+        [CustomAuthorization]
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Roles/Delete/5
         [HttpPost]
+        [CustomAuthorization]
+        [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
@@ -350,9 +356,12 @@ namespace WebApplication.Controllers
                 return View();
             }
         }
+
+
         #endregion roles
 
         private ApplicationUserManager _userManager;
+
         public ApplicationUserManager UserManager
         {
             get
@@ -368,13 +377,15 @@ namespace WebApplication.Controllers
         }
 
         #region user
+
+        [CustomAuthorization]
         public ActionResult UserIndex()
         {
             using (var _context = new Entities())
             {
                 UserRoleViewModel vm = new UserRoleViewModel()
                 {
-                    tbl_User_list = _context.tbl_User.ToList(),
+                    tbl_User_list = _context.tbl_User.Where(x=>x.IsDeleted != 1).ToList(),
 
                 };
                 return View(vm);
@@ -382,7 +393,7 @@ namespace WebApplication.Controllers
 
         }
 
-         //[CustomAuthorization]
+        [CustomAuthorization]
         public ActionResult CreateUser()
         {
             using (var _context = new Entities())
@@ -397,24 +408,9 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult GetRoles()
-        {
-            using (var _context = new Entities())
-            {
-                var roles = _context.tbl_Role.Select(x => new RolesModel
-                {
-                    RoleId = x.RoleId,
-                    Name = x.Name,
-
-                }).ToList();
-
-                return new JsonResult() { Data = new { roles = roles }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            }
-
-        }
-
         [HttpPost]
+        [CustomAuthorization]
+        [ValidateAntiForgeryToken]
         public ActionResult CreateUser(tbl_User tbl_User, tbl_Role tbl_Role)
         {
             using (var _context = new Entities())
@@ -470,7 +466,7 @@ namespace WebApplication.Controllers
                         var Password = password;
 
 
-                        var objNewAdminUser = new ApplicationUser { UserName = tbl_User.UserId, Email = tbl_User.UserId };
+                        var objNewAdminUser = new ApplicationUser { Id= tbl_User.UserId,  UserName = tbl_User.UserId, Email = tbl_User.UserId };
                         var AdminUserCreateResult = UserManager.Create(objNewAdminUser, Password);
                         if (AdminUserCreateResult.Succeeded)
                         {
@@ -498,6 +494,25 @@ namespace WebApplication.Controllers
             }
         }
 
+        [HttpGet]
+        [CheckUserSession]
+        public ActionResult GetRoles()
+        {
+            using (var _context = new Entities())
+            {
+                var roles = _context.tbl_Role.Where(x=>x.IsDeleted != 1).Select(x => new RolesModel
+                {
+                    RoleId = x.RoleId,
+                    Name = x.Name,
+
+                }).ToList();
+
+                return new JsonResult() { Data = new { roles = roles }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+
+        }
+
+        [CustomAuthorization]
         public ActionResult EditUser(string id)
         {
             using (var _context = new Entities())
@@ -531,8 +546,8 @@ namespace WebApplication.Controllers
             }
         }
 
-        // POST: Roles/Edit/5
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult EditUser(string id, tbl_User tbl_User, string selectedItems)
         {
             using (var _context = new Entities())
@@ -562,12 +577,12 @@ namespace WebApplication.Controllers
                         {
                             string password = string.Empty;
 
-                            using(var newCOntext = new Entities())
+                            using (var newCOntext = new Entities())
                             {
                                 var previousUser = newCOntext.tbl_User.FirstOrDefault(x => x.UserId == tbl_User.Pno);
                                 password = previousUser.Password;
                             }
-             
+
                             string pwd = password;
                             tbl_User.UserId = tbl_User.Pno;
                             tbl_User.Password = pwd;
@@ -599,7 +614,7 @@ namespace WebApplication.Controllers
 
                             var UserName = tbl_User.UserId;
 
-                            ApplicationUser result = UserManager.FindByEmail(UserName);
+                            ApplicationUser result = UserManager.FindById(UserName);
                             // Was a password sent across?
                             if (result != null && !string.IsNullOrEmpty(tbl_User.Password))
                             {
@@ -651,7 +666,7 @@ namespace WebApplication.Controllers
             }
         }
 
-        // GET: Parts/Delete/id
+        [CustomAuthorization]
         public ActionResult DeleteUser(string id)
         {
             if (id == null)
@@ -661,9 +676,10 @@ namespace WebApplication.Controllers
             return PartialView("_Delete");
         }
 
-        // POST: Parts/Delete/id
+ 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [CustomAuthorization]
+ 
         public ActionResult DeleteUser(string id, FormCollection collection)
         {
             using (var _context = new Entities())
@@ -680,17 +696,17 @@ namespace WebApplication.Controllers
                         var result = _context.tbl_User.Where(x => x.UserId == id).FirstOrDefault();
                         if (result != null)
                         {
-
-                            result.IsActive = 0;
+ 
+                            result.IsDeleted = 1;
 
                             _context.tbl_User.Attach(result);
-                            _context.Entry(result).Property(x => x.IsActive).IsModified = true;
-
+                            _context.Entry(result).Property(x => x.IsDeleted).IsModified = true;
+                       
                             _context.SaveChanges();
 
                             #region User Injection 
 
-                            ApplicationUser user = UserManager.FindByEmail(id);
+                            ApplicationUser user = UserManager.FindById(id);
                             UserManager.Delete(user);
 
                             #endregion
@@ -711,9 +727,180 @@ namespace WebApplication.Controllers
             }
         }
 
+
+        [CheckUserSession]
+        public ActionResult ChangePassword()
+        {
+            ViewBag.Msg = "";
+            ChangePwdVM vm = new ChangePwdVM() { UserId = Session[SessionKeys.UserId]?.ToString() };
+            return PartialView("_ChangePassword", vm);
+        }
+
+        [HttpPost]
+        [CheckUserSession]
+        public ActionResult ChangePassword(ChangePwdVM changePwd)
+        {
+            string actionName = "ChangePassword";
+
+            var type = "error";
+            string msg = string.Empty;
+
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    #region User Injection
+
+                    var UserName = changePwd.UserId;
+                    var Password = changePwd.NewPassword;
+
+                    if (changePwd.NewPassword == changePwd.ConfirmPassword)
+                    {
+                        using (var context = new Entities())
+                        {
+                            var user = context.tbl_User.FirstOrDefault(x => x.UserId == changePwd.UserId && x.IsDeleted != 1);
+                            if (user != null)
+                            {
+                                if (user.Password == changePwd.OldPassword)
+                                {
+                                    var AdminUserCreateResult = UserManager.ChangePassword(changePwd.UserId, changePwd.OldPassword, changePwd.NewPassword);
+                                    if (AdminUserCreateResult.Succeeded)
+                                    {
+                                        user.Password = changePwd.NewPassword;
+                                        user.PasswordChangeDateTime = DateTime.Now;
+
+                                        context.Entry(user).State = EntityState.Modified;
+                                        context.SaveChanges();
+
+                                        type = "success";
+                                        msg = "Password changed successfully.";
+                                    }
+                                    else
+                                    {
+                                        msg = "Something went wrong.";
+                                    }
+                                }
+                                else
+                                {
+                                    msg = "Incorrect password.";
+                                }
+                            }
+                            else
+                            {
+                                msg = "User not found.";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        msg = "New and old password mismatch.";
+                    }
+                    #endregion
+                }
+                else
+                {
+                    msg = "Please input valid data.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
+                msg = "Some error occurred";
+            }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+            ViewBag.Msg = msg;
+
+            if (type == "success")
+            {
+                return RedirectToAction("Dashboard", "Admin");
+            }
+            else
+            {
+                return PartialView("_ChangePassword", changePwd);
+            }
+        }
+
+
+        [HttpPost]
+        [CustomAuthorization]
+        public ActionResult ResetPassword(string userId)
+        {
+            string actionName = "ResetPassword";
+
+            var type = "error";
+            string msg = string.Empty;
+
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+            try
+            {
+                if (!String.IsNullOrWhiteSpace(userId))
+                {
+                    using (var context = new Entities())
+                    {
+                        var user = context.tbl_User.FirstOrDefault(x => x.UserId == userId && x.IsDeleted != 1);
+                        if (user != null)
+                        {
+                            string newPassword = "Abc@" + user.Pno.Trim();
+
+                            var AdminUserCreateResult = UserManager.ChangePassword(user.UserId, user.Password,newPassword);
+                            if (AdminUserCreateResult.Succeeded)
+                            {
+                                user.Password = newPassword;
+                                user.PasswordChangeDateTime = DateTime.Now;
+
+                                context.Entry(user).State = EntityState.Modified;
+                                context.SaveChanges();
+
+                                type = "success";
+                                msg = "Password reset successfully";
+
+                                _logger.Log(LogLevel.Trace, actionName + " :: Pwd reset successfully for user id : " + user.UserId );
+
+                            }
+                            else
+                            {
+                                msg = "Unable to reset password";
+                                _logger.Log(LogLevel.Trace, actionName + " :: Reset Pwd Failed for user : "  + user.UserId + "  :: Errors : " + AdminUserCreateResult.Errors.ToList());
+                            }
+
+                        }
+                        else
+                        {
+                            msg = "User not found.";
+                        }
+                    }
+                }
+                else
+                {
+                    msg = "User id is empty";
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
+                msg = "Some error occurred";
+            }
+
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+            return Json(new
+            {
+                msg = msg,
+                type = type
+            });
+
+        }
+
+        [CheckUserSession]
         private List<tbl_Role> GetActiveRoles()
         {
-            using(_context = new Entities())
+            using (_context = new Entities())
             {
                 return _context.tbl_Role.Where(x => x.IsDeleted != 1).ToList();
             }
