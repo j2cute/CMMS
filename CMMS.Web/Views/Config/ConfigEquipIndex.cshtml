@@ -34,15 +34,12 @@
     var table;
     var editTable;
     var permissions;
-    var siteId;
-
+ 
     $(document).ready(function () {
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
-        console.log(siteId);
-        $("#C_Site_Config_SiteId").val(siteId);
-        //attr('disabled', true, "style", "pointer-events: '';")
+
+ 
         $("#addFooter").hide();
         $("#editFooter").hide();
         $("#AddChild").attr('disabled', true);
@@ -50,15 +47,15 @@
         $("#delChild").attr('disabled', true);
 
         $("#ConfigEquipment").show();
-      
+
 
         $("#AddChild").click(function () {
-    
+
             $('#C_Site_Config_ESWBS').val("");
             $('#C_Site_Config_Nomanclature').val("");
             Qty: $('#C_Site_Config_Qty').val("");
             $('#C_Site_Config_PMS_No').val("");
-            $('#C_Site_Config_SMR_Code').val("");     
+            $('#C_Site_Config_SMR_Code').val("");
             table.$('tr.selected').removeClass('selected');
             $("#addFooter").show();
             $("#editFooter").hide();
@@ -72,9 +69,9 @@
             $("#addFooter").hide();
             $("#C_Site_Config_ESWBS").attr("readonly", true);
         });
-        
+
         GetConfig();
- 
+
            table=  $('#example1').DataTable(
             {
                 "bServerSide": true,
@@ -138,11 +135,11 @@
             $.each(tblData, function (i, val) {
                 selectedData = tblData[i];
             });
-  
+
             var partId = selectedData.PartId;
- 
+
             var cageId = selectedData.CageId;
- 
+
             $('#C_Site_Config_PartId').val(partId);
             $('#C_Site_Config_CageId').val(cageId);
 
@@ -160,7 +157,8 @@
 
             dataType: 'json',  // add this line
             data: {
-                eswbs: eswbs
+                eswbs: eswbs,
+                siteId: siteId
             },
             success: function (data) {
 
@@ -169,7 +167,7 @@
                     if  (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0) {
                         $("#AddChild").removeAttr('disabled');
                     }
-             
+
 
                     if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
                             $("#editChild").removeAttr('disabled');
@@ -177,9 +175,9 @@
 
                     if (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0) {
                             $("#delChild").removeAttr('disabled');
-                    }                    
+                    }
 
-                    
+
 
                     // eswbs Detail
 
@@ -230,7 +228,7 @@
 
     function OnSuccess(response , status, xhr) {
 
-       
+
         if (status != "error")
         {
             if (response.type == "success") {
@@ -318,7 +316,7 @@
             },
             success: OnSuccess,
             failure: function (vm) {
-             
+
                 var finalError = ''
                 for (i = 0; i < vm.responseJSON.length; i++) {
                     finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
@@ -354,7 +352,7 @@
                     }
                         swal({ title: "ERROR", text: finalError, type: "error", });
                     }
-              
+
             }
         });
     };
@@ -504,7 +502,7 @@
                     var eswbs = data.id;
                     var name = data.text;
                     var parent = data.parent;
-                   
+
                     // use for addChild eswbs becomes peswbs
                     $('#Eswbs').val(eswbs);
                     $('#C_Site_Config_PESWBS').val(eswbs);
@@ -558,7 +556,7 @@
     function GetEditChild() {
 
 
-      
+
 
         $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
         $("#C_Site_Config_Title").val($("#tbtitle").val());

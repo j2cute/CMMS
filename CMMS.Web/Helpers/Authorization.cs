@@ -14,7 +14,6 @@ namespace WebApplication.Helpers
 {
     public class CustomAuthorizationAttribute : AuthorizeAttribute
     {
-        private static string ReturnUrlToUnitSelection = "~/Admin/UnitSelection";
         private static string ReturnUrlToLogin = "~/Account/Login";
 
         public override void OnAuthorization(AuthorizationContext filterContext)
@@ -36,33 +35,19 @@ namespace WebApplication.Helpers
                 }
                 else
                 {
-                    if (HttpContext.Current.Request.FilePath.Contains("/Admin/UnitSelection"))
+                    if (!HttpContext.Current.Request.FilePath.Contains("/Admin/Dashboard"))
                     {
-
-                    }
-                    else
-                    {
-                        if (!HttpContext.Current.Request.FilePath.Contains("/Admin/Dashboard"))
+                        // Check for authorization  
+                        if (HttpContext.Current.Session[SessionKeys.SessionHelperInstance] != null)
                         {
-                            // Check for authorization  
-                            if (HttpContext.Current.Session[SessionKeys.SessionHelperInstance] != null)
+                            if (!AuthorizeCore(filterContext.HttpContext))
                             {
-                                if (String.IsNullOrWhiteSpace(((SessionHelper)(HttpContext.Current.Session[SessionKeys.SessionHelperInstance])).SelectedSiteId))
-                                {
-                                    filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
-                                }
-                                else
-                                {
-                                    if (!AuthorizeCore(filterContext.HttpContext))
-                                    {
-                                        HandleUnauthorizedRequest(filterContext);
-                                    }
-                                }
+                                HandleUnauthorizedRequest(filterContext);
                             }
-                            else
-                            {
-                                filterContext.Result = new RedirectResult(ReturnUrlToUnitSelection);
-                            }
+                        }
+                        else
+                        {
+                            filterContext.Result = new RedirectResult(ReturnUrlToLogin);
                         }
                     }
                 }

@@ -79,10 +79,10 @@ namespace CMMS.Web.Helper
 
         }
 
-        public SessionHelper(string siteId, string userId,string roleId, List<PermissionViewModel> permissions)
+        public SessionHelper(string userId,string roleId, List<PermissionViewModel> permissions)
         {
             UserId = userId;
-            SelectedSiteId = siteId;
+ 
             CurrentRoleId = roleId;
             CurrentRolePermissions = permissions;
 
@@ -103,7 +103,7 @@ namespace CMMS.Web.Helper
 
         public List<RolesVM> UserRoles { get; set; }
         private string UserId { get; set; }
-        public string SelectedSiteId { get; set; }
+ 
         public IEnumerable<ClassLibrary.Models.tbl_Unit> ApplicableUnits { get; set; }
 
 

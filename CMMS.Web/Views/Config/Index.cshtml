@@ -13,24 +13,22 @@
     }
 </style>
 <script>
-    var siteId;
+    
     $(document).ready(function () {
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
 
         if (!permissions.filter(obj => obj.PermissionId == "AddSystem").length > 0) {
             $("#items").attr('disabled','disabled')
-        }  
+        }
 
 
-     siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
-        $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
+     @*siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
+        $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")*@
 
-       // $("#ConfigBox").hide();
-      //  $("#Proceed").click(function () {
-       // $("#ConfigBox").show();
+
         GetConfig();
-       // });
+
  });
 
 </script>
@@ -58,7 +56,7 @@
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-sm-7">
-                                     @*   <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />*@
+                                        @*   <input type="button" id="Proceed" onclick="GetConfig()" value="Proceed" class="btn btn-primary" />*@
                                     </div>
                                 </div>
                             </div>
@@ -242,7 +240,7 @@
                selectedData.push(selectedIndexes[index]);
            });
 
-   
+
            selectedData = JSON.stringify(selectedData);
            console.log(selectedData);
 
@@ -258,7 +256,7 @@
                     unitId: unitId
                 },
                 success: function (vm) {
-                   
+
                     $("#jstreeSiteConfig").jstree('destroy').empty();
                     $("#jstreeSiteConfig").jstree({
 
