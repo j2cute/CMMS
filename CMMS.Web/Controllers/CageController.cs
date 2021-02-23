@@ -76,6 +76,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAjax]
+        [ValidateLoadActions]
         public JsonResult LoadData(int length, int start)
         {
             string actionName = "LoadData";
@@ -193,6 +194,7 @@ namespace WebApplication.Controllers
 
         [HttpPost]
         [ValidateAjax]
+        [ValidateLoadActions]
         public JsonResult CageCodeCheck(string CageCode)
         {
             string actionName = "CageCodeCheck";

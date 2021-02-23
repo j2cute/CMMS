@@ -1,4 +1,6 @@
 ﻿using CMMS.Web.Helper;
+using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -130,6 +132,96 @@ namespace WebApplication.Helpers
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
+            ClearSession();
+
+            if (filterContext.HttpContext.Request.IsAjaxRequest())
+            {
+                var httpContext = filterContext.HttpContext;
+                var response = httpContext.Response;
+                response.StatusCode = (int)HttpStatusCode.Forbidden;
+                response.SuppressFormsAuthenticationRedirect = true;
+                response.End();
+                base.HandleUnauthorizedRequest(filterContext);
+            }
+            else if (filterContext.HttpContext.Request.HttpMethod == "POST")
+            {
+                base.HandleUnauthorizedRequest(filterContext);
+            }
+
+            else
+                base.HandleUnauthorizedRequest(filterContext);
+        }
+
+        public void ClearSession()
+        {
+            HttpContext.Current.Session.Clear();
+            HttpContext.Current.Session.RemoveAll();
+            HttpContext.Current.Session.Abandon();
+
+            HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            HttpContext.Current.Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            HttpContext.Current.Response.Cache.SetNoStore();
+
+            HttpContext.Current.Response.Cookies.Clear();
+
+        }
+    }
+
+
+     /// <summary>
+    /// This Attribute Is Compulsory for Every Action
+    /// </summary>
+    public class CheckUserSessionAttribute : AuthorizeAttribute
+    {
+        private static string ReturnUrlToLogin = "~/Account/Login";
+
+        public override void OnAuthorization(AuthorizationContext filterContext)
+        {
+            try
+            {
+                //return;
+                if (filterContext.ActionDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true)
+                   || filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(AllowAnonymousAttribute), true))
+                {
+                    // Don't check for authorization as AllowAnonymous filter is applied to the action or controller  
+                    return;
+                }
+
+                // Check for authorization  
+                if (HttpContext.Current.Session[SessionKeys.UserId] == null)
+                {
+                    filterContext.Result = new RedirectResult(ReturnUrlToLogin);
+                    HandleUnauthorizedRequest(filterContext);
+                }
+                
+            }
+            catch
+            {
+                filterContext.Result = new RedirectResult(ReturnUrlToLogin);
+                HandleUnauthorizedRequest(filterContext);
+            }
+        }
+ 
+
+        public void ClearSession()
+        {
+            HttpContext.Current.Session.Clear();
+            HttpContext.Current.Session.RemoveAll();
+            HttpContext.Current.Session.Abandon();
+
+            HttpContext.Current.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            HttpContext.Current.Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+            HttpContext.Current.Response.Cache.SetNoStore();
+
+            HttpContext.Current.Response.Cookies.Clear();
+
+        }
+
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            ClearSession();
+
             if (filterContext.HttpContext.Request.IsAjaxRequest())
             {
                 var httpContext = filterContext.HttpContext;
@@ -148,5 +240,4 @@ namespace WebApplication.Helpers
                 base.HandleUnauthorizedRequest(filterContext);
         }
     }
-
 }

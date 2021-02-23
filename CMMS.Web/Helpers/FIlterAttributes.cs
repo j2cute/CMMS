@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMMS.Web.Helper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -36,5 +37,73 @@ namespace WebApplication.Helpers
                                                       (int)HttpStatusCode.BadRequest;
             }
         }
+    }
+
+
+    public class ValidateLoadActions : System.Web.Mvc.ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            bool result = false;
+            try
+            {
+        
+                var rolePermission = ((SessionHelper)filterContext.HttpContext.Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions;
+                if (rolePermission != null)
+                {
+
+                    if (filterContext.HttpContext.Request.IsAjaxRequest())
+                    {
+
+                        var requestParts = filterContext.HttpContext.Request.UrlReferrer.LocalPath.Split('?')[0]?.Split('/');
+
+                        string url = "/" + (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[0] : requestParts[1]) + "/" +
+                                           (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[1] : requestParts[2]);
+
+                        if (rolePermission.Any(x => !String.IsNullOrWhiteSpace(x.URL) && x.URL.Contains(url)))
+                        {
+                            result = true;
+                        }
+                    }
+                    else
+                    {
+
+                        var requestParts = filterContext.HttpContext.Request.UrlReferrer.LocalPath.Split('?')[0]?.Split('/');
+
+                        // Previous was a ajax Request
+                        if (requestParts.Length > 3)
+                        {
+                            string url = "/" + (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[0] : requestParts[1]) + "/" +
+                                        (!String.IsNullOrWhiteSpace(requestParts[0]) ? requestParts[1] : requestParts[2]);
+
+                            if (rolePermission.Any(x => !String.IsNullOrWhiteSpace(x.URL) && x.URL.Contains(url)))
+                            {
+                                result = true;
+                            }
+                        }
+                        else
+                        {
+
+                            if (rolePermission.Any(x => x.URL == filterContext.HttpContext.Request.RawUrl.Split('?')[0]))
+                            {
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+
+            if(!result)
+            {
+                filterContext.HttpContext.Response.StatusCode =
+                                      (int)HttpStatusCode.BadRequest;
+            }
+        }
+
+
     }
 }

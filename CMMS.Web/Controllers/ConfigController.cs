@@ -74,7 +74,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
-        //[CustomAuthorization]
+        [ValidateLoadActions]
         public JsonResult LoadData(int length, int start)
         {
             using (var db = new WebAppDbContext())
@@ -168,7 +168,7 @@ namespace WebApplication.Controllers
 
         }
 
-        //[CustomAuthorization]
+        [ValidateLoadActions]
         public JsonResult GetConfigEquipment(int? siteId)
         {
             try
@@ -189,7 +189,7 @@ namespace WebApplication.Controllers
 
         #region GetConfigData
         [HttpPost]
-       // [CustomAuthorization]
+        [ValidateLoadActions]
         public JsonResult GetSelectedConfigData(string eswbs)
         {
             string actionName = "GetSelectedConfigData";
@@ -648,7 +648,7 @@ namespace WebApplication.Controllers
             return View("Index", vm);
         }
 
- 
+        [ValidateLoadActions]
         public JsonResult GetConfig(int unitId)
         {
             string actionName = "GetConfig";

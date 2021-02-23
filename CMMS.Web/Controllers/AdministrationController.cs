@@ -20,7 +20,6 @@ using CMMS.Web.Helper;
 
 namespace WebApplication.Controllers
 {
-    //[CustomAuthorization]
     public class AdministrationController : Controller
     {
         private static Logger _logger;
@@ -33,6 +32,7 @@ namespace WebApplication.Controllers
 
         #region UserCheck
 
+        [CheckUserSession]
         public JsonResult CheckUserName(string Pno)
         {
             string actionName = "CheckUserName";
@@ -63,10 +63,10 @@ namespace WebApplication.Controllers
 
         #region roles
 
-        // GET: Roles
+        [CustomAuthorization]
         public ActionResult ViewRoles()
         {
-            string actionName = "CheckUserName";
+            string actionName = "ViewRoles";
             RolesViewModel vm = new RolesViewModel();
             try
             {
@@ -90,6 +90,7 @@ namespace WebApplication.Controllers
             return View(vm);
         }
 
+        [CustomAuthorization]
         public ActionResult Create()
         {
             string actionName = "Create";
@@ -122,6 +123,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CustomAuthorization]
         [ValidateAntiForgeryToken]
         public ActionResult Create(tbl_Role tbl_Role, string selectedItems)
         {
@@ -201,7 +203,7 @@ namespace WebApplication.Controllers
             }
         }
 
-        // GET: Roles/Edit/5
+        [CustomAuthorization]
         public ActionResult Edit(string id)
         {
             using (var _context = new Entities())
@@ -246,8 +248,9 @@ namespace WebApplication.Controllers
             }
         }
 
-        // POST: Roles/Edit/5
         [HttpPost]
+        [CustomAuthorization]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, tbl_Role tbl_Role, string selectedItems)
         {
             using (var _context = new Entities())
@@ -331,14 +334,15 @@ namespace WebApplication.Controllers
             }
         }
 
-        // GET: Roles/Delete/5
+        [CustomAuthorization]
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: Roles/Delete/5
         [HttpPost]
+        [CustomAuthorization]
+        [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
@@ -352,9 +356,12 @@ namespace WebApplication.Controllers
                 return View();
             }
         }
+
+
         #endregion roles
 
         private ApplicationUserManager _userManager;
+
         public ApplicationUserManager UserManager
         {
             get
@@ -370,6 +377,8 @@ namespace WebApplication.Controllers
         }
 
         #region user
+
+        [CustomAuthorization]
         public ActionResult UserIndex()
         {
             using (var _context = new Entities())
@@ -384,7 +393,7 @@ namespace WebApplication.Controllers
 
         }
 
-        //[CustomAuthorization]
+        [CustomAuthorization]
         public ActionResult CreateUser()
         {
             using (var _context = new Entities())
@@ -399,24 +408,9 @@ namespace WebApplication.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult GetRoles()
-        {
-            using (var _context = new Entities())
-            {
-                var roles = _context.tbl_Role.Select(x => new RolesModel
-                {
-                    RoleId = x.RoleId,
-                    Name = x.Name,
-
-                }).ToList();
-
-                return new JsonResult() { Data = new { roles = roles }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
-            }
-
-        }
-
         [HttpPost]
+        [CustomAuthorization]
+        [ValidateAntiForgeryToken]
         public ActionResult CreateUser(tbl_User tbl_User, tbl_Role tbl_Role)
         {
             using (var _context = new Entities())
@@ -500,6 +494,25 @@ namespace WebApplication.Controllers
             }
         }
 
+        [HttpGet]
+        [CheckUserSession]
+        public ActionResult GetRoles()
+        {
+            using (var _context = new Entities())
+            {
+                var roles = _context.tbl_Role.Where(x=>x.IsDeleted != 1).Select(x => new RolesModel
+                {
+                    RoleId = x.RoleId,
+                    Name = x.Name,
+
+                }).ToList();
+
+                return new JsonResult() { Data = new { roles = roles }, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            }
+
+        }
+
+        [CustomAuthorization]
         public ActionResult EditUser(string id)
         {
             using (var _context = new Entities())
@@ -533,8 +546,8 @@ namespace WebApplication.Controllers
             }
         }
 
-        // POST: Roles/Edit/5
         [HttpPost]
+        [CustomAuthorization]
         public ActionResult EditUser(string id, tbl_User tbl_User, string selectedItems)
         {
             using (var _context = new Entities())
@@ -653,7 +666,7 @@ namespace WebApplication.Controllers
             }
         }
 
-        // GET: Parts/Delete/id
+        [CustomAuthorization]
         public ActionResult DeleteUser(string id)
         {
             if (id == null)
@@ -663,9 +676,10 @@ namespace WebApplication.Controllers
             return PartialView("_Delete");
         }
 
-        // POST: Parts/Delete/id
+ 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [CustomAuthorization]
+ 
         public ActionResult DeleteUser(string id, FormCollection collection)
         {
             using (var _context = new Entities())
@@ -714,6 +728,7 @@ namespace WebApplication.Controllers
         }
 
 
+        [CheckUserSession]
         public ActionResult ChangePassword()
         {
             ViewBag.Msg = "";
@@ -722,6 +737,7 @@ namespace WebApplication.Controllers
         }
 
         [HttpPost]
+        [CheckUserSession]
         public ActionResult ChangePassword(ChangePwdVM changePwd)
         {
             string actionName = "ChangePassword";
@@ -810,7 +826,7 @@ namespace WebApplication.Controllers
 
 
         [HttpPost]
-
+        [CustomAuthorization]
         public ActionResult ResetPassword(string userId)
         {
             string actionName = "ResetPassword";
@@ -881,7 +897,7 @@ namespace WebApplication.Controllers
 
         }
 
-
+        [CheckUserSession]
         private List<tbl_Role> GetActiveRoles()
         {
             using (_context = new Entities())
