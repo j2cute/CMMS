@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "SfdIndex";
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+<h2>SfdIndex</h2>
+
+@(Html.DevExtreme().DataGrid<ClassLibrary.Models.V_SFD>()
+    .DataSource(d => d.Mvc()
+        .Controller("SFD")
+        .LoadAction("Get")
+    )
+    .RemoteOperations(true)
+    .Columns(columns => {
+
+        columns.AddFor(m => m.SiteId);
+
+        columns.AddFor(m => m.Name);
+
+        columns.AddFor(m => m.ESWBS);
+
+        columns.AddFor(m => m.PESWBS);
+
+        columns.AddFor(m => m.Nomanclature);
+
+        columns.AddFor(m => m.Title);
+
+        columns.AddFor(m => m.Qty);
+
+        columns.AddFor(m => m.PMS_No);
+
+        columns.AddFor(m => m.SMR_Code);
+
+        columns.AddFor(m => m.PartId);
+
+        columns.AddFor(m => m.CageId);
+
+        columns.AddFor(m => m.CageCode);
+
+        columns.AddFor(m => m.PART_NAME);
+
+        columns.AddFor(m => m.NSN);
+
+        columns.AddFor(m => m.UNIT_PRICE);
+
+        columns.AddFor(m => m.CurrencyID);
+
+        columns.AddFor(m => m.Model);
+
+        columns.AddFor(m => m.CageName);
+
+        columns.AddFor(m => m.Address);
+
+        columns.AddFor(m => m.City);
+
+        columns.AddFor(m => m.Country);
+    })
+)

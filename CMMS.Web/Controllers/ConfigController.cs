@@ -15,6 +15,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using WebApplication.Helpers;
+using DevExtreme.AspNet.Data;
+using DevExtreme.AspNet.Mvc;
 using static ClassLibrary.Common.Enums;
 
 namespace WebApplication.Controllers
@@ -29,8 +31,40 @@ namespace WebApplication.Controllers
             _logger = LogManager.GetCurrentClassLogger();
         }
 
-        #region ConfigurationEquipment
+        [CustomAuthorization]
+        public ActionResult SFD()
+        {
+            IEnumerable<V_SFD> response = null;
+            using(var context = new WebAppDbContext())
+            {
+                response = context.V_SFD.ToList().Where(x => x.ESWBS.Length > 4);
+            }
 
+            return View(response);
+        }
+        [CustomAuthorization]
+        public ActionResult Units()
+        {
+            IEnumerable<V_UNITS> response = null;
+            using(var context = new WebAppDbContext())
+            {
+                response = context.V_UNITS.ToList();
+            }
+
+            return View(response);
+        }
+        [CustomAuthorization]
+        public ActionResult UnitType()
+        {
+            IEnumerable<tbl_UnitType> response = null;
+            using(var context = new WebAppDbContext())
+            {
+                response = context.tbl_UnitType.ToList();
+            }
+
+            return View(response);
+        }
+        #region ConfigurationEquipment
         [CustomAuthorization]
         public ActionResult ConfigEquipIndex()
         {
@@ -71,6 +105,15 @@ namespace WebApplication.Controllers
             _logger.Log(LogLevel.Trace, actionName + " :: Ended.");
 
             return View("ConfigEquipIndex", vm);
+        }
+
+        [HttpGet]
+        public object GetSFD(DataSourceLoadOptions loadOptions)
+        {
+            using (var db = new WebAppDbContext())
+            {
+                return DataSourceLoader.Load(db.V_SFD.ToList(),loadOptions);
+            }
         }
 
         [HttpPost]

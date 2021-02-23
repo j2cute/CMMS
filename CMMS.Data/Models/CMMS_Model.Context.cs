@@ -54,5 +54,7 @@ namespace ClassLibrary.Models
         public virtual DbSet<M_MOP_PLAN> M_MOP_PLAN { get; set; }
         public virtual DbSet<M_MOP_PLAN_HISTORY> M_MOP_PLAN_HISTORY { get; set; }
         public virtual DbSet<UserDashboardMapping> UserDashboardMappings { get; set; }
+        public virtual DbSet<V_SFD> V_SFD { get; set; }
+        public virtual DbSet<V_UNITS> V_UNITS { get; set; }
     }
 }

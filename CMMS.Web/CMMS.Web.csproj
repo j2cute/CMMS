@@ -1763,6 +1763,10 @@
     <Content Include="Views\Config\_AddEditConfig.cshtml" />
     <Content Include="Views\Account\LoginCopy.cshtml" />
     <Content Include="Views\Shared\_LayoutUnit.cshtml" />
+    <Content Include="Views\Config\SFD.cshtml" />
+    <Content Include="Views\SFD\Index.cshtml" />
+    <Content Include="Views\Config\Units.cshtml" />
+    <Content Include="Views\Config\UnitType.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\DashBoards\" />

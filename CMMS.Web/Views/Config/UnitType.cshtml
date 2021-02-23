@@ -1,0 +1,79 @@
+﻿@using ClassLibrary.Models
+@model IEnumerable<tbl_UnitType>
+
+@{
+    ViewBag.Title = "SFD";
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+
+
+<br />
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <h1><strong>&nbsp;UNIT TYPES:</strong></h1>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div id="gridSFD">
+            @(Html.DevExtreme().DataGrid<tbl_UnitType>()
+            .ID("gridContainer")
+            .DataSource(Model)
+
+            .ShowColumnHeaders(true)
+            .ShowColumnLines(true)
+            .ShowRowLines(true)
+            .ShowBorders(true)
+
+            .Sorting(sorting => sorting.Mode(GridSortingMode.Multiple))
+            .Paging(p => p.PageSize(10))
+            .ColumnChooser(c => c.Enabled(true))
+            .LoadPanel(p => p.Enabled(true))
+
+            .FilterRow(filterRow => filterRow
+            .Visible(true)
+            .ApplyFilter(GridApplyFilterMode.Auto))
+
+            .SearchPanel(searchPanel => searchPanel
+            .Visible(true)
+            .Width(240)
+            .Placeholder("Search Parts ...")
+            .SearchVisibleColumnsOnly(false)
+        )
+
+        .HeaderFilter(headerFilter => headerFilter.Visible(true))
+
+        .GroupPanel(g => g.Visible(true))
+        .Grouping(g => g.AutoExpandAll(false))
+        .Selection(s => s.Mode(SelectionMode.Single))
+
+                                    // START COLUMN SECTION
+        .ColumnHidingEnabled(true)
+        .ColumnChooser(c => c
+        .Enabled(true)
+        .Mode(GridColumnChooserMode.Select))
+
+
+        .Columns(columns =>
+        {
+
+                columns.AddFor(m => m.UnitTypeId)
+                    .Caption("TYPE ID")
+                    .Width(80);
+
+                columns.AddFor(m => m.UnitTypeName)
+                    .Caption("TYPE NAME");
+               
+        })
+        )
+           
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+

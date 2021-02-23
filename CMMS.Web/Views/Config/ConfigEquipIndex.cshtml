@@ -40,9 +40,9 @@
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
         siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
-
-        $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
- 
+        console.log(siteId);
+        $("#C_Site_Config_SiteId").val(siteId);
+        //attr('disabled', true, "style", "pointer-events: '';")
         $("#addFooter").hide();
         $("#editFooter").hide();
         $("#AddChild").attr('disabled', true);
@@ -166,42 +166,29 @@
 
                 if (data.type == "success") {
 
-                    if (((eswbs.toString().length) >= 4) && (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0)) {
+                    if  (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0) {
                         $("#AddChild").removeAttr('disabled');
                     }
-                    if ((eswbs.toString().length) < 4) {
-                        $("#AddChild").attr('disabled', true);
-                    }
+             
 
-                    if ((eswbs.toString().length) > 4) {
-
-
-                        if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
+                    if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
                             $("#editChild").removeAttr('disabled');
-                        }
+                    }
 
-                        if (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0) {
+                    if (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0) {
                             $("#delChild").removeAttr('disabled');
-                        }
- 
+                    }                    
 
-                    }
-
-                    else if ((eswbs.toString().length) <= 4) {
-                        $("#editChild").attr('disabled', true);
-                        $("#delChild").attr('disabled', true);
-
-                    }
-
+                    
 
                     // eswbs Detail
 
-                    $("#tbEswbs").val(data.vm.C_SiteConfigModel.ESWBS);
+                    $("#tbEswbs").text(data.vm.C_SiteConfigModel.ESWBS);
                     $("#tbPEswbs").val(data.vm.C_SiteConfigModel.PESWBS);
-                    $("#tbEswbsName").val(data.vm.C_SiteConfigModel.Nomanclature);
+                    $("#tbEswbsName").text(data.vm.C_SiteConfigModel.Nomanclature);
                     $("#tbSmr").val(data.vm.C_SiteConfigModel.SMR_Code);
-                    $("#tbPms").val(data.vm.C_SiteConfigModel.PMS_No);
-                    $("#tbQpa").val(data.vm.C_SiteConfigModel.Qty);
+                    $("#tbPms").text(data.vm.C_SiteConfigModel.PMS_No);
+                    $("#tbQpa").text(data.vm.C_SiteConfigModel.Qty);
                     $("#tbPartId").val(data.vm.C_SiteConfigModel.PartId);
                     $("#tbCageId").val(data.vm.C_SiteConfigModel.CageId);
                     //Parts Details
@@ -209,25 +196,18 @@
                     if (data.vm.PartsModel) {
                         $("#WizardPicturePreview").attr('src', data.vm.PartsModel.base64Pic);
 
-                        $("#tbPartNo").val(data.vm.PartsModel.Part_No);
-                        $("#tbPartName").val(data.vm.PartsModel.PART_NAME);
-                        $("#tbCage").val(data.vm.PartsModel.CageCode);
-                        $("#tbNsn").val(data.vm.PartsModel.NSN);
-                        $("#tbType").val(data.vm.PartsModel.PartTypeID);
-                        $("#tbCat").val(data.vm.PartsModel.MCAT_ID);
-                        $("#tbLength").val(data.vm.PartsModel.LENGTH);
-                        $("#tbWidth").val(data.vm.PartsModel.WIDTH);
-                        $("#tbHeight").val(data.vm.PartsModel.HEIGHT);
-                        $("#WEIGHT").val(data.vm.PartsModel.WEIGHT);
-                        $("#tbDetails").val(data.vm.PartsModel.PART_CHARACTERISTIC);
-                        $("#tbMtbf").val(data.vm.PartsModel.MTBF);
-                        $("#tbMttr").val(data.vm.PartsModel.MTTR);
+                        $("#tbPartNo").text(data.vm.PartsModel.Part_No);
+                        $("#tbPartName").text(data.vm.PartsModel.PART_NAME);
+                        $("#tbCage").text(data.vm.PartsModel.CageCode);
                     }
 
                     if (data.vm.CageModel)
                     {
-                        $("#tbManufacturer").val(data.vm.CageModel.CageName);
+                        $("#tbManufacturer").text(data.vm.CageModel.CageName);
                     }
+
+                    var x = document.getElementById("divDetails").style.display = "block";
+
                 }
                 else
                 {
@@ -316,6 +296,7 @@
             }
         }
     };
+
 
 
     function AddChildData() {
@@ -581,10 +562,10 @@
 
         $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
         $("#C_Site_Config_Title").val($("#tbtitle").val());
-        $("#C_Site_Config_ESWBS").val($("#tbEswbs").val());
-        $("#C_Site_Config_Nomanclature").val($("#tbEswbsName").val());
-        $("#C_Site_Config_Qty").val($("#tbQpa").val());
-        $("#C_Site_Config_PMS_No").val($("#tbPms").val());
+        $("#C_Site_Config_ESWBS").val($("#tbEswbs").text());
+        $("#C_Site_Config_Nomanclature").val($("#tbEswbsName").text());
+        $("#C_Site_Config_Qty").val($("#tbQpa").text());
+        $("#C_Site_Config_PMS_No").val($("#tbPms").text());
         $("#C_Site_Config_SMR_Code").val($("#tbSmr").val());
         $('#C_Site_Config_PartId').val($("#tbPartId").val());
         $('#C_Site_Config_CageId').val($("#tbCageId").val());
@@ -600,13 +581,14 @@
 
 </script>
 
-<section class="content-header">
+@*<section class="content-header">
     <h1>
         Configure Site
     </h1>
-</section>
+</section>*@
 <!-- Main content -->
-<section class="content" style="min-height:0px !important">
+
+<!--<section class="content" style="height:0px !important; visibility:hidden" >
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -618,9 +600,7 @@
                                 <div class="form-group row" style="margin-bottom: 0.1rem">
                                     <label class="col-sm-2 col-form-label">Selected Unit</label>
                                     <div class="col-sm-4">
-                                        @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", @required = "true" })
-                                        @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
-                                    </div>
+                                   </div>
                                     <div class="col-sm-7">
                                                                         </div>
                                 </div>
@@ -631,10 +611,10 @@
 
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- /.row (main row) -->
-    </div>
-</section>
+    <!--</div>
+</section>-->
 
 <!-- /.row (main row) -->
 <input type="hidden" name="SiteId" id="SiteId" />
@@ -642,265 +622,108 @@
 
 <section class="content">
     <div class="container-fluid">
-
         <div class="row" id="ConfigEquipment">
-
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card" style="width:100%">
                     <div class="card-header">
-                        <h6 class="card-title"><b>Site Configuration</b></h6>
-
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row" style="margin-bottom: 0.1rem">
+                                    <label class="col-sm-3 col-form-label">Site Configuration:</label>
+                                    <div class="col-sm-9">
+                                        @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", onchange = "GetConfig()", @required = "true" })
+                                        @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
+                                    </div>
+                                  
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="text-align:right">
+                                <input type="hidden" name="selectedItems" id="selectedItems" />
+                                <input data-toggle="modal" data-target="#myModal" type="button" value="Add ESWBS" class="btn btn-default" id="AddChild" />
+                                <input data-toggle="modal" data-target="#myModal" onclick="GetEditChild()" type="button" value="Edit ESWBS" class="btn btn-default" id="editChild" />
+                                <input data-toggle="modal" data-target="#delChildModal" type="button" value="Delete ESWBS" class="btn btn-default" id="delChild" />
+                            </div>
+                        </div> 
                     </div>
                     <div class="card-body">
                         <div class="scroll" style="overflow-x: auto;  width: 100%;">
-
-                            <div id="jstree" style="min-height:495px">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div id="jstree" style="min-height:495px"></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <fieldset class="border p-3" id="divDetails" style="display:none;border: 2px solid #dee2e6!important;">
+                                        <legend class="w-auto">Selected ESWBS Details</legend>
+                                        <input id="tbtitle" type="hidden" />
+                                        <input id="tbPartId" type="hidden" />
+                                        <input id="tbCageId" type="hidden" />
+                                        <input id="tbPEswbs" type="hidden" />
+                                        <input id="tbSmr" type="hidden" />
+                                        <div class="form-group">
+                                            <label><strong>Eswbs No:</strong></label>
+                                            <br />
+                                            <label id="tbEswbs"></label>
+                                            @*<input class="form-control" type="text" id="tbEswbs" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Eswbs Name:</strong></label>
+                                            <br/>
+                                            <label id="tbEswbsName"></label>
+                                            @*<input class="form-control" id="tbEswbsName" type="text" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Part Name:</strong></label>
+                                            <br />
+                                            <label id="tbPartName"></label>
+                                            @*<input class="form-control" id="tbPartName" type="text" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Manufacturer Name:</strong></label>
+                                            <br />
+                                            <label id="tbManufacturer"></label>
+                                            @*<input class="form-control" id="tbManufacturer" type="text" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>PMS No:</strong></label>
+                                            <br />
+                                            <label id="tbPms"></label>
+                                            @*<input class="form-control" id="tbPms" type="text" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Qty Per Assy:</strong></label>
+                                            <br />
+                                            <label id="tbQpa"></label>
+                                            @*<input class="form-control" id="tbQpa" type="text" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Part No:</strong></label>
+                                            <br />
+                                            <label id="tbPartNo"></label>
+                                            @*<input class="form-control" id="tbPartNo" type="text" readonly="readonly" />*@
+                                        </div>
+                                        <div class="form-group">
+                                            <label><strong>Cage Code:</strong></label>
+                                            <br />
+                                            <label id="tbCage"></label>
+                                            @*<input class="form-control" id="tbCage" type="text" readonly="readonly" />*@
+                                        </div>
+                                    </fieldset>
+                                </div>
                             </div>
                         </div>
                         <br />
-                        <div>
-                            <input type="hidden" name="selectedItems" id="selectedItems" />
-                            <input data-toggle="modal" data-target="#myModal" type="button" value="Add Child" class="btn btn-success" id="AddChild" />
-                            <input data-toggle="modal" data-target="#myModal" onclick="GetEditChild()" type="button" value="Edit Child" class="btn btn-primary" id="editChild" />
-                            <input data-toggle="modal" data-target="#delChildModal" type="button" value="Delete Child" class="btn btn-danger" id="delChild" />
-                            <input type="button" value="Expand" class="btn btn-success" id="btnExpand" onclick="OpenAllNode()" />
-
-                        </div>
+                        
                     </div>
                 </div>
 
             </div>
 
 
-            <div class="col-md-6" id="AllDetails">
-                <div class="row" id="ConfigDetails">
-                    <div class="card card-default" style="width:100%">
-                        <div class="card-header">
-                            <h3 class="card-title"><b>ESWBS DETAILS:</b></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-
-                            <div class="row">
-                                <input id="tbtitle" type="hidden" />
-                                <input id="tbPartId" type="hidden" />
-                                <input id="tbCageId" type="hidden" />
-
-                                <div class="col-md-7">
-                                    <div class="row">
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>Eswbs No:</strong></label>
-                                                <input class="form-control" type="text" id="tbEswbs" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>Parent Eswbs:</strong></label>
-                                                <input class="form-control" id="tbPEswbs" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><strong>Eswbs Name:</strong></label>
-                                                <input class="form-control" id="tbEswbsName" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>SMR Code:</strong></label>
-                                                <input class="form-control" id="tbSmr" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>PMS No:</strong></label>
-                                                <input class="form-control" id="tbPms" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><strong>Qty Per Assy:</strong></label>
-                                                <input class="form-control" id="tbQpa" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="picture-container">
-                                        <div class="picture">
-                                            <img src="" class="avatar-preview" id="WizardPicturePreview" title="" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @*Eswbs Detail- End*@
+           
 
 
-                @*Parts Detail- start*@
-                <div class="row" id="PartsDetails">
-                    <div class="card card-default" style="width:100%">
-                        <div class="card-header">
-                            <h3 class="card-title"><b>PART's DETAILS</b></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label><strong>Part No:</strong></label>
-                                        <input class="form-control" id="tbPartNo" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label><strong>Part Name:</strong></label>
-                                        <input class="form-control" id="tbPartName" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label><strong>Cage Code:</strong></label>
-                                        <input class="form-control" id="tbCage" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <label><strong>Manufacturer Name:</strong></label>
-                                        <input class="form-control" id="tbManufacturer" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label><strong>NSN No:</strong></label>
-                                        <input class="form-control" id="tbNsn" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label><strong>Part type:</strong></label>
-                                        <input class="form-control" id="tbType" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label><strong>Material Cat:</strong></label>
-                                        <input class="form-control" id="tbCat" type="text" readonly="readonly" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @*Parts Detail- End*@
 
 
-                @*Characteristics Details- start*@
-                <div class="row" id="PartsDetails">
-
-                    <div class="card card-default" style="width:100%">
-                        <div class="card-header">
-                            <h3 class="card-title"><b>CHARACTERISTIC's DETAILS</b></h3>
-
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>Length(m):</strong></label>
-                                                <input class="form-control" id="tbLength" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>Width(m):</strong></label>
-                                                <input class="form-control" id="tbWidth" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>Height(m):</strong></label>
-                                                <input class="form-control" id="tbHeight" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>Weight(kg):</strong></label>
-                                                <input class="form-control" id="tbWeight" type="text" readonly="readonly" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label class="col-md-12"><strong>MTBF:</strong></label>
-
-
-                                                <input class="form-control" id="tbMtbf" type="text" readonly="readonly" />
-
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label><strong>MTTR:</strong></label>
-                                                <input class="form-control" id="tbMttr" type="text" readonly="readonly" />
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label><strong>Detail Characterisitcs:</strong></label>
-                                                <textarea class="form-control" id="tbDetails" rows="6" cols="20" readonly="readonly"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                @*Characteristics Detail- End*@
 
             </div>
         </div>

@@ -18,7 +18,7 @@ using NLog;
 
 namespace WebApplication.Controllers
 {
-    //[CustomAuthorization]
+    [CustomAuthorization]
     public class AdministrationController : Controller
     {
         private static Logger _logger;

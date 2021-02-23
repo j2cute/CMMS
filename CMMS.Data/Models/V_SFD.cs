@@ -12,9 +12,10 @@ namespace ClassLibrary.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class C_Site_Config
+    public partial class V_SFD
     {
         public int SiteId { get; set; }
+        public string Name { get; set; }
         public string ESWBS { get; set; }
         public string PESWBS { get; set; }
         public string Nomanclature { get; set; }
@@ -24,12 +25,15 @@ namespace ClassLibrary.Models
         public string SMR_Code { get; set; }
         public Nullable<int> PartId { get; set; }
         public Nullable<int> CageId { get; set; }
-        public string EIACODXA { get; set; }
-        public string LSACONXB { get; set; }
-        public string ALTLCNXB { get; set; }
-        public string LCNTYPXB { get; set; }
-        public string LOC { get; set; }
-    
-        public virtual tbl_Unit tbl_Unit { get; set; }
+        public string CageCode { get; set; }
+        public string PART_NAME { get; set; }
+        public string NSN { get; set; }
+        public Nullable<decimal> UNIT_PRICE { get; set; }
+        public string CurrencyID { get; set; }
+        public string Model { get; set; }
+        public string CageName { get; set; }
+        public string Address { get; set; }
+        public string City { get; set; }
+        public string Country { get; set; }
     }
 }

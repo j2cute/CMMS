@@ -1,0 +1,126 @@
+﻿@using ClassLibrary.Models
+@model IEnumerable<V_SFD>
+
+@{
+    ViewBag.Title = "SFD";
+    Layout = "~/Views/Shared/_LayoutPageNew.cshtml";
+}
+
+
+
+<div id="gridSFD">
+
+    @(Html.DevExtreme().DataGrid<V_SFD>()
+    .ID("gridContainer")
+    .DataSource(Model)
+
+    .ShowColumnHeaders(true)
+    .ShowColumnLines(true)
+    .ShowRowLines(true)
+                            .ShowBorders(true)
+
+
+                            .Sorting(sorting => sorting.Mode(GridSortingMode.Multiple))
+                            .Paging(p => p.PageSize(10))
+                            .ColumnChooser(c => c.Enabled(true))
+                            .LoadPanel(p => p.Enabled(true))
+
+                            .FilterRow(filterRow => filterRow
+                            .Visible(true)
+                            .ApplyFilter(GridApplyFilterMode.Auto)
+                            )
+
+                            .SearchPanel(searchPanel => searchPanel
+                            .Visible(true)
+                            .Width(240)
+                            .Placeholder("Search Parts ...")
+                            .SearchVisibleColumnsOnly(false)
+                            )
+
+                            .HeaderFilter(headerFilter => headerFilter.Visible(true))
+
+                            .GroupPanel(g => g.Visible(true))
+                            .Grouping(g => g.AutoExpandAll(false))
+                            .Selection(s => s.Mode(SelectionMode.Single))
+
+                            // START COLUMN SECTION
+                            .ColumnHidingEnabled(true)
+                            .ColumnChooser(c => c
+                                .Enabled(true)
+                                .Mode(GridColumnChooserMode.Select))
+
+
+    .Columns(columns =>
+    {
+
+        columns.AddFor(m => m.SiteId)
+            .Caption("SHIP ID")
+            .Width(50);
+
+        columns.AddFor(m => m.Name)
+            .Caption("SHIP NAME");
+
+        columns.AddFor(m => m.ESWBS)
+            .Caption("ESWBS");
+
+
+        columns.AddFor(m => m.Nomanclature)
+            .Caption("ESWBS NAME");
+
+        columns.AddFor(m => m.PART_NAME)
+            .Caption("EQUIPMENT NAME");
+
+        columns.AddFor(m => m.CageName)
+            .Caption("MANUFACTURER");
+
+
+        columns.AddFor(m => m.Country)
+            .Caption("COUNTRY");
+
+
+        columns.AddFor(m => m.PMS_No)
+            .Caption("PMS NO");
+
+        columns.AddFor(m => m.Model)
+            .Caption("Model");
+    })
+)
+    @*@(Html.DevExtreme().DataGrid<ClassLibrary.Models.V_SFD>()
+            .ID("gridContainer")
+            .ShowBorders(true)
+            .Sorting(sorting => sorting.Mode(GridSortingMode.Multiple))
+            .Columns(columns =>
+            {
+                //columns.AddFor(m => m.Name)
+                //    .Caption("SHIP NAME")
+                //    .Fixed(true);
+
+                columns.AddFor(m => m.ESWBS)
+                    .Caption("ESWBS");
+
+
+                //columns.AddFor(m => m.Nomanclature)
+                //    .Caption("ESWBS NAME");
+
+                //columns.AddFor(m => m.PART_NAME)
+                //    .Caption("EQUIPMENT NAME");
+
+                //columns.AddFor(m => m.CageName)
+                //    .Caption("MANUFACTURER");
+
+
+                //columns.AddFor(m => m.Country)
+                //    .Caption("COUNTRY");
+
+
+                //columns.AddFor(m => m.PMS_No)
+                //    .Caption("PMS NO");
+
+                //columns.AddFor(m => m.Model)
+                //    .Caption("Model");
+
+            })
+            .DataSource(d => d.Mvc().Controller("Config").LoadAction("GetSFD") )
+
+        )*@
+</div>

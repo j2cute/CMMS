@@ -90,6 +90,11 @@
           <Property Name="SMR_Code" Type="nvarchar" MaxLength="6" />
           <Property Name="PartId" Type="int" />
           <Property Name="CageId" Type="int" />
+          <Property Name="EIACODXA" Type="varchar" MaxLength="10" />
+          <Property Name="LSACONXB" Type="varchar" MaxLength="18" />
+          <Property Name="ALTLCNXB" Type="varchar" MaxLength="2" />
+          <Property Name="LCNTYPXB" Type="char" MaxLength="1" />
+          <Property Name="LOC" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="M_MOP">
           <Key>
@@ -421,6 +426,48 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="PMS_ID" Type="nvarchar" MaxLength="22" />
           <Property Name="PartTypeID" Type="nvarchar" MaxLength="1" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'db_CMMS.dbo.V_SFD' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_SFD">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="SiteId" Type="int" Nullable="false" />
+          <Property Name="ESWBS" Type="nvarchar" MaxLength="25" Nullable="false" />
+          <Property Name="PESWBS" Type="nvarchar" MaxLength="25" />
+          <Property Name="Nomanclature" Type="nvarchar" MaxLength="250" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" />
+          <Property Name="Qty" Type="int" />
+          <Property Name="PMS_No" Type="nvarchar" MaxLength="11" />
+          <Property Name="SMR_Code" Type="nvarchar" MaxLength="6" />
+          <Property Name="PartId" Type="int" />
+          <Property Name="CageId" Type="int" />
+          <Property Name="CageCode" Type="nvarchar" MaxLength="5" />
+          <Property Name="PART_NAME" Type="nvarchar" MaxLength="100" />
+          <Property Name="NSN" Type="nvarchar" MaxLength="13" />
+          <Property Name="UNIT_PRICE" Type="decimal" Precision="7" Scale="0" />
+          <Property Name="CurrencyID" Type="nvarchar" MaxLength="5" />
+          <Property Name="Model" Type="nvarchar" MaxLength="100" />
+          <Property Name="CageName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="City" Type="nvarchar" MaxLength="50" />
+          <Property Name="Country" Type="nvarchar" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'db_CMMS.dbo.V_UNITS' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V_UNITS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ParentUnitId" Type="int" />
+          <Property Name="UnitTypeId" Type="int" />
+          <Property Name="UnitTypeName" Type="nvarchar" MaxLength="120" />
+          <Property Name="UnitTypeLevel" Type="int" />
+        </EntityType>
         <Association Name="FK_C_Site_Config_tbl_Unit">
           <End Role="tbl_Unit" Type="Self.tbl_Unit" Multiplicity="1" />
           <End Role="C_Site_Config" Type="Self.C_Site_Config" Multiplicity="*" />
@@ -603,6 +650,41 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
     [V_MSD].[PMS_ID] AS [PMS_ID], 
     [V_MSD].[PartTypeID] AS [PartTypeID]
     FROM [dbo].[V_MSD] AS [V_MSD]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_SFD" EntityType="Self.V_SFD" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_SFD].[SiteId] AS [SiteId], 
+    [V_SFD].[ESWBS] AS [ESWBS], 
+    [V_SFD].[PESWBS] AS [PESWBS], 
+    [V_SFD].[Nomanclature] AS [Nomanclature], 
+    [V_SFD].[Title] AS [Title], 
+    [V_SFD].[Qty] AS [Qty], 
+    [V_SFD].[PMS_No] AS [PMS_No], 
+    [V_SFD].[SMR_Code] AS [SMR_Code], 
+    [V_SFD].[PartId] AS [PartId], 
+    [V_SFD].[CageId] AS [CageId], 
+    [V_SFD].[CageCode] AS [CageCode], 
+    [V_SFD].[PART_NAME] AS [PART_NAME], 
+    [V_SFD].[NSN] AS [NSN], 
+    [V_SFD].[UNIT_PRICE] AS [UNIT_PRICE], 
+    [V_SFD].[CurrencyID] AS [CurrencyID], 
+    [V_SFD].[Model] AS [Model], 
+    [V_SFD].[CageName] AS [CageName], 
+    [V_SFD].[Address] AS [Address], 
+    [V_SFD].[City] AS [City], 
+    [V_SFD].[Country] AS [Country], 
+    [V_SFD].[Name] AS [Name]
+    FROM [dbo].[V_SFD] AS [V_SFD]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="V_UNITS" EntityType="Self.V_UNITS" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_UNITS].[Id] AS [Id], 
+    [V_UNITS].[Name] AS [Name], 
+    [V_UNITS].[ParentUnitId] AS [ParentUnitId], 
+    [V_UNITS].[UnitTypeId] AS [UnitTypeId], 
+    [V_UNITS].[UnitTypeName] AS [UnitTypeName], 
+    [V_UNITS].[UnitTypeLevel] AS [UnitTypeLevel]
+    FROM [dbo].[V_UNITS] AS [V_UNITS]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_C_Site_Config_tbl_Unit" Association="Self.FK_C_Site_Config_tbl_Unit">
             <End Role="tbl_Unit" EntitySet="tbl_Unit" />
@@ -797,6 +879,8 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySet Name="M_MOP_PLAN" EntityType="db_CMMSModel.M_MOP_PLAN" />
           <EntitySet Name="M_MOP_PLAN_HISTORY" EntityType="db_CMMSModel.M_MOP_PLAN_HISTORY" />
           <EntitySet Name="UserDashboardMappings" EntityType="db_CMMSModel.UserDashboardMapping" />
+          <EntitySet Name="V_SFD" EntityType="db_CMMSModel.V_SFD" />
+          <EntitySet Name="V_UNITS" EntityType="db_CMMSModel.V_UNITS" />
  
           </EntityContainer>
         <EntityType Name="tbl_ErrorLogs">
@@ -1066,6 +1150,11 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="PartId" Type="Int32" />
           <Property Name="CageId" Type="Int32" />
           <NavigationProperty Name="tbl_Unit" Relationship="db_CMMSModel.FK_C_Site_Config_tbl_Unit" FromRole="C_Site_Config" ToRole="tbl_Unit" />
+          <Property Name="EIACODXA" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="LSACONXB" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="ALTLCNXB" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="LCNTYPXB" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="LOC" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <Association Name="FK_C_Site_Config_tbl_Unit">
           <End Type="db_CMMSModel.tbl_Unit" Role="tbl_Unit" Multiplicity="1" />
@@ -1217,6 +1306,44 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <Property Name="LastUpdatedBy" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="LastUpdatedDateTime" Type="DateTime" Precision="3" />
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="V_SFD">
+          <Key>
+            <PropertyRef Name="SiteId" />
+            <PropertyRef Name="ESWBS" />
+          </Key>
+          <Property Name="SiteId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ESWBS" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="PESWBS" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Nomanclature" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" />
+          <Property Name="PMS_No" Type="String" MaxLength="11" FixedLength="false" Unicode="true" />
+          <Property Name="SMR_Code" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="PartId" Type="Int32" />
+          <Property Name="CageId" Type="Int32" />
+          <Property Name="CageCode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="PART_NAME" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NSN" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="UNIT_PRICE" Type="Decimal" Precision="7" Scale="0" />
+          <Property Name="CurrencyID" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Model" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CageName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="V_UNITS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ParentUnitId" Type="Int32" />
+          <Property Name="UnitTypeId" Type="Int32" />
+          <Property Name="UnitTypeName" Type="String" MaxLength="120" FixedLength="false" Unicode="true" />
+          <Property Name="UnitTypeLevel" Type="Int32" />
         </EntityType>
 
 
@@ -1509,6 +1636,11 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
           <EntitySetMapping Name="C_Site_Config">
             <EntityTypeMapping TypeName="db_CMMSModel.C_Site_Config">
               <MappingFragment StoreEntitySet="C_Site_Config">
+                <ScalarProperty Name="LOC" ColumnName="LOC" />
+                <ScalarProperty Name="LCNTYPXB" ColumnName="LCNTYPXB" />
+                <ScalarProperty Name="ALTLCNXB" ColumnName="ALTLCNXB" />
+                <ScalarProperty Name="LSACONXB" ColumnName="LSACONXB" />
+                <ScalarProperty Name="EIACODXA" ColumnName="EIACODXA" />
                 <ScalarProperty Name="CageId" ColumnName="CageId" />
                 <ScalarProperty Name="PartId" ColumnName="PartId" />
                 <ScalarProperty Name="SMR_Code" ColumnName="SMR_Code" />
@@ -1639,6 +1771,45 @@ warning 6002: The table/view 'db_CMMS.dbo.V_MSD' does not have a primary key def
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
                 <ScalarProperty Name="DashboardId" ColumnName="DashboardId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_SFD">
+            <EntityTypeMapping TypeName="db_CMMSModel.V_SFD">
+              <MappingFragment StoreEntitySet="V_SFD">
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="CageName" ColumnName="CageName" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+                <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+                <ScalarProperty Name="UNIT_PRICE" ColumnName="UNIT_PRICE" />
+                <ScalarProperty Name="NSN" ColumnName="NSN" />
+                <ScalarProperty Name="PART_NAME" ColumnName="PART_NAME" />
+                <ScalarProperty Name="CageCode" ColumnName="CageCode" />
+                <ScalarProperty Name="CageId" ColumnName="CageId" />
+                <ScalarProperty Name="PartId" ColumnName="PartId" />
+                <ScalarProperty Name="SMR_Code" ColumnName="SMR_Code" />
+                <ScalarProperty Name="PMS_No" ColumnName="PMS_No" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Nomanclature" ColumnName="Nomanclature" />
+                <ScalarProperty Name="PESWBS" ColumnName="PESWBS" />
+                <ScalarProperty Name="ESWBS" ColumnName="ESWBS" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_UNITS">
+            <EntityTypeMapping TypeName="db_CMMSModel.V_UNITS">
+              <MappingFragment StoreEntitySet="V_UNITS">
+                <ScalarProperty Name="UnitTypeLevel" ColumnName="UnitTypeLevel" />
+                <ScalarProperty Name="UnitTypeName" ColumnName="UnitTypeName" />
+                <ScalarProperty Name="UnitTypeId" ColumnName="UnitTypeId" />
+                <ScalarProperty Name="ParentUnitId" ColumnName="ParentUnitId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -21,15 +21,15 @@
             <div class="col-md-12">
 
                 <!-- jquery validation -->
-                <div class="box">
-                    <div class="box-header">
-                        <a class="btn btn-success" data-modal='' href="@Url.Action("Create","MCAT")"><i class="fa fa-plus"></i> Add New Type</a>
+                <div class="card">
+                    <div class="card-header">
+                        @*<a class="btn btn-success" data-modal='' href="@Url.Action("Create","MCAT")"><i class="fa fa-plus"></i> Add New Type</a>*@
 
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
 
-                    <div class="box-body">
+                    <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
@@ -50,15 +50,15 @@
                                             if (this.User.IsInRole("Admin"))
                                             {
                                                 <td>
-                                                    <a class="btn-primary btn-sm" data-modal='' href="@Url.Action("Edit", "MCAT", new { id = item.MCAT_ID })"><i class="fa fa-pencil"></i></a> |
-                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "MCAT", new { id = item.MCAT_ID }) "><i class="fa fa-eye"></i></a> |
-                                                    <a class="btn-danger btn-sm" data-modal='' href="@Url.Action("Delete", "MCAT", new { id = item.MCAT_ID })"><i class="fa fa-trash"></i></a>
+                                                    <a class="btn-primary btn-sm" data-modal='' href="@Url.Action("Edit", "MCAT", new { id = item.MCAT_ID ,@disabled=true})"><i class="fas fa-edit"></i></a> |
+                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "MCAT", new { id = item.MCAT_ID,@disabled=true }) "><i class="fa fa-eye"></i></a> |
+                                                    <a class="btn-danger btn-sm" data-modal='' href="@Url.Action("Delete", "MCAT", new { id = item.MCAT_ID ,@disabled=true})"><i class="fa fa-trash"></i></a>
 
                                                 </td> }
                                             else
                                             {
                                                 <td>
-                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "MCAT", new { id = item.MCAT_ID }) "><i class="fa fa-eye"></i></a> |
+                                                    <a class="btn-info btn-sm" data-modal='' href="@Url.Action("Details", "MCAT", new { id = item.MCAT_ID,@disabled=true }) "><i class="fa fa-eye"></i></a> |
                                                 </td> }
 
                                         }
@@ -69,7 +69,7 @@
                         </table>
                     </div>
                     <!-- /.card-body -->
-                    <div class="box-footer">
+                    <div class="card-footer">
 
                     </div>
 
