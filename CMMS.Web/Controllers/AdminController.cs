@@ -300,7 +300,7 @@ namespace WebApplication.Controllers
         public ActionResult Dashboard()
         {
             string actionName = "Dashboard";
-            string inRoleId = string.Empty;
+            string inRoleId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.CurrentRoleId;
             try
             {
                 string siteId = Session[SessionKeys.UserUnitId]?.ToString();

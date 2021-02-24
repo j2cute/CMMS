@@ -24,7 +24,7 @@ namespace CMMS.Web.Helper
         public static  string AllUnits = "AllUnits";
         public static string UnitTypes = "UnitTypes";
         public static string RolePermissions = "RolePermissions";
-
+        public static string ReloadRolePermissions = "ReloadRolePermissions";
         public static void LoadTablesInSession(string tableName,string userId = null,string roleId = null)
         {
             using (var db = new WebAppDbContext())
@@ -66,6 +66,18 @@ namespace CMMS.Web.Helper
                                                                                select permission).ToList();
                             }
                         }
+                        break;
+
+                    case "ReloadRolePermissions":
+                     
+                            using (var _context = new Entities())
+                            {
+                                HttpContext.Current.Session[RolePermissions] = (from permission in _context.tbl_Permission
+                                                                                join rolePermission in _context.tbl_RolePermission on permission.PermissionId equals rolePermission.PermissionId
+                                                                                where rolePermission.RoleId == roleId
+                                                                                select permission).ToList();
+                            }
+                     
                         break;
                 }
             }

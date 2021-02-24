@@ -153,11 +153,15 @@ namespace WebApplication.Controllers
         [CheckUserSession]
         public ActionResult SwitchRole(string roleId = "")
         {
+            var type = "error";
             try
             {
                 if (!String.IsNullOrWhiteSpace(roleId))
                 {
-                    LoadRole(roleId);
+                    if (LoadRole(roleId))
+                    {
+                        type = "success";
+                    }
                 }
             }
             catch (Exception ex)
@@ -166,7 +170,7 @@ namespace WebApplication.Controllers
             }
 
             var redirectUrl = new UrlHelper(Request.RequestContext).Action("Dashboard", "Admin", new { inRoleId = roleId });
-            return Json(new { Url = redirectUrl });
+            return Json(new { Url = redirectUrl, type = type });
         }
 
         protected override void Dispose(bool disposing)
@@ -266,8 +270,13 @@ namespace WebApplication.Controllers
         }
         #endregion
 
-        private void LoadRole(string roleId)
+        private bool LoadRole(string roleId)
         {
+            string actionName = "LoadRole";
+
+            _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+            bool response = false;
             try
             {
                 if (!String.IsNullOrWhiteSpace(roleId))
@@ -281,24 +290,26 @@ namespace WebApplication.Controllers
 
                         if (!string.IsNullOrWhiteSpace(currentRole))
                         {
-                            SessionKeys.LoadTablesInSession(SessionKeys.RolePermissions, "", currentRole);
-                            var permissions = ((List<tbl_RolePermission>)Session[SessionKeys.RolePermissions]);
+                            SessionKeys.LoadTablesInSession(SessionKeys.ReloadRolePermissions, "", currentRole);
+                            var permissions = ((List<tbl_Permission>)Session[SessionKeys.RolePermissions]);
 
                             foreach (var item in permissions)
                             {
                                 PermissionViewModel permissionViewModel = new PermissionViewModel()
                                 {
                                     PermissionId = item.PermissionId,
-                                    DisplayName = item.tbl_Permission.DisplayName,
-                                    Level = item.tbl_Permission.PermissionLevel.ToString(),
-                                    ParentId = item.tbl_Permission.ParentId,
-                                    URL = item.tbl_Permission.URL
+                                    DisplayName = item.DisplayName,
+                                    Level = item.PermissionLevel.ToString(),
+                                    ParentId = item.ParentId,
+                                    URL = item.URL
                                 };
 
                                 ListPermissionViewModel.Add(permissionViewModel);
                             }
 
                             Session[SessionKeys.SessionHelperInstance] = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]).UpdateFields(roleId, ListPermissionViewModel);
+
+                            response = true;
                         }
                         else
                         {
@@ -309,8 +320,11 @@ namespace WebApplication.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Log(LogLevel.Error, ex.ToString());
+                _logger.Log(LogLevel.Error,actionName + " :: Exception : "  + ex.ToString());
             }
+
+            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+            return response;
         }
 
 
