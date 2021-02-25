@@ -4,7 +4,7 @@
     $("a[data-modal]").on("click", function (e) {
          
         $('#myModalContent').load(this.href, function (response,status,xhr) {
-
+        
             if (status == "error") {
 
                 if (xhr) {
