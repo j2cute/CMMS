@@ -74,7 +74,6 @@
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.CageCode, "", new { @class = "text-danger" })
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Part No</label>
@@ -85,7 +84,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Part Name<span style="color:red">*</span></label>
@@ -133,7 +131,6 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>Unit Price</label>
-
                                     @Html.EditorFor(model => model.tbl_Parts.UNIT_PRICE, new { htmlAttributes = new { @class = "form-control" } })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.UNIT_PRICE, "", new { @class = "text-danger" })
 
@@ -142,10 +139,8 @@
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label>Currency</label>
-
                                     @Html.DropDownListFor(model => model.tbl_Parts.CurrencyID, new SelectList(Model._tbl_Currency, "CurrencyID", "CurrencyName"), "Select", new { @class = "form-control" })
                                     @Html.ValidationMessageFor(model => model.tbl_Parts.CurrencyID, "", new { @class = "text-danger" })
-
                                 </div>
                             </div>
                             <div class="col-md-2">

@@ -8,6 +8,81 @@
 
 
 
+<section class="content" style="min-height:0px !important">
+
+
+
+
+    <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-red">
+                    <div class="inner">
+                        <h3 id="dashEqp"></h3>
+                        <p>Total Equipments</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-blue">
+                    <div class="inner" >
+                        <h3 id="dashMan"></h3>
+                        <p>Manufacturers</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3 id="dashCountries"></h3>
+                        <p>Countries</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-map"></i>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ./col -->
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-yellow">
+                    <div class="inner" >
+                        <h3 id="dashSites"></h3>
+                        <p>Sites</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fas fa-ship"></i>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+        </div>
+    </div>
+
+</section>
+
+
+
 <div id="gridSFD">
 
     @(Html.DevExtreme().DataGrid<V_SFD>()
@@ -32,8 +107,8 @@
 
                             .SearchPanel(searchPanel => searchPanel
                             .Visible(true)
-                            .Width(240)
-                            .Placeholder("Search Parts ...")
+                            .Width(480)
+                            .Placeholder("Search Equipments ...")
                             .SearchVisibleColumnsOnly(false)
                             )
 
@@ -124,3 +199,41 @@
 
         )*@
 </div>
+
+
+<script>
+    $(document).ready(function () {
+        var model = @Html.Raw(Json.Encode(Model));
+        console.log("model", model);
+
+        var country = model.map(function (obj) {
+            return obj.Country;
+        });
+        
+        var cage = model.map(function (obj) {
+            return obj.CageId;
+        });
+        
+        var eqp = model.map(function (obj) {
+            return obj.PartId;
+        });
+        
+        var site = model.map(function (obj) {
+            return obj.SiteId;
+        });
+             
+        document.getElementById('dashEqp').innerText = countUnique(eqp);
+        document.getElementById('dashMan').innerText = countUnique(cage);
+        document.getElementById('dashCountries').innerText = countUnique(country);
+        document.getElementById('dashSites').innerText = countUnique(site);
+    });
+
+    function countUnique(iterable) {
+        return new Set(iterable).size;
+    }
+
+
+    
+
+    
+</script>

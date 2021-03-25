@@ -152,8 +152,10 @@ namespace WebApplication.Controllers
                             {
                                 if (string.IsNullOrWhiteSpace(defaultRoleId))
                                 {
-                                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1 && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault().RoleId;
-                                }
+                                    var data  = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1 && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault();
+                                    ;
+                                    defaultRoleId = data.RoleId;
+                                    }
                                 else
                                 {
                                     defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault().RoleId;
