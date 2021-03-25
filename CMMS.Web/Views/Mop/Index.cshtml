@@ -47,7 +47,7 @@
     var siteId;
     $(document).ready(function () {
     permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
+        siteId = ""; @*@Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));*@
         $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
         GetSiteConfig();
         var mopTable;

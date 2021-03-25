@@ -5,13 +5,19 @@
 
 <link href="~/Content/AdminLTE/tailwind.min.css" rel="stylesheet" />
 <script src="@Url.Content("~/Scripts/AdminLTE/jquery-tailwind-toggle.js")"></script>
- 
+
+<style>
+    .dropdown-menu-lg {
+        min-width: 165px !important;
+    }
+</style>
+
 @Html.AntiForgeryToken()
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
-    <ul class="navbar-nav">
+    <ul class="navbar-nav" style="margin-left: auto !important;">
 
-        CONFIGURATION & MAINTENANCE MANAGEMENT SYSTEM
+        <b> CONFIGURATION & MAINTENANCE MANAGEMENT SYSTEM</b>
     </ul>
 
     <!-- Right navbar links -->
@@ -20,11 +26,13 @@
 
 
         <!-- Messages Dropdown Menu -->
-        <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
+        <li class="nav-item dropdown" tooltip="Hello">
+
+            <a class="nav-link" data-toggle="dropdown" href="#" t>
                 <i class="fas fa-sliders-h"></i>
                 <span class="badge badge-danger navbar-badge"></span>
             </a>
+
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                 @{
                     foreach (var role in userRoles)
@@ -48,29 +56,27 @@
                     }
                 }
             </div>
+
         </li>
 
         <li class="nav-item dropdown">
-
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="fas fa-sliders-h"></i>
-                <span class="badge badge-danger navbar-badge"></span>
+            <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
+                <i class="fas fa-th-large"></i>
             </a>
-
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 
- 
-                <a class="nav-link"  data-modal='' href="@Url.Action("ChangePassword","Administration")">
-                    <i class="fas fa-sign-out-alt">Change Password</i>
+                <div class="dropdown-divider cc_cursor"></div>
+                <a class="nav-link" data-modal='' href="@Url.Action("ChangePassword","Administration")">
+                    <i class="fa fa-key"></i> Change Password
                     <span class="badge badge-danger navbar-badge"></span>
                 </a>
 
-                <a class="nav-link" href="@Url.Action("LogOff","Account")">
-                    <i class="fas fa-sign-out-alt">Logout</i>
+                <div class="dropdown-divider"></div>
+                <a class="nav-link text-danger" href="@Url.Action("LogOff","Account")">
+                    <i class="fa fa-sign-out-alt"></i> Logout
                     <span class="badge badge-danger navbar-badge"></span>
                 </a>
             </div>
-
         </li>
     </ul>
 </nav>
@@ -79,26 +85,45 @@
     function SwitchRoles(selectorOfCheckBox) {
         $(selectorOfCheckBox).each(function () {
             currentRoleId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRoleId));
+
             if (currentRoleId === $(this).prop('value')) {
-                $(this).prop('checked', true);
-                ChangeColor(this)
-            }
-            $(this).change(function () {
-                $.ajax({
-                url: '@Url.Action("SwitchRole", "Account")',
-                type: 'POST',
-                data: {
-                    roleId:  $(this).prop('value')
-                },
-                success: function (response) {
-                    alert('Role has been switched successfully.');
-                    window.location.href = response.Url
-                    },
-                error: function () {
-                        alert('Some error occured.');
-                    }
+
+                    $(this).prop('checked', true);
+                    ChangeColor(this)
+             
+            } else {
+                $(this).change(function () {
+                    $.ajax({
+                        url: '@Url.Action("SwitchRole", "Account")',
+                        type: 'POST',
+                        data: {
+                            roleId: $(this).prop('value')
+                        },
+                        success: function (response) {
+                            if (response) {
+
+                                if (response.type == "success") {
+
+                                    $(this).prop('checked', true);
+                                    ChangeColor(this);
+
+                                    alert('Role has been switched successfully.');
+                                    window.location.href = response.Url
+                                } else {
+                                    alert('Some error occurred.');
+                                }
+
+                            } else {
+                                alert('Some error occurred.');
+                            }
+
+                        },
+                        error: function () {
+                            alert('Some error occured.');
+                        }
+                    });
                 });
-            });
+            }
         });
     }
 

@@ -35,36 +35,40 @@ namespace WebApplication.Controllers
         public ActionResult SFD()
         {
             IEnumerable<V_SFD> response = null;
-            using(var context = new WebAppDbContext())
+            using (var context = new WebAppDbContext())
             {
                 response = context.V_SFD.ToList().Where(x => x.ESWBS.Length > 4);
             }
 
             return View(response);
         }
+
         [CustomAuthorization]
         public ActionResult Units()
         {
             IEnumerable<V_UNITS> response = null;
-            using(var context = new WebAppDbContext())
+            using (var context = new WebAppDbContext())
             {
                 response = context.V_UNITS.ToList();
             }
 
             return View(response);
         }
+
         [CustomAuthorization]
         public ActionResult UnitType()
         {
             IEnumerable<tbl_UnitType> response = null;
-            using(var context = new WebAppDbContext())
+            using (var context = new WebAppDbContext())
             {
                 response = context.tbl_UnitType.ToList();
             }
 
             return View(response);
         }
+
         #region ConfigurationEquipment
+
         [CustomAuthorization]
         public ActionResult ConfigEquipIndex()
         {
@@ -77,17 +81,8 @@ namespace WebApplication.Controllers
             {
                 SessionKeys.LoadTablesInSession(SessionKeys.ApplicableUnits, "", "");
 
-                var selectedSiteId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.SelectedSiteId;
-                if (!String.IsNullOrWhiteSpace(selectedSiteId))
-                {
-                    int siteId = Convert.ToInt32(selectedSiteId);
-                    vm._tbl_Unit = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.ApplicableUnits]).Where(x => x.Id == siteId);
-                }
-                else
-                {
-                    vm._tbl_Unit = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.ApplicableUnits]);
 
-                }
+                vm._tbl_Unit = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.ApplicableUnits]);
 
                 vm.selectedData = "0";
 
@@ -112,7 +107,7 @@ namespace WebApplication.Controllers
         {
             using (var db = new WebAppDbContext())
             {
-                return DataSourceLoader.Load(db.V_SFD.ToList(),loadOptions);
+                return DataSourceLoader.Load(db.V_SFD.ToList(), loadOptions);
             }
         }
 
@@ -197,13 +192,13 @@ namespace WebApplication.Controllers
                 {
                     filterrecord = Partdata.Count();
                 }
-                else 
-                { 
+                else
+                {
                     filterrecord = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A")).Count();
                 }
 
                 var recordcount = db.tbl_Parts.Where(x => x.Status == "Active" && (x.PartTypeID == "X" || x.PartTypeID == "A")).Count();
- 
+
 
                 var response = new { recordsTotal = recordcount, recordsFiltered = filterrecord, data = Partdata };
                 return Json(response, JsonRequestBehavior.AllowGet);
@@ -217,10 +212,15 @@ namespace WebApplication.Controllers
             try
             {
                 ConfigViewModel vm = new ConfigViewModel();
-                if (siteId != 0)
+
+                if (IsValidSiteId(siteId))
                 {
-                    vm = GetSiteConfigTree(siteId);
+                    if (siteId != 0)
+                    {
+                        vm = GetSiteConfigTree(siteId);
+                    }
                 }
+
                 return Json(vm, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -231,9 +231,10 @@ namespace WebApplication.Controllers
         }
 
         #region GetConfigData
+        
         [HttpPost]
         [ValidateLoadActions]
-        public JsonResult GetSelectedConfigData(string eswbs)
+        public JsonResult GetSelectedConfigData(string eswbs, string siteId)
         {
             string actionName = "GetSelectedConfigData";
             _logger.Log(LogLevel.Trace, actionName + " :: started.");
@@ -241,99 +242,111 @@ namespace WebApplication.Controllers
             var type = "error";
             var msg = string.Empty;
             ConfigViewModel vm = new ConfigViewModel();
-            int siteId;
+
             try
             {
                 using (var db = new WebAppDbContext())
                 {
-                    var selectedSiteId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.SelectedSiteId;
-
-
-                    if (!String.IsNullOrWhiteSpace(eswbs) && !String.IsNullOrWhiteSpace(selectedSiteId))
+                    if (!string.IsNullOrWhiteSpace(siteId))
                     {
-                        siteId = Convert.ToInt32(selectedSiteId);
-                        var eswbsDetail = db.C_Site_Config.Where(x => x.ESWBS == eswbs && x.SiteId == siteId).Select(x => new C_SiteConfigModel
-                        {
-                            ESWBS = x.ESWBS,
-                            PESWBS = x.PESWBS,
-                            Nomanclature = x.Nomanclature,
-                            SMR_Code = x.SMR_Code,
-                            PMS_No = x.PMS_No,
-                            Qty = x.Qty,
-                            CageId = x.CageId,
-                            PartId = x.PartId,
+                        int intSiteId = Convert.ToInt32(siteId);
 
-                        }).FirstOrDefault();
-
-                        if (eswbsDetail != null)
+                        if (IsValidSiteId(intSiteId))
                         {
-                            type = "success";
-                            if (eswbsDetail.CageId != null && eswbsDetail.PartId != null)
+                            if (!String.IsNullOrWhiteSpace(eswbs))
                             {
-                                var partDetails = db.tbl_Parts.Where(x => x.CageId == eswbsDetail.CageId && x.PartId == eswbsDetail.PartId).Select(x => new PartsModel
+                                var eswbsDetail = db.C_Site_Config.Where(x => x.ESWBS == eswbs && x.SiteId == intSiteId).Select(x => new C_SiteConfigModel
                                 {
-                                    Part_No = x.Part_No,
-                                    PART_NAME = x.PART_NAME,
-                                    CageCode = x.CageCode,
-                                    NSN = x.NSN,
-                                    PartTypeID = x.PartTypeID,
-                                    MCAT_ID = x.MCAT_ID,
-                                    LENGTH = x.LENGTH,
-                                    WIDTH = x.WIDTH,
-                                    HEIGHT = x.HEIGHT,
-                                    WEIGHT = x.WEIGHT,
-                                    MTBF = x.MTBF,
-                                    MTTR = x.MTTR,
-                                    PART_CHARACTERISTIC = x.PART_CHARACTERISTIC,
-                                    PICTURE_FILE_NAME = x.PICTURE_FILE_NAME,
-                                    File_Path = x.File_Path,
+                                    ESWBS = x.ESWBS,
+                                    PESWBS = x.PESWBS,
+                                    Nomanclature = x.Nomanclature,
+                                    SMR_Code = x.SMR_Code,
+                                    PMS_No = x.PMS_No,
+                                    Qty = x.Qty,
+                                    CageId = x.CageId,
+                                    PartId = x.PartId,
+
                                 }).FirstOrDefault();
 
-                                if (partDetails != null)
+                                if (eswbsDetail != null)
                                 {
-                                    if (!String.IsNullOrWhiteSpace(partDetails.PICTURE_FILE_NAME) && !String.IsNullOrWhiteSpace(partDetails.File_Path))
+                                    type = "success";
+                                    if (eswbsDetail.CageId != null && eswbsDetail.PartId != null)
                                     {
-                                        var imgPath = partDetails.File_Path + partDetails.PICTURE_FILE_NAME;
-                                        var imgsrc = ImageConverter.GetImageBase64(imgPath);
-                                        partDetails.base64Pic = imgsrc;
-                                    }
-
-                                    vm.PartsModel = partDetails;
-
-                                    if (!String.IsNullOrWhiteSpace(partDetails.CageCode))
-                                    {
-                                        var CageDetails = db.tbl_Cage.Where(x => x.CageCode == partDetails.CageCode).Select(x => new CageModel
+                                        var partDetails = db.tbl_Parts.Where(x => x.CageId == eswbsDetail.CageId && x.PartId == eswbsDetail.PartId).Select(x => new PartsModel
                                         {
+                                            Part_No = x.Part_No,
+                                            PART_NAME = x.PART_NAME,
                                             CageCode = x.CageCode,
-                                            CageName = x.CageName,
+                                            NSN = x.NSN,
+                                            PartTypeID = x.PartTypeID,
+                                            MCAT_ID = x.MCAT_ID,
+                                            LENGTH = x.LENGTH,
+                                            WIDTH = x.WIDTH,
+                                            HEIGHT = x.HEIGHT,
+                                            WEIGHT = x.WEIGHT,
+                                            MTBF = x.MTBF,
+                                            MTTR = x.MTTR,
+                                            PART_CHARACTERISTIC = x.PART_CHARACTERISTIC,
+                                            PICTURE_FILE_NAME = x.PICTURE_FILE_NAME,
+                                            File_Path = x.File_Path,
                                         }).FirstOrDefault();
 
-                                        vm.CageModel = CageDetails;
-                                    };
+                                        if (partDetails != null)
+                                        {
+                                            if (!String.IsNullOrWhiteSpace(partDetails.PICTURE_FILE_NAME) && !String.IsNullOrWhiteSpace(partDetails.File_Path))
+                                            {
+                                                var imgPath = partDetails.File_Path + partDetails.PICTURE_FILE_NAME;
+                                                var imgsrc = ImageConverter.GetImageBase64(imgPath);
+                                                partDetails.base64Pic = imgsrc;
+                                            }
+
+                                            vm.PartsModel = partDetails;
+
+                                            if (!String.IsNullOrWhiteSpace(partDetails.CageCode))
+                                            {
+                                                var CageDetails = db.tbl_Cage.Where(x => x.CageCode == partDetails.CageCode).Select(x => new CageModel
+                                                {
+                                                    CageCode = x.CageCode,
+                                                    CageName = x.CageName,
+                                                }).FirstOrDefault();
+
+                                                vm.CageModel = CageDetails;
+                                            };
+                                        }
+                                    }
+
+                                    vm.C_SiteConfigModel = eswbsDetail;
+                                }
+                                else
+                                {
+                                    msg = "ESWBS Not Found !!!";
                                 }
                             }
-
-                            vm.C_SiteConfigModel = eswbsDetail;
+                            else
+                            {
+                                msg = "Required Data Missing !!!";
+                            }
                         }
                         else
                         {
-                            msg = "ESWBS Not Found !!!";
+                            msg = "Please select valid site id !!!";
                         }
                     }
                     else
                     {
-                        msg = "Required Data Missing !!!";
+                        msg = "Please select site id !!!";
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 type = "error";
                 _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
                 Exception(ex);
 
                 msg = "Something Went Wrong !!!";
-             
+
             }
 
             if (type == "success")
@@ -379,52 +392,58 @@ namespace WebApplication.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var selectedSiteId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.SelectedSiteId;
-                    if (model.SiteId == Convert.ToInt64(selectedSiteId))
+                    if (model.SiteId > 0)
                     {
-                        using (var db = new WebAppDbContext())
+                        if (IsValidSiteId(model.SiteId))
                         {
-                            if (model.SiteId != 0 && !String.IsNullOrWhiteSpace(model.ESWBS))
+                            using (var db = new WebAppDbContext())
                             {
-                                if (!db.C_Site_Config.Any(x => x.SiteId == model.SiteId && model.ESWBS == x.ESWBS))
+                                if (model.SiteId != 0 && !String.IsNullOrWhiteSpace(model.ESWBS))
                                 {
-
-                                    var obj = new C_Site_Config()
+                                    if (!db.C_Site_Config.Any(x => x.SiteId == model.SiteId && model.ESWBS == x.ESWBS))
                                     {
-                                        SiteId = model.SiteId,
-                                        ESWBS = model.ESWBS,
-                                        PESWBS = model.PESWBS,
-                                        Nomanclature = model.Nomanclature,
-                                        Qty = model.Qty,
-                                        PMS_No = model.PMS_No,
-                                        SMR_Code = model.SMR_Code,
-                                        CageId = model.CageId,
-                                        PartId = model.PartId,
-                                        Title = model.ESWBS + " - " + model.Nomanclature,
-                                    };
 
-                                    db.C_Site_Config.Add(obj);
-                                    db.SaveChanges();
+                                        var obj = new C_Site_Config()
+                                        {
+                                            SiteId = model.SiteId,
+                                            ESWBS = model.ESWBS,
+                                            PESWBS = model.PESWBS,
+                                            Nomanclature = model.Nomanclature,
+                                            Qty = model.Qty,
+                                            PMS_No = model.PMS_No,
+                                            SMR_Code = model.SMR_Code,
+                                            CageId = model.CageId,
+                                            PartId = model.PartId,
+                                            Title = model.ESWBS + " - " + model.Nomanclature,
+                                        };
 
-                                    vm = GetSiteConfigTree(model.SiteId);
+                                        db.C_Site_Config.Add(obj);
+                                        db.SaveChanges();
 
-                                    type = "success";
-                                    msg = "ESWBS Added Successfully !! ";
+                                        vm = GetSiteConfigTree(model.SiteId);
+
+                                        type = "success";
+                                        msg = "ESWBS Added Successfully !! ";
+                                    }
+                                    else
+                                    {
+                                        msg = "Duplicate ESWBS : " + model.ESWBS;
+                                    }
+
+
+                                    _logger.Log(LogLevel.Trace, actionName + " :: Ended.");
+
                                 }
                                 else
                                 {
-                                    msg = "Duplicate ESWBS : " + model.ESWBS;
+                                    _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
+                                    msg = "Required Data Missing !!!";
                                 }
-
-
-                                _logger.Log(LogLevel.Trace, actionName + " :: Ended.");
-
                             }
-                            else
-                            {
-                                _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
-                                msg = "Required Data Missing !!!";
-                            }
+                        }
+                        else
+                        {
+                            msg = "Please select valid site id !!!";
                         }
                     }
                     else
@@ -485,59 +504,65 @@ namespace WebApplication.Controllers
             _logger.Log(LogLevel.Trace, actionName + " :: started.");
 
             ConfigViewModel vm = new ConfigViewModel();
-            
+
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var selectedSiteId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.SelectedSiteId;
-
-                    if (model.SiteId == Convert.ToInt64(selectedSiteId))
-                    {
-                        using (var db = new WebAppDbContext())
-                        {
-                            if (model.SiteId != 0 && !String.IsNullOrWhiteSpace(model.ESWBS))
-                            {
-                                if (db.C_Site_Config.Any(x => x.SiteId == model.SiteId && model.ESWBS == x.ESWBS))
-                                {
-
-                                    var obj = new C_Site_Config()
-                                    {
-                                        SiteId = model.SiteId,
-                                        ESWBS = model.ESWBS,
-                                        PESWBS = model.PESWBS,
-                                        Nomanclature = model.Nomanclature,
-                                        Qty = model.Qty,
-                                        PMS_No = model.PMS_No,
-                                        SMR_Code = model.SMR_Code,
-                                        CageId = model.CageId,
-                                        PartId = model.PartId,
-                                        Title = model.ESWBS + " - " + model.Nomanclature,
-                                    };
-
-                                    db.Entry(obj).State = EntityState.Modified;
-                                    db.SaveChanges();
  
-                                    vm = GetSiteConfigTree(model.SiteId);
+                    if (model.SiteId> 0)
+                    {
+                        if (IsValidSiteId(model.SiteId))
+                        {
+                            using (var db = new WebAppDbContext())
+                            {
+                                if (model.SiteId != 0 && !String.IsNullOrWhiteSpace(model.ESWBS))
+                                {
+                                    if (db.C_Site_Config.Any(x => x.SiteId == model.SiteId && model.ESWBS == x.ESWBS))
+                                    {
 
-                                    type = "success";
-                                    msg = "ESWBS Updated Successfully !! ";
+                                        var obj = new C_Site_Config()
+                                        {
+                                            SiteId = model.SiteId,
+                                            ESWBS = model.ESWBS,
+                                            PESWBS = model.PESWBS,
+                                            Nomanclature = model.Nomanclature,
+                                            Qty = model.Qty,
+                                            PMS_No = model.PMS_No,
+                                            SMR_Code = model.SMR_Code,
+                                            CageId = model.CageId,
+                                            PartId = model.PartId,
+                                            Title = model.ESWBS + " - " + model.Nomanclature,
+                                        };
+
+                                        db.Entry(obj).State = EntityState.Modified;
+                                        db.SaveChanges();
+
+                                        vm = GetSiteConfigTree(model.SiteId);
+
+                                        type = "success";
+                                        msg = "ESWBS Updated Successfully !! ";
+                                    }
+                                    else
+                                    {
+                                        msg = "ESWBS : " + model.ESWBS + " Not Found.";
+                                        _logger.Log(LogLevel.Trace, actionName + " :: " + msg);
+                                    }
+
+
+                                    _logger.Log(LogLevel.Trace, actionName + " :: Ended.");
+
                                 }
                                 else
                                 {
-                                    msg = "ESWBS : " + model.ESWBS + " Not Found.";
-                                    _logger.Log(LogLevel.Trace, actionName + " :: "+ msg);
+                                    _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
+                                    msg = "Required Data Missing !!!";
                                 }
-
-
-                                _logger.Log(LogLevel.Trace, actionName + " :: Ended.");
-
                             }
-                            else
-                            {
-                                _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
-                                msg = "Required Data Missing !!!";
-                            }
+                        }
+                        else
+                        {
+                            msg = "Please Select Valid Site !!!";
                         }
                     }
                     else
@@ -595,40 +620,46 @@ namespace WebApplication.Controllers
             _logger.Log(LogLevel.Trace, actionName + " :: started.");
 
             ConfigViewModel vm = new ConfigViewModel();
-          
+
             try
             {
-                var selectedSiteId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.SelectedSiteId;
-                if (siteId == Convert.ToInt64(selectedSiteId))
+                 if (siteId > 0)
                 {
-                    using (var db = new WebAppDbContext())
+                    if (IsValidSiteId(siteId))
                     {
-
-                        if (siteId != 0 && !String.IsNullOrWhiteSpace(eswbs))
+                        using (var db = new WebAppDbContext())
                         {
-                            if (db.C_Site_Config.Any(x => x.SiteId == siteId && x.ESWBS == eswbs))
+
+                            if (siteId != 0 && !String.IsNullOrWhiteSpace(eswbs))
                             {
-                                var result = db.C_Site_Config.Where(x => x.SiteId == siteId && x.ESWBS == eswbs).SingleOrDefault();
-                                if (result != null)
+                                if (db.C_Site_Config.Any(x => x.SiteId == siteId && x.ESWBS == eswbs))
                                 {
-                                    db.C_Site_Config.Remove(result);
-                                    db.SaveChanges();
-                                    vm = GetSiteConfigTree(siteId);
-                                    type = "success";
-                                    msg = "Record Deleted Successfully !! ";
+                                    var result = db.C_Site_Config.Where(x => x.SiteId == siteId && x.ESWBS == eswbs).SingleOrDefault();
+                                    if (result != null)
+                                    {
+                                        db.C_Site_Config.Remove(result);
+                                        db.SaveChanges();
+                                        vm = GetSiteConfigTree(siteId);
+                                        type = "success";
+                                        msg = "Record Deleted Successfully !! ";
+                                    }
+                                }
+                                else
+                                {
+                                    msg = "ESWBS : " + eswbs + " Not Found.";
+                                    _logger.Log(LogLevel.Trace, actionName + " :: " + msg);
                                 }
                             }
                             else
                             {
-                                msg = "ESWBS : " + eswbs + " Not Found.";
-                                _logger.Log(LogLevel.Trace, actionName + " :: " + msg);
+                                _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
+                                msg = "Required Data Missing !!!";
                             }
                         }
-                        else
-                        {
-                            _logger.Log(LogLevel.Error, actionName + " :: Ended. Required data missing. ");
-                            msg = "Required Data Missing !!!";
-                        }
+                    }
+                    else
+                    {
+                        msg = "Please Select Valid Site !!!";
                     }
                 }
                 else
@@ -713,18 +744,20 @@ namespace WebApplication.Controllers
 
                     if (unitId > 0)
                     {
-                        List<TreeViewNode> nodesSite = new List<TreeViewNode>();
-                        foreach (C_Site_Config c in db.C_Site_Config.Where(x => x.SiteId == unitId))
+                        if (IsValidSiteId(unitId))
                         {
-                            if (c.PESWBS == "0") { c.PESWBS = "#"; }
-                            if (c.ESWBS.Length < 5)
+                            List<TreeViewNode> nodesSite = new List<TreeViewNode>();
+                            foreach (C_Site_Config c in db.C_Site_Config.Where(x => x.SiteId == unitId))
                             {
-                                nodesSite.Add(new TreeViewNode { id = c.ESWBS.ToString(), parent = c.PESWBS.ToString(), text = (c.ESWBS + " - " + c.Nomanclature), Name = c.Nomanclature });
+                                if (c.PESWBS == "0") { c.PESWBS = "#"; }
+                                if (c.ESWBS.Length < 5)
+                                {
+                                    nodesSite.Add(new TreeViewNode { id = c.ESWBS.ToString(), parent = c.PESWBS.ToString(), text = (c.ESWBS + " - " + c.Nomanclature), Name = c.Nomanclature });
+                                }
                             }
+
+                            vm.JsonSiteConfig = (new JavaScriptSerializer()).Serialize(nodesSite);
                         }
-
-                        vm.JsonSiteConfig = (new JavaScriptSerializer()).Serialize(nodesSite);
-
                     }
 
                     _logger.Log(LogLevel.Error, actionName + " :: Ended.");
@@ -755,71 +788,74 @@ namespace WebApplication.Controllers
                     {
                         if (unitId != 0)
                         {
-                            List<TreeViewNode> items = (new JavaScriptSerializer()).Deserialize<List<TreeViewNode>>(selectedItems);
-
-                            List<string> newListOfParent = new List<string>();
-
-                            foreach (var temp in items.Select(x => x.parents))
+                            if (IsValidSiteId(unitId))
                             {
-                                newListOfParent = newListOfParent.Concat(temp).ToList();
-                            }
-                            newListOfParent = newListOfParent.Distinct().ToList();
+                                List<TreeViewNode> items = (new JavaScriptSerializer()).Deserialize<List<TreeViewNode>>(selectedItems);
 
-                            foreach (var selected in items)
-                            {
-                                if (selected.parent == "#")
+                                List<string> newListOfParent = new List<string>();
+
+                                foreach (var temp in items.Select(x => x.parents))
                                 {
-                                    selected.parent = "0";
+                                    newListOfParent = newListOfParent.Concat(temp).ToList();
                                 }
+                                newListOfParent = newListOfParent.Distinct().ToList();
 
-                                if (!db.C_Site_Config.Where(x => x.SiteId == unitId).Any(x => x.ESWBS == selected.id))
+                                foreach (var selected in items)
                                 {
-                                    var model = new C_Site_Config
+                                    if (selected.parent == "#")
                                     {
-                                        SiteId = unitId,
-                                        ESWBS = selected.id,
-                                        PESWBS = selected.parent,
-                                        Title = selected.text,
-                                        Nomanclature = selected.text.Substring(selected.text.IndexOf('-') + 2),
-                                    };
-                                    db.C_Site_Config.Add(model);
-                                }
-                            }
+                                        selected.parent = "0";
+                                    }
 
-                            foreach (var selected in newListOfParent)
-                            {
-                                if (!items.Where(x => x.id == selected).Any() && selected != "#")
-                                {
-                                    C_Config_Master master = db.C_Config_Master.Where(x => x.ESWBS == selected).FirstOrDefault();
-
-                                    if (!db.C_Site_Config.Where(x => x.SiteId == unitId).Any(x => x.ESWBS == selected))
+                                    if (!db.C_Site_Config.Where(x => x.SiteId == unitId).Any(x => x.ESWBS == selected.id))
                                     {
                                         var model = new C_Site_Config
                                         {
                                             SiteId = unitId,
-                                            ESWBS = selected,
-                                            PESWBS = master.PESWBS,
-                                            Title = master.Nomanclature,
-                                            Nomanclature = master.Nomanclature,
+                                            ESWBS = selected.id,
+                                            PESWBS = selected.parent,
+                                            Title = selected.text,
+                                            Nomanclature = selected.text.Substring(selected.text.IndexOf('-') + 2),
                                         };
                                         db.C_Site_Config.Add(model);
                                     }
                                 }
-                            }
 
-                            db.SaveChanges();
-                            transaction.Commit();
-                            vm = GetSiteConfigTree(unitId);
+                                foreach (var selected in newListOfParent)
+                                {
+                                    if (!items.Where(x => x.id == selected).Any() && selected != "#")
+                                    {
+                                        C_Config_Master master = db.C_Config_Master.Where(x => x.ESWBS == selected).FirstOrDefault();
+
+                                        if (!db.C_Site_Config.Where(x => x.SiteId == unitId).Any(x => x.ESWBS == selected))
+                                        {
+                                            var model = new C_Site_Config
+                                            {
+                                                SiteId = unitId,
+                                                ESWBS = selected,
+                                                PESWBS = master.PESWBS,
+                                                Title = master.Nomanclature,
+                                                Nomanclature = master.Nomanclature,
+                                            };
+                                            db.C_Site_Config.Add(model);
+                                        }
+                                    }
+                                }
+
+                                db.SaveChanges();
+                                transaction.Commit();
+                                vm = GetSiteConfigTree(unitId);
+                            }
                         }
                         //Serialize to JSON string.                
-                       
+
                         return Json(vm, JsonRequestBehavior.AllowGet);
                     }
                     catch (Exception ex)
                     {
                         transaction.Rollback();
                         Exception(ex);
-                        
+
                         return Json(vm, JsonRequestBehavior.AllowGet);
                     }
                 }
@@ -1024,7 +1060,7 @@ namespace WebApplication.Controllers
                         {
                             result.Status = 3;
                             db.Entry(result).Property(x => x.Status).IsModified = true;
-                  
+
                             db.SaveChanges();
 
                         }
@@ -1152,20 +1188,50 @@ namespace WebApplication.Controllers
         #region utilities
         public ConfigViewModel GetSiteConfigTree(int? Id)
         {
+            var viewModel = new ConfigViewModel();
+
             using (var db = new WebAppDbContext())
             {
-                var viewModel = new ConfigViewModel();
-                List<TreeViewNode> nodesSite = new List<TreeViewNode>();
-                foreach (C_Site_Config c in db.C_Site_Config.Where(x => x.SiteId == Id))
+
+                if (Id > 0)
                 {
-                    if (c.PESWBS == "0") { c.PESWBS = "#"; }
-                    nodesSite.Add(new TreeViewNode { id = c.ESWBS.ToString(), parent = c.PESWBS.ToString(), text = (c.ESWBS + " - " + c.Nomanclature), Name = c.Nomanclature });
+                    if (IsValidSiteId(Id))
+                    {
+                        List<TreeViewNode> nodesSite = new List<TreeViewNode>();
+                        foreach (C_Site_Config c in db.C_Site_Config.Where(x => x.SiteId == Id))
+                        {
+                            if (c.PESWBS == "0") { c.PESWBS = "#"; }
+                            nodesSite.Add(new TreeViewNode { id = c.ESWBS.ToString(), parent = c.PESWBS.ToString(), text = (c.ESWBS + " - " + c.Nomanclature), Name = c.Nomanclature });
+                        }
+                        //Serialize to JSON string.
+                        viewModel.JsonSiteConfig = (new JavaScriptSerializer()).Serialize(nodesSite);
+                    }
                 }
-                //Serialize to JSON string.
-                viewModel.JsonSiteConfig = (new JavaScriptSerializer()).Serialize(nodesSite);
-                return viewModel;
             }
+
+            return viewModel;
         }
+
+        public bool IsValidSiteId(int? siteId)
+        {
+            bool response = false;
+            using (var context = new WebAppDbContext())
+            {
+                if (Session[SessionKeys.ApplicableUnits] != null)
+                {
+                   var siteList = (IEnumerable<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.ApplicableUnits];
+
+                    if(siteList.Where(x=>x.Id == siteId).Any())
+                    {
+                        response = true;
+                    }
+                }
+                 
+            }
+
+            return response;
+        }
+
         #endregion utilities
     }
 }

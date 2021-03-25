@@ -10,7 +10,7 @@
 <script src="~/Content/Digitalscript.js"></script>
 <script src="~/Scripts/jstree.min.js"></script>
 <script src="~/Scripts/dataTables.select.min.js"></script>
- 
+
 <style>
     .modal-dialog {
         width: 80% !important;
@@ -34,15 +34,12 @@
     var table;
     var editTable;
     var permissions;
-    var siteId;
 
     $(document).ready(function () {
 
         permissions = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).CurrentRolePermissions));
-        siteId = @Html.Raw(Json.Encode(((SessionHelper)Session[SessionKeys.SessionHelperInstance]).SelectedSiteId));
-        console.log(siteId);
-        $("#C_Site_Config_SiteId").val(siteId);
-        //attr('disabled', true, "style", "pointer-events: '';")
+
+
         $("#addFooter").hide();
         $("#editFooter").hide();
         $("#AddChild").attr('disabled', true);
@@ -50,15 +47,15 @@
         $("#delChild").attr('disabled', true);
 
         $("#ConfigEquipment").show();
-      
+
 
         $("#AddChild").click(function () {
-    
+
             $('#C_Site_Config_ESWBS').val("");
             $('#C_Site_Config_Nomanclature').val("");
             Qty: $('#C_Site_Config_Qty').val("");
             $('#C_Site_Config_PMS_No').val("");
-            $('#C_Site_Config_SMR_Code').val("");     
+            $('#C_Site_Config_SMR_Code').val("");
             table.$('tr.selected').removeClass('selected');
             $("#addFooter").show();
             $("#editFooter").hide();
@@ -72,9 +69,9 @@
             $("#addFooter").hide();
             $("#C_Site_Config_ESWBS").attr("readonly", true);
         });
-        
+
         GetConfig();
- 
+
            table=  $('#example1').DataTable(
             {
                 "bServerSide": true,
@@ -138,11 +135,11 @@
             $.each(tblData, function (i, val) {
                 selectedData = tblData[i];
             });
-  
+
             var partId = selectedData.PartId;
- 
+
             var cageId = selectedData.CageId;
- 
+
             $('#C_Site_Config_PartId').val(partId);
             $('#C_Site_Config_CageId').val(cageId);
 
@@ -160,7 +157,8 @@
 
             dataType: 'json',  // add this line
             data: {
-                eswbs: eswbs
+                eswbs: eswbs,
+                siteId: siteId
             },
             success: function (data) {
 
@@ -169,7 +167,7 @@
                     if  (permissions.filter(obj => obj.PermissionId == "ConfigAdd").length > 0) {
                         $("#AddChild").removeAttr('disabled');
                     }
-             
+
 
                     if (permissions.filter(obj => obj.PermissionId == "ConfigEdit").length > 0) {
                             $("#editChild").removeAttr('disabled');
@@ -177,9 +175,9 @@
 
                     if (permissions.filter(obj => obj.PermissionId == "ConfigDel").length > 0) {
                             $("#delChild").removeAttr('disabled');
-                    }                    
+                    }
 
-                    
+
 
                     // eswbs Detail
 
@@ -230,12 +228,12 @@
 
     function OnSuccess(response , status, xhr) {
 
-       
+
         if (status != "error")
         {
             if (response.type == "success") {
 
-                $("#myModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
+                $("#testModal").modal('hide'); $("#editChildModal").modal('hide'); $("#delChildModal").modal('hide');
                 $("#AddChild").attr('disabled', true); $("#editChild").attr('disabled', true); $("#delChild").attr('disabled', true);
                 resetFormInputs();
                 if (response.vm.JsonSiteConfig != null) {
@@ -318,7 +316,7 @@
             },
             success: OnSuccess,
             failure: function (vm) {
-             
+
                 var finalError = ''
                 for (i = 0; i < vm.responseJSON.length; i++) {
                     finalError += vm.responseJSON[i].key + " : " + vm.responseJSON[i].errors[0] + "\n";
@@ -354,7 +352,7 @@
                     }
                         swal({ title: "ERROR", text: finalError, type: "error", });
                     }
-              
+
             }
         });
     };
@@ -504,7 +502,7 @@
                     var eswbs = data.id;
                     var name = data.text;
                     var parent = data.parent;
-                   
+
                     // use for addChild eswbs becomes peswbs
                     $('#Eswbs').val(eswbs);
                     $('#C_Site_Config_PESWBS').val(eswbs);
@@ -536,7 +534,7 @@
             .each(function () {
                 jQuery(this).val(jQuery(this).prop('defautValue'));
             });
-        jQuery(':input', '#myModal')
+        jQuery(':input', '#testModal')
             .removeAttr('checked')
             .removeAttr('selected')
             .attr("style", "pointer-events: '';")
@@ -558,7 +556,7 @@
     function GetEditChild() {
 
 
-      
+
 
         $("#C_Site_Config_PESWBS").val($("#tbPEswbs").val());
         $("#C_Site_Config_Title").val($("#tbtitle").val());
@@ -582,12 +580,11 @@
 </script>
 
 @*<section class="content-header">
-    <h1>
-        Configure Site
-    </h1>
-</section>*@
+        <h1>
+            Configure Site
+        </h1>
+    </section>*@
 <!-- Main content -->
-
 <!--<section class="content" style="height:0px !important; visibility:hidden" >
     <div class="container-fluid">
         <div class="row">
@@ -612,10 +609,9 @@
                 </div>
             </div>
         </div>-->
-        <!-- /.row (main row) -->
-    <!--</div>
+<!-- /.row (main row) -->
+<!--</div>
 </section>-->
-
 <!-- /.row (main row) -->
 <input type="hidden" name="SiteId" id="SiteId" />
 <input type="hidden" name="Eswbs" id="Eswbs" />
@@ -634,16 +630,16 @@
                                         @Html.DropDownListFor(model => model.C_Site_Config.SiteId, new SelectList(Model._tbl_Unit, "Id", "Name"), "Select", new { @class = "form-control", onchange = "GetConfig()", @required = "true" })
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
-                                  
+
                                 </div>
                             </div>
                             <div class="col-md-6" style="text-align:right">
                                 <input type="hidden" name="selectedItems" id="selectedItems" />
-                                <input data-toggle="modal" data-target="#myModal" type="button" value="Add ESWBS" class="btn btn-default" id="AddChild" />
-                                <input data-toggle="modal" data-target="#myModal" onclick="GetEditChild()" type="button" value="Edit ESWBS" class="btn btn-default" id="editChild" />
+                                <input data-toggle="modal" data-target="#testModal" type="button" value="Add Child" class="btn btn-default" id="AddChild" />
+                                <input data-toggle="modal" data-target="#testModal" onclick="GetEditChild()" type="button" value="Edit ESWBS" class="btn btn-default" id="editChild" />
                                 <input data-toggle="modal" data-target="#delChildModal" type="button" value="Delete ESWBS" class="btn btn-default" id="delChild" />
                             </div>
-                        </div> 
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="scroll" style="overflow-x: auto;  width: 100%;">
@@ -667,7 +663,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label><strong>Eswbs Name:</strong></label>
-                                            <br/>
+                                            <br />
                                             <label id="tbEswbsName"></label>
                                             @*<input class="form-control" id="tbEswbsName" type="text" readonly="readonly" />*@
                                         </div>
@@ -712,29 +708,28 @@
                             </div>
                         </div>
                         <br />
-                        
+
                     </div>
                 </div>
 
             </div>
 
 
-           
 
 
 
 
 
-            </div>
+
         </div>
-
-
     </div>
+
+
+
 </section>
 
 
-
-<div id='myModal' class='modal fade'>
+<div id='testModal' class='modal fade'>
     <div class="modal-dialog modal-lg" style="max-width: 60% !important;">
         <div class="modal-content">
             <div id='myModalContent'>
@@ -746,7 +741,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-         
+
                 <form id="addChildForm">
                     <div class="modal-body">
                         @Html.HiddenFor(model => model.C_Site_Config.PartId)
@@ -877,10 +872,12 @@
 
 
 
+
+
 <div id='delChildModal' class='modal fade'>
     <div class="modal-dialog modal-lg" style="width: 40% !important;">
         <div class="modal-content">
-            <div id='myModalContent'>
+            <div id='myModalContent1'>
 
                 <div class="modal-header">
                     <h4 class="modal-title" style="color:red"><b>Confirm Delete</b></h4>
@@ -905,6 +902,3 @@
     </div>
 </div>
 
-@section scripts{
-    @Scripts.Render("~/Scripts/Common/ModalPopup.js")
-}

@@ -181,7 +181,7 @@ namespace WebApplication.Controllers
                                         ListPermissionViewModel.Add(permissionViewModel);
                                     }
 
-                                    Session[SessionKeys.SessionHelperInstance] = new SessionHelper(siteId, loginUserId, defaultRoleId, ListPermissionViewModel);
+                                    Session[SessionKeys.SessionHelperInstance] = new SessionHelper(loginUserId, defaultRoleId, ListPermissionViewModel);
                                     dashboard.DashboardId = GetDashboardId(loginUserId);
 
 
@@ -215,84 +215,182 @@ namespace WebApplication.Controllers
             return RedirectToAction("UnitSelection");
         }
 
+        //[HttpGet]
+        //[CheckUserSession]
+        //public ActionResult Dashboard()
+        //{
+        //    string actionName = "Get Dashboard";
+        //    try
+        //    {
+        //        _logger.Log(LogLevel.Trace, actionName + " :: started.");
+
+        //        var sessionVariables = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]);
+        //        if (sessionVariables != null)
+        //        {
+
+        //            DashboardViewModel dashboard = new DashboardViewModel();
+        //            List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+
+        //            dashboard._tbl_Unit = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.AllUnits]);
+
+        //            dashboard.datetime = DateTime.Now.ToString();
+        //            string loginUserId = Session[SessionKeys.UserId]?.ToString();
+
+        //            string defaultRoleId = string.Empty;
+
+        //            using (Entities _context = new Entities())
+        //            {
+        //                if (string.IsNullOrWhiteSpace(sessionVariables.CurrentRoleId))
+        //                {
+        //                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1 && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault().RoleId;
+        //                }
+        //                else
+        //                {
+        //                    defaultRoleId = sessionVariables.CurrentRoleId;
+        //                }
+
+        //                if (!String.IsNullOrWhiteSpace(defaultRoleId))
+        //                {
+        //                    var permissions = ((List<tbl_Permission>)Session[SessionKeys.RolePermissions]);
+
+        //                    foreach (var item in permissions)
+        //                    {
+        //                        PermissionViewModel permissionViewModel = new PermissionViewModel()
+        //                        {
+        //                            PermissionId = item.PermissionId,
+        //                            DisplayName = item.DisplayName,
+        //                            Level = item.PermissionLevel?.ToString(),
+        //                            ParentId = item.ParentId,
+        //                            URL = item.URL,
+        //                            IconPath = item.IconPath
+        //                        };
+
+        //                        ListPermissionViewModel.Add(permissionViewModel);
+        //                    }
+
+
+        //                    Session[SessionKeys.SessionHelperInstance] = new SessionHelper(loginUserId, defaultRoleId, ListPermissionViewModel);
+
+        //                    dashboard.DashboardId = GetDashboardId(loginUserId);
+        //                    return View(dashboard);
+        //                }
+        //                else
+        //                {
+        //                    _logger.Log(LogLevel.Error, actionName + " :: Role id not found.");
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            _logger.Log(LogLevel.Error, actionName + " :: Session Expired.");
+        //            RedirectToAction("LogOff", "Account");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
+        //    }
+
+        //    _logger.Log(LogLevel.Trace, actionName + " :: ended.");
+
+        //    return RedirectToAction("UnitSelection");
+        //}
+
+
         [HttpGet]
         [CheckUserSession]
         public ActionResult Dashboard()
         {
-            string actionName = "Get Dashboard";
+            string actionName = "Dashboard";
+            string inRoleId = ((SessionHelper)Session[SessionKeys.SessionHelperInstance])?.CurrentRoleId;
             try
             {
+                string siteId = Session[SessionKeys.UserUnitId]?.ToString();
+
                 _logger.Log(LogLevel.Trace, actionName + " :: started.");
 
-                var sessionVariables = ((SessionHelper)Session[SessionKeys.SessionHelperInstance]);
-                if (sessionVariables != null)
+                if (!string.IsNullOrWhiteSpace(siteId))
                 {
-
-                    DashboardViewModel dashboard = new DashboardViewModel();
-                    List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
-
-                    dashboard._tbl_Unit = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.AllUnits]);
-
-                    dashboard.datetime = DateTime.Now.ToString();
-                    string loginUserId = Session[SessionKeys.UserId]?.ToString();
-
-                    string defaultRoleId = string.Empty;
-
-                    using (Entities _context = new Entities())
+                    if (Regex.IsMatch(siteId, RegexHelper.NumberOnly))
                     {
-                        if (string.IsNullOrWhiteSpace(sessionVariables.CurrentRoleId))
-                        {
-                            defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1 && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault().RoleId;
-                        }
-                        else
-                        {
-                            defaultRoleId = sessionVariables.CurrentRoleId;
-                        }
+                        var applicableUnits = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.ApplicableUnits]);
+                        int intSiteId = Convert.ToInt32(siteId);
 
-                        if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                        if (applicableUnits != null && applicableUnits.Where(x => x.Id == intSiteId).Any())
                         {
-                            var permissions = ((List<tbl_Permission>)Session[SessionKeys.RolePermissions]);
 
-                            foreach (var item in permissions)
+                            DashboardViewModel dashboard = new DashboardViewModel();
+                            List<PermissionViewModel> ListPermissionViewModel = new List<PermissionViewModel>();
+
+                            dashboard._tbl_Unit = ((List<ClassLibrary.Models.tbl_Unit>)Session[SessionKeys.AllUnits]);
+
+                            string defaultRoleId = !String.IsNullOrWhiteSpace(inRoleId) ? inRoleId : string.Empty;
+
+                            dashboard.datetime = DateTime.Now.ToString();
+                            string loginUserId = Session[SessionKeys.UserId]?.ToString();
+
+                            using (Entities _context = new Entities())
                             {
-                                PermissionViewModel permissionViewModel = new PermissionViewModel()
+                                if (string.IsNullOrWhiteSpace(defaultRoleId))
                                 {
-                                    PermissionId = item.PermissionId,
-                                    DisplayName = item.DisplayName,
-                                    Level = item.PermissionLevel?.ToString(),
-                                    ParentId = item.ParentId,
-                                    URL = item.URL,
-                                    IconPath = item.IconPath
-                                };
+                                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.IsDefault == 1 && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault().RoleId;
+                                }
+                                else
+                                {
+                                    defaultRoleId = _context.tbl_UserRole.Where(x => x.UserId == loginUserId && x.RoleId == inRoleId && x.IsActive != 0 && x.IsDeleted != 1)?.FirstOrDefault().RoleId;
+                                }
 
-                                ListPermissionViewModel.Add(permissionViewModel);
+                                if (!String.IsNullOrWhiteSpace(defaultRoleId))
+                                {
+                                    SessionKeys.LoadTablesInSession(SessionKeys.RolePermissions, "", defaultRoleId);
+                                    var permissions = ((List<tbl_Permission>)Session[SessionKeys.RolePermissions]);
+
+                                    foreach (var item in permissions)
+                                    {
+                                        PermissionViewModel permissionViewModel = new PermissionViewModel()
+                                        {
+                                            PermissionId = item.PermissionId,
+                                            DisplayName = item.DisplayName,
+                                            Level = item.PermissionLevel?.ToString(),
+                                            ParentId = item.ParentId,
+                                            URL = item.URL,
+                                            IconPath = item.IconPath
+                                        };
+
+                                        ListPermissionViewModel.Add(permissionViewModel);
+                                    }
+
+                                    Session[SessionKeys.SessionHelperInstance] = new SessionHelper(loginUserId, defaultRoleId, ListPermissionViewModel);
+                                    dashboard.DashboardId = GetDashboardId(loginUserId);
+
+
+                                    return View(dashboard);
+                                }
+                                else
+                                {
+                                    _logger.Log(LogLevel.Error, actionName + " :: Role id not found.");
+                                }
                             }
-
-
-                            Session[SessionKeys.SessionHelperInstance] = new SessionHelper(sessionVariables.SelectedSiteId, loginUserId, defaultRoleId, ListPermissionViewModel);
-
-                            dashboard.DashboardId = GetDashboardId(loginUserId);
-                            return View(dashboard);
                         }
                         else
                         {
-                            _logger.Log(LogLevel.Error, actionName + " :: Role id not found.");
+                            _logger.Log(LogLevel.Error, actionName + " :: Please select valid site id.");
                         }
+                    }
+                    else
+                    {
+                        _logger.Log(LogLevel.Error, actionName + " :: Invalid input in site id.");
                     }
                 }
                 else
                 {
-                    _logger.Log(LogLevel.Error, actionName + " :: Session Expired.");
-                    RedirectToAction("LogOff", "Account");
+                    _logger.Log(LogLevel.Error, actionName + " :: Site id empty.");
                 }
             }
             catch (Exception ex)
             {
                 _logger.Log(LogLevel.Error, actionName + " EXCEPTION :: " + ex.ToString() + " INNER EXCEPTION :: " + ex.InnerException?.ToString());
             }
-
-            _logger.Log(LogLevel.Trace, actionName + " :: ended.");
-
             return RedirectToAction("UnitSelection");
         }
 

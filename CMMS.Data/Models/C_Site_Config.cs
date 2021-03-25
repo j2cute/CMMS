@@ -29,7 +29,7 @@ namespace ClassLibrary.Models
         public string ALTLCNXB { get; set; }
         public string LCNTYPXB { get; set; }
         public string LOC { get; set; }
-    
+
         public virtual tbl_Unit tbl_Unit { get; set; }
     }
 }
