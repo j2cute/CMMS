@@ -1,419 +1,65 @@
-2021-02-23 10:30:27.0975|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 10:30:28.4377|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 10:30:28.5808|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 10:30:33.3221|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 10:30:33.4591|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 10:30:33.5161|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 10:53:38.0377|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 10:53:38.0647|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 10:53:38.0917|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 10:54:24.0138|ERROR|WebApplication.Controllers.CageController|Index :: started.
-2021-02-23 10:54:24.0398|TRACE|WebApplication.Controllers.CageController|Index :: ended.
-2021-02-23 10:54:27.9803|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
-2021-02-23 10:54:28.0283|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
-2021-02-23 11:38:51.3178|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 11:38:53.4285|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 11:38:53.6185|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 11:39:00.2445|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 11:39:00.4515|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 11:39:00.5165|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 11:39:29.3103|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 11:39:29.3892|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 11:39:43.1834|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 11:39:43.2474|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 11:41:21.5661|ERROR|WebApplication.Controllers.ConfigController|Index :: started.
-2021-02-23 11:41:21.5661|ERROR|WebApplication.Controllers.ConfigController|Index :: Ended.
-2021-02-23 11:41:22.2871|ERROR|WebApplication.Controllers.ConfigController|GetConfig :: started.
-2021-02-23 11:41:22.3681|ERROR|WebApplication.Controllers.ConfigController|GetConfig :: Ended.
-2021-02-23 11:47:59.6056|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 11:47:59.6206|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 11:50:51.0253|TRACE|WebApplication.Controllers.PartsController|Index :: started.
-2021-02-23 11:50:51.0723|TRACE|WebApplication.Controllers.PartsController|Index :: ended.
-2021-02-23 11:50:56.8563|TRACE|WebApplication.Controllers.PartsController|Index :: started.
-2021-02-23 11:50:56.8563|TRACE|WebApplication.Controllers.PartsController|Index :: ended.
-2021-02-23 11:50:56.9053|TRACE|WebApplication.Controllers.PartsController|LoadData :: started.
-2021-02-23 11:50:56.9972|TRACE|WebApplication.Controllers.PartsController|LoadData :: ended.
-2021-02-23 12:03:28.0831|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:03:28.1952|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:03:28.2101|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:03:32.4244|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:03:32.4504|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:03:32.4834|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:03:47.8820|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:03:47.9000|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:03:47.9000|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:04:22.1877|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:04:25.9793|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:04:26.4877|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:04:31.1770|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:04:31.3650|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:04:31.4381|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:07:25.1256|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:07:25.1526|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:07:25.1526|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:07:29.6080|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:07:29.6170|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:07:29.6170|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:07:58.0301|TRACE|WebApplication.Controllers.AdministrationController|CheckUserName :: started.
-2021-02-23 12:07:58.0301|TRACE|WebApplication.Controllers.AdministrationController|CheckUserName :: ended.
-2021-02-23 12:09:02.9410|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:09:02.9860|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:13:44.5868|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
-2021-02-23 12:13:44.5868|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
-2021-02-23 12:13:47.0491|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:13:47.0971|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:13:47.1221|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:13:52.2076|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:13:52.2276|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:13:52.2276|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:14:16.4419|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:14:16.4489|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:15:50.7036|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:15:50.7036|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:17:23.8469|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:17:23.8609|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:24:16.2919|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:24:16.2919|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:24:19.5998|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:24:19.5998|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:24:19.9628|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:24:19.9898|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:24:33.4282|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
-2021-02-23 12:24:33.4282|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
-2021-02-23 12:24:35.2967|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:24:35.3267|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:24:35.3357|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:24:39.3183|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:24:39.3183|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:24:39.3343|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:25:00.0766|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:25:00.0766|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:26:04.9932|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:26:04.9932|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:26:10.2188|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 12:26:10.2188|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 12:26:19.9942|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:26:19.9942|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:26:35.4677|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
-2021-02-23 12:26:35.4677|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
-2021-02-23 12:26:37.7044|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:26:37.7295|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:26:37.7295|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:26:41.6057|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:26:41.6197|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:26:41.6197|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:26:47.3123|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:26:47.3123|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:27:31.2595|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:27:31.2805|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:28:06.7593|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:28:06.7593|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:28:07.8839|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:28:07.8839|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:28:13.3989|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:28:13.3989|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:31:18.9822|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:31:18.9822|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:32:02.0604|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:32:02.0604|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:32:05.5852|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:32:05.5852|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:33:45.6098|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:33:45.6098|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:33:49.1896|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:33:49.1896|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:35:34.2886|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:35:34.2886|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:35:39.5074|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:35:39.5074|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:35:39.6635|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:35:39.6635|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:35:46.1091|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:35:46.1091|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:35:55.8637|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:35:55.8637|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:35:58.2816|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:35:58.2816|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:39:38.1419|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:39:38.1419|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:39:42.8200|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:39:42.8200|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:39:42.9749|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:39:42.9749|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:41:48.4454|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:41:48.4454|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:41:53.6939|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:41:53.6939|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:41:53.8350|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:41:53.8350|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:41:53.9309|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:41:53.9309|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:42:33.9206|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:42:33.9206|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:42:37.6337|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:42:37.6337|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:42:37.8054|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:42:37.8054|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:42:37.9757|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:42:37.9757|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:49:37.5646|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:49:40.3270|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:49:40.7479|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:49:45.0646|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:49:45.2286|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:49:45.3026|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:50:26.4437|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:54:31.4328|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:56:54.1274|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
-2021-02-23 12:56:54.1274|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
-2021-02-23 12:56:56.7267|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 12:56:56.7857|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 12:56:56.8007|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 12:57:00.6804|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 12:57:00.7043|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 12:57:00.7233|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 12:57:10.7284|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 12:57:10.7284|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 12:58:14.3385|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:58:14.3505|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:58:50.1551|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:58:50.1551|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:58:51.4708|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:58:51.4745|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:58:54.8824|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:58:54.9044|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 12:59:29.3296|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 12:59:29.3296|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 13:00:48.4818|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:00:48.4938|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:01:07.0473|TRACE|WebApplication.Controllers.PartsController|Index :: started.
-2021-02-23 13:01:07.0943|TRACE|WebApplication.Controllers.PartsController|Index :: ended.
-2021-02-23 13:01:07.4799|TRACE|WebApplication.Controllers.PartsController|Index :: started.
-2021-02-23 13:01:07.4799|TRACE|WebApplication.Controllers.PartsController|Index :: ended.
-2021-02-23 13:01:07.5039|TRACE|WebApplication.Controllers.PartsController|LoadData :: started.
-2021-02-23 13:01:07.5619|TRACE|WebApplication.Controllers.PartsController|LoadData :: ended.
-2021-02-23 13:01:10.8732|TRACE|WebApplication.Controllers.PartTypeController|Index :: started.
-2021-02-23 13:01:10.8732|TRACE|WebApplication.Controllers.PartTypeController|Index :: ended.
-2021-02-23 13:01:34.8833|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:01:34.8833|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:02:23.2013|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:02:23.2183|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:05:06.6862|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:05:06.6982|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:08:35.2293|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:08:35.2293|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:08:54.4140|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:08:54.4570|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:24:21.4592|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:24:21.4592|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:24:36.9379|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 13:24:36.9379|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 13:26:13.0135|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:26:13.0224|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:29:57.5209|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:29:57.5329|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:30:16.8173|TRACE|WebApplication.Controllers.AccountController|LogOff :: started.
-2021-02-23 13:30:16.8173|TRACE|WebApplication.Controllers.AccountController|LogOff :: ended.
-2021-02-23 13:30:22.0231|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 13:30:22.0910|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 13:30:22.1120|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 13:30:26.8751|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 13:30:26.9321|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 13:30:26.9521|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 13:30:40.1319|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:30:40.1319|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:32:14.9429|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:32:14.9519|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:32:30.4067|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 13:32:30.4067|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 13:32:38.9497|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 13:32:38.9497|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 13:32:41.4698|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:32:41.5028|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:32:56.6166|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:32:56.6166|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:39:28.8465|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:39:28.8595|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:39:57.7138|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 13:39:57.7138|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 13:41:52.5061|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:41:52.5471|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:49:22.5023|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 13:49:27.3146|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 13:49:27.9094|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 13:49:33.1706|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 13:49:33.3396|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 13:49:33.4175|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 13:49:51.8489|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 13:49:52.0088|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 13:50:04.3885|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 13:50:04.3995|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 13:50:05.7659|TRACE|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: started.
-2021-02-23 13:50:05.7659|ERROR|WebApplication.Controllers.ConfigController|GetSelectedConfigData :: Ended. 
-2021-02-23 14:07:29.3887|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 14:07:33.4266|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 14:07:34.5618|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 14:07:39.7557|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 14:07:39.9826|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 14:07:40.0504|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 14:08:24.0714|ERROR|WebApplication.Controllers.AccountController|System.InvalidCastException: Unable to cast object of type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_Permission]' to type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_RolePermission]'.
-   at WebApplication.Controllers.AccountController.LoadRole(String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AccountController.cs:line 284
-2021-02-23 14:08:25.5334|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 14:08:25.5783|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 14:08:25.6122|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 14:08:31.9132|ERROR|WebApplication.Controllers.AccountController|System.InvalidCastException: Unable to cast object of type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_Permission]' to type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_RolePermission]'.
-   at WebApplication.Controllers.AccountController.LoadRole(String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AccountController.cs:line 284
-2021-02-23 14:08:33.8527|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 14:08:33.8717|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 14:08:33.8907|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 14:08:40.3002|ERROR|WebApplication.Controllers.AccountController|System.InvalidCastException: Unable to cast object of type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_Permission]' to type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_RolePermission]'.
-   at WebApplication.Controllers.AccountController.LoadRole(String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AccountController.cs:line 284
-2021-02-23 14:08:41.3661|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 14:08:41.3781|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 14:08:41.3901|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 14:08:53.3263|ERROR|WebApplication.Controllers.CageController|Index :: started.
-2021-02-23 14:08:53.3857|TRACE|WebApplication.Controllers.CageController|Index :: ended.
-2021-02-23 14:08:58.7533|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
-2021-02-23 14:08:58.8191|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
-2021-02-23 14:09:08.8360|TRACE|WebApplication.Controllers.CageController|Edit :: started.
-2021-02-23 14:09:08.8605|TRACE|WebApplication.Controllers.CageController|Edit :: ended.
-2021-02-23 14:09:13.1106|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 14:09:15.8193|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 15:14:20.3846|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:14:23.8073|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:14:24.0418|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:14:24.0917|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 15:14:24.0917|ERROR|WebApplication.Controllers.AdminController|Get Dashboard :: Session Expired.
-2021-02-23 15:14:24.0917|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: ended.
-2021-02-23 15:14:24.1048|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:14:24.1048|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:15:11.5541|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:15:11.6703|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:15:11.6818|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:15:11.7239|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 15:15:11.7239|ERROR|WebApplication.Controllers.AdminController|Get Dashboard :: Session Expired.
-2021-02-23 15:15:11.7239|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: ended.
-2021-02-23 15:15:11.7422|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:15:11.7502|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:15:24.8054|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:15:28.2172|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:15:28.2172|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:15:37.8742|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 15:15:37.8742|ERROR|WebApplication.Controllers.AdminController|Get Dashboard :: Session Expired.
-2021-02-23 15:15:37.8742|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: ended.
-2021-02-23 15:15:37.8916|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:15:37.8916|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:15:55.4571|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:15:57.0176|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:15:57.0278|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:15:57.0530|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 15:15:57.0530|ERROR|WebApplication.Controllers.AdminController|Get Dashboard :: Session Expired.
-2021-02-23 15:15:57.0530|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: ended.
-2021-02-23 15:15:57.0817|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:15:57.0917|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:16:12.7584|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:16:16.5193|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:16:16.5300|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:16:17.6309|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 15:16:17.6309|ERROR|WebApplication.Controllers.AdminController|Get Dashboard :: Session Expired.
-2021-02-23 15:16:17.6309|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: ended.
-2021-02-23 15:16:17.6831|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:16:17.6831|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:18:06.3016|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:18:11.1889|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:18:24.7870|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:18:30.8595|TRACE|WebApplication.Controllers.AdminController|Get Dashboard :: started.
-2021-02-23 15:26:53.1835|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:27:05.0710|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:27:05.9168|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:27:11.4543|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 15:27:11.9134|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 15:27:12.0239|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 15:27:31.4270|ERROR|WebApplication.Controllers.AccountController|System.InvalidCastException: Unable to cast object of type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_Permission]' to type 'System.Collections.Generic.List`1[ILS.UserManagement.Models.tbl_RolePermission]'.
-   at WebApplication.Controllers.AccountController.LoadRole(String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AccountController.cs:line 285
-2021-02-23 15:27:35.3520|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 15:27:35.4722|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
-2021-02-23 15:27:35.5277|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
-2021-02-23 15:27:41.3053|ERROR|WebApplication.Controllers.CageController|Index :: started.
-2021-02-23 15:27:41.3927|TRACE|WebApplication.Controllers.CageController|Index :: ended.
-2021-02-23 15:27:56.3522|TRACE|WebApplication.Controllers.CageController|LoadData :: started.
-2021-02-23 15:27:56.4812|TRACE|WebApplication.Controllers.CageController|LoadData :: ended.
-2021-02-23 15:28:40.9367|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 15:28:41.1848|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 15:29:22.0857|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 15:29:22.0985|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 15:30:08.1776|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: started.
-2021-02-23 15:30:08.1944|TRACE|WebApplication.Controllers.ConfigController|ConfigEquipIndex :: Ended.
-2021-02-23 15:32:29.1508|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:32:41.1308|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
-2021-02-23 15:32:41.5707|ERROR|WebApplication.Controllers.AccountController|PopulateSessions EXCEPTION :: System.Data.Entity.Core.MetadataException: Schema specified is not valid. Errors: 
-The relationship 'db_CMMSModel.FK_C_Site_Config_tbl_Unit' was not loaded because the type 'db_CMMSModel.C_Site_Config' is not available.
-The following information may be useful in resolving the previous error:
-The required property 'EIACODXA' does not exist on the type 'ClassLibrary.Models.C_Site_Config'.
-
-
-   at System.Data.Entity.Core.Metadata.Edm.ObjectItemCollection.LoadAssemblyFromCache(Assembly assembly, Boolean loadReferencedAssemblies, EdmItemCollection edmItemCollection, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.ExplicitLoadFromAssembly(Assembly assembly, ObjectItemCollection collection, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.LoadFromAssembly(Assembly assembly, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.LoadFromAssembly(Assembly assembly)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataOptimization.TryUpdateEntitySetMappingsForType(Type entityType)
-   at System.Data.Entity.Internal.InternalContext.UpdateEntitySetMappingsForType(Type entityType)
-   at System.Data.Entity.Internal.InternalContext.GetEntitySetAndBaseTypeForType(Type entityType)
-   at System.Data.Entity.Internal.Linq.InternalSet`1.Initialize()
-   at System.Data.Entity.Internal.Linq.InternalSet`1.GetEnumerator()
-   at System.Data.Entity.Infrastructure.DbQuery`1.System.Collections.Generic.IEnumerable<TResult>.GetEnumerator()
-   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
-   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
-   at CMMS.Web.Helper.SessionKeys.LoadTablesInSession(String tableName, String userId, String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Helpers\Constants.cs:line 37
-   at WebApplication.Controllers.AccountController.PopulateSessions() in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AccountController.cs:line 325 INNER EXCEPTION :: 
-2021-02-23 15:32:41.5707|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
-2021-02-23 15:32:43.5045|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 15:32:43.5045|ERROR|WebApplication.Controllers.AdminController|Dashboard :: Site id empty.
-2021-02-23 15:32:43.5260|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:32:43.5996|ERROR|WebApplication.Controllers.AdminController|UnitSelection EXCEPTION :: System.Data.Entity.Core.MetadataException: Schema specified is not valid. Errors: 
-The relationship 'db_CMMSModel.FK_C_Site_Config_tbl_Unit' was not loaded because the type 'db_CMMSModel.C_Site_Config' is not available.
-The following information may be useful in resolving the previous error:
-The required property 'EIACODXA' does not exist on the type 'ClassLibrary.Models.C_Site_Config'.
-
-
-   at System.Data.Entity.Core.Metadata.Edm.ObjectItemCollection.LoadAssemblyFromCache(Assembly assembly, Boolean loadReferencedAssemblies, EdmItemCollection edmItemCollection, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.ExplicitLoadFromAssembly(Assembly assembly, ObjectItemCollection collection, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.LoadFromAssembly(Assembly assembly, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.LoadFromAssembly(Assembly assembly)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataOptimization.TryUpdateEntitySetMappingsForType(Type entityType)
-   at System.Data.Entity.Internal.InternalContext.UpdateEntitySetMappingsForType(Type entityType)
-   at System.Data.Entity.Internal.InternalContext.GetEntitySetAndBaseTypeForType(Type entityType)
-   at System.Data.Entity.Internal.Linq.InternalSet`1.Initialize()
-   at System.Data.Entity.Internal.Linq.InternalSet`1.GetEnumerator()
-   at System.Data.Entity.Infrastructure.DbQuery`1.System.Collections.Generic.IEnumerable<TResult>.GetEnumerator()
-   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
-   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
-   at CMMS.Web.Helper.SessionKeys.LoadTablesInSession(String tableName, String userId, String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Helpers\Constants.cs:line 37
-   at WebApplication.Controllers.AdminController.UnitSelection() in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AdminController.cs:line 49 INNER EXCEPTION :: 
-2021-02-23 15:32:43.5996|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:33:55.1970|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
-2021-02-23 15:34:05.2689|ERROR|WebApplication.Controllers.AdminController|Dashboard :: Site id empty.
-2021-02-23 15:34:05.3348|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: started.
-2021-02-23 15:34:05.4315|ERROR|WebApplication.Controllers.AdminController|UnitSelection EXCEPTION :: System.Data.Entity.Core.MetadataException: Schema specified is not valid. Errors: 
-The relationship 'db_CMMSModel.FK_C_Site_Config_tbl_Unit' was not loaded because the type 'db_CMMSModel.C_Site_Config' is not available.
-The following information may be useful in resolving the previous error:
-The required property 'EIACODXA' does not exist on the type 'ClassLibrary.Models.C_Site_Config'.
-
-
-   at System.Data.Entity.Core.Metadata.Edm.ObjectItemCollection.LoadAssemblyFromCache(Assembly assembly, Boolean loadReferencedAssemblies, EdmItemCollection edmItemCollection, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.ExplicitLoadFromAssembly(Assembly assembly, ObjectItemCollection collection, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.LoadFromAssembly(Assembly assembly, Action`1 logLoadMessage)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataWorkspace.LoadFromAssembly(Assembly assembly)
-   at System.Data.Entity.Core.Metadata.Edm.MetadataOptimization.TryUpdateEntitySetMappingsForType(Type entityType)
-   at System.Data.Entity.Internal.InternalContext.UpdateEntitySetMappingsForType(Type entityType)
-   at System.Data.Entity.Internal.InternalContext.GetEntitySetAndBaseTypeForType(Type entityType)
-   at System.Data.Entity.Internal.Linq.InternalSet`1.Initialize()
-   at System.Data.Entity.Internal.Linq.InternalSet`1.GetEnumerator()
-   at System.Data.Entity.Infrastructure.DbQuery`1.System.Collections.Generic.IEnumerable<TResult>.GetEnumerator()
-   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
-   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
-   at CMMS.Web.Helper.SessionKeys.LoadTablesInSession(String tableName, String userId, String roleId) in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Helpers\Constants.cs:line 37
-   at WebApplication.Controllers.AdminController.UnitSelection() in C:\Users\QVISE\source\repos\CMMS\CMMS.Web\Controllers\AdminController.cs:line 49 INNER EXCEPTION :: 
-2021-02-23 15:34:05.4315|TRACE|WebApplication.Controllers.AdminController|UnitSelection :: ended.
-2021-02-23 15:34:14.6482|TRACE|WebApplication.Controllers.AccountController|Login attempted for : 123456
-2021-02-23 15:34:19.8806|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
+2021-04-06 18:42:23.0523|TRACE|WebApplication.Controllers.AccountController|Login attempted for : admin
+2021-04-06 18:42:26.1044|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: started.
+2021-04-06 18:42:26.5566|TRACE|WebApplication.Controllers.AccountController|PopulateSessions :: ended.
+2021-04-06 18:42:26.5993|TRACE|WebApplication.Controllers.AdminController|Dashboard :: started.
+2021-04-06 18:42:26.7554|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: started
+2021-04-06 18:42:26.7947|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: No dashboard linked with user.
+2021-04-06 18:42:26.7947|TRACE|WebApplication.Controllers.AdminController|GetDashboardId :: ended
+2021-04-06 18:42:39.2138|TRACE|WebApplication.Controllers.MopController|Index :: started.
+2021-04-06 18:42:39.2338|TRACE|WebApplication.Controllers.MopController|Index :: ended.
+2021-04-06 18:42:40.1227|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: started.
+2021-04-06 18:42:40.1227|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: ended.
+2021-04-06 18:42:53.3279|TRACE|WebApplication.Controllers.MopController|LoadPlans :: started.
+2021-04-06 18:42:53.3778|TRACE|WebApplication.Controllers.MopController|LoadPlans :: ended.
+2021-04-06 18:42:58.1960|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 18:42:58.2019|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 18:43:05.2033|TRACE|WebApplication.Controllers.MopController|Index :: started.
+2021-04-06 18:43:05.2033|TRACE|WebApplication.Controllers.MopController|Index :: ended.
+2021-04-06 18:43:05.7424|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: started.
+2021-04-06 18:43:05.7424|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: ended.
+2021-04-06 18:48:37.0369|TRACE|WebApplication.Controllers.MopController|Index :: started.
+2021-04-06 18:48:37.0929|TRACE|WebApplication.Controllers.MopController|Index :: ended.
+2021-04-06 18:48:43.1651|TRACE|WebApplication.Controllers.MopController|Index :: started.
+2021-04-06 18:48:43.1770|TRACE|WebApplication.Controllers.MopController|Index :: ended.
+2021-04-06 18:48:45.3886|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: started.
+2021-04-06 18:48:45.3886|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: ended.
+2021-04-06 18:49:05.7338|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: started.
+2021-04-06 18:49:05.8458|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: ended.
+2021-04-06 18:49:23.7845|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: started.
+2021-04-06 18:49:23.8414|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: ended.
+2021-04-06 18:49:33.9684|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: started.
+2021-04-06 18:49:33.9684|TRACE|WebApplication.Controllers.MopController|GetSiteConfig :: ended.
+2021-04-06 18:49:35.2360|TRACE|WebApplication.Controllers.MopController|GetMOPData :: started.
+2021-04-06 18:49:35.2470|TRACE|WebApplication.Controllers.MopController|GetMOPData :: ended.
+2021-04-06 18:49:41.0065|TRACE|WebApplication.Controllers.MopController|GetMOPData :: started.
+2021-04-06 18:49:41.0735|TRACE|WebApplication.Controllers.MopController|GetMOPData :: ended.
+2021-04-06 18:49:49.5975|TRACE|WebApplication.Controllers.MopController|GetSelectedData :: started.
+2021-04-06 18:49:49.6235|TRACE|WebApplication.Controllers.MopController|GetSelectedData :: ended.
+2021-04-06 18:49:50.1020|TRACE|WebApplication.Controllers.MopController|GetSelectedData :: started.
+2021-04-06 18:49:50.1170|TRACE|WebApplication.Controllers.MopController|GetSelectedData :: ended.
+2021-04-06 18:50:40.5153|TRACE|WebApplication.Controllers.MopController|LoadPlans :: started.
+2021-04-06 18:50:40.5153|TRACE|WebApplication.Controllers.MopController|LoadPlans :: ended.
+2021-04-06 18:50:45.8202|TRACE|WebApplication.Controllers.MopController|LoadDataForScheduler :: started.
+2021-04-06 18:50:45.9841|TRACE|WebApplication.Controllers.MopController|LoadDataForScheduler :: ended.
+2021-04-06 18:51:07.0617|TRACE|WebApplication.Controllers.MopController|LoadPlans :: started.
+2021-04-06 18:51:07.0757|TRACE|WebApplication.Controllers.MopController|LoadPlans :: ended.
+2021-04-06 18:51:21.0221|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 18:51:21.0271|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 19:05:45.2753|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 19:05:45.3323|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 19:06:23.8147|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 19:06:23.8247|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 19:13:35.6555|TRACE|WebApplication.Controllers.MopController|LoadPlans :: started.
+2021-04-06 19:13:35.7055|TRACE|WebApplication.Controllers.MopController|LoadPlans :: ended.
+2021-04-06 19:13:37.7716|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 19:13:37.7866|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 19:13:47.3150|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 19:13:47.3610|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 19:13:51.8182|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 19:13:51.8252|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
+2021-04-06 19:15:42.9227|TRACE|WebApplication.Controllers.MopController|LoadDataForScheduler :: started.
+2021-04-06 19:15:42.9467|TRACE|WebApplication.Controllers.MopController|LoadDataForScheduler :: ended.
+2021-04-06 19:17:08.8717|TRACE|WebApplication.Controllers.MopController|LoadPlans :: started.
+2021-04-06 19:17:08.8857|TRACE|WebApplication.Controllers.MopController|LoadPlans :: ended.
+2021-04-06 19:17:10.4923|TRACE|WebApplication.Controllers.MopController|MopPlanData :: started.
+2021-04-06 19:17:10.5103|TRACE|WebApplication.Controllers.MopController|MopPlanData :: ended.
