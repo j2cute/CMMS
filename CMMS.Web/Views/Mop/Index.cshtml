@@ -51,7 +51,7 @@
         $("#C_Site_Config_SiteId").val(siteId).attr('disabled', true, "style", "pointer-events: '';")
         GetSiteConfig();
         var mopTable;
-        $("#addNewMOP").attr('disabled', true);
+        //$("#addNewMOP").attr('disabled', true);
         //$("#ConfigEquipment").hide();
        // $("#Proceed").click(function () {
 
@@ -404,7 +404,6 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group row" style="margin-bottom: 0.1rem">
@@ -414,7 +413,7 @@
                                         @Html.ValidationMessageFor(model => model.C_Site_Config.SiteId, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="col-sm-7">
-                                      @*  <input type="button" id="Proceed" onclick="GetSiteConfig()" value="Proceed" class="btn btn-primary" />*@
+                                        <input type="button" id="Proceed" onclick="GetSiteConfig()" value="Proceed" class="btn btn-primary" />
                                     </div>
                                 </div>
                             </div>
