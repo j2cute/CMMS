@@ -24,6 +24,28 @@
     table.dataTable tbody th, table.dataTable tbody td {
         padding: 4px 4px !important;
     }
+
+    .card-header {
+        background-color: #17a2b8 !important;
+    }
+
+    .button-color {
+        background-color: #f8f9fa !important;
+        opacity: .65 !important;
+        color: #444 !important;
+        float: right !important;
+    }
+
+    .btn {
+        padding: 0rem !important;
+        padding-right: .5rem !important;
+        padding-left: .5rem !important;
+    }
+
+
+    .jsTableHeader {
+        background-color: #cccfd2 !important;
+    }
 </style>
 
 <script>
@@ -86,13 +108,17 @@
                 { 'data': 'Status', "name": "Status", },
                 {
                     'data': function (data, type, row, meta) {
-                        return '<a  class="btn-info btn-sm select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
+                        return '<a  class="btn-info btn-xs select" data-toggle="modal" data-target="myModal" href="/Cage/Details/' + data.CageId + '">' + 'Details' + '</a>';
                     }
                 },
             ],
             "rowCallback": function (row, data, dataIndex) {
                 if (data["Status"] == "InActive") {
-                    $('td', row).css('background-color', 'red');
+                    $('td', row).css('color', '#d03131');
+                    $('td', row).css('background-color', '#dee2e6');
+                    
+                } else {
+                    $('td', row).css('background-color', '#f9f9ed');
                 }
             },
 
@@ -133,18 +159,19 @@
 </script>
 
 
-<section class="content-header">
+@*<section class="content-header">
     <div class="container-fluid">
         <h1>
-            Manufactures
+            
         </h1>
     </div>
-</section>
+</section>*@
 <!-- Main content -->
 <section class="content" style="min-height:0px !important">
 
     @Html.Partial("_NotificationPanel")
 
+    <br />
     <div class="container-fluid">
         <!-- Small boxes (Stat box) -->
         <div class="row">
@@ -170,7 +197,7 @@
                         <p>Countries</p>
                     </div>
                     <div class="icon">
-                        <i class="fas fa-map"></i>
+                        <i class="fas fa-globe"></i>
                     </div>
 
                 </div>
@@ -207,17 +234,17 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <a id="addCage" class="btn btn-success" data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"></i> Add New Record</a>
+                        <h1 style="color:white;font-size: 1.4rem;" class="card-title">Manufacturers</h1>
+                        <a id="addCage" class="btn button-color"  data-modal='' href="@Url.Action("Create", "Cage")"><i class="fa fa-plus"> Add</i></a>
                     </div>
                     <!-- /.box-header -->
                     <div class="card-body">
                         <table id="example1" class="table table-bordered table-striped" width="100%">
                             <thead>
-                                <tr>
+                                <tr class="jsTableHeader">
                                     <th>Actions</th>
                                     <th>Cage Code</th>
                                     <th>Cage Name</th>
-
                                     <th>Country</th>
                                     <th>Status</th>
                                     <th></th>
@@ -230,28 +257,22 @@
                 </div>
 
             </div>
+            
             <div class="col-md-4">
-
-
-                <!-- /.box -->
-                <!-- DONUT CHART -->
-                <div class="box box-danger">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"> </h3>
-                        <br />
-                        <br />
-                        <br />
-                        <div class="box-tools pull-right">
-
+                <div class="card">
+                    <div class="card-header">
+                        <h1 style="color:white;font-size: 1.4rem;" class="card-title">Origin Wise Count</h1>
+                       </div>
+                    <!-- /.box-header -->
+                    <div class="card-body">
+                        <div class="box-body chart-responsive">
+                            <div class="chart" id="sales-chart" style="height: 300px; position: relative;"></div>
                         </div>
-                    </div>
-                    <div class="box-body chart-responsive">
-                        <div class="chart" id="sales-chart" style="height: 300px; position: relative;"></div>
                     </div>
                     <!-- /.box-body -->
                 </div>
-                <!-- /.box -->
             </div>
+            
         </div>
     </div>
 </section>

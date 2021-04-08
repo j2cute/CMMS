@@ -10,26 +10,30 @@
     .dropdown-menu-lg {
         min-width: 165px !important;
     }
+
 </style>
 
 @Html.AntiForgeryToken()
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-info">
     <!-- Left navbar links -->
-    <ul class="navbar-nav" style="margin-left: auto !important;">
+    <ul class="navbar-nav" style="margin-right:auto;">
+        <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars bg-info"></i></a>
+        </li>
 
-        <b> CONFIGURATION & MAINTENANCE MANAGEMENT SYSTEM</b>
+        <li class="nav-item" style="margin-top: 5px;color: #fff;margin-left: 300px">
+            <b> Configuration & Maintenance Management System</b>
+        </li>
     </ul>
 
     <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto" style="align-content:center">
-
-
+    <ul class="navbar-nav" style="align-content:center">
 
         <!-- Messages Dropdown Menu -->
-        <li class="nav-item dropdown" tooltip="Hello">
+        <li class="nav-item dropdown" tooltip="Switch Roles">
 
             <a class="nav-link" data-toggle="dropdown" href="#" t>
-                <i class="fas fa-sliders-h"></i>
+                <i class="fas fa-sliders-h bg-info"></i>
                 <span class="badge badge-danger navbar-badge"></span>
             </a>
 
@@ -61,7 +65,7 @@
 
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
-                <i class="fas fa-th-large"></i>
+                <i class="fas fa-th-large bg-info"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
 
@@ -90,7 +94,7 @@
 
                     $(this).prop('checked', true);
                     ChangeColor(this)
-             
+
             } else {
                 $(this).change(function () {
                     $.ajax({

@@ -55,11 +55,15 @@
     <script type="text/javascript" src="~/Scripts/aspnet/dx.aspnet.data.js"></script>
 
 </head>
-<body class="hold-transition layout-fixed text-sm sidebar-mini">
+<body class="sidebar-mini layout-fixed sidebar-collapse">
     <div class="wrapper">
         @Html.Partial("_NavBar", userRoles)
         @Html.Partial("_SideBar", permissions)
-        @Html.Partial("_NotificationPanel");
+
+
+        @*@Html.Partial("_NotificationPanel");*@
+
+
         <div id="idContent" class="content-wrapper">
             @RenderBody()
         </div>

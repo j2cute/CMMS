@@ -3,62 +3,64 @@
 @{
     var permissions = (List<PermissionViewModel>)Model;
 }
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    @*<a href=@Url.Action("Dashboard","Admin") class="brand-link">
-        <img src="~/Content/Images/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-             style="opacity: .8">
-        <span class="brand-text font-weight-light"> CMMS </span>
-    </a>*@
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-            @*<div class="image">
-                <img src="" class="img-circle elevation-2" alt="User Image">
-            </div>*@
-            <div class="info">
-                <a href="#" class="d-block">Welcome!! <b> @User.Identity.GetUserName()</b></a>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4 sidebar-no-expand cc_cursor">
+        <!-- Brand Logo -->
+        <a href=@Url.Action("Dashboard","Admin") class="brand-link">
+            <img src="~/Content/Images/AdminLTELogo.jpg" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+                 style="opacity: .8">
+            <span class="brand-text font-weight"> PN - CMMS </span>
+        </a>
+
+ 
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                @*<div class="image">
+                    <img src="~/Content/Images/User.png" class="img-circle elevation-2" alt="">
+                </div>*@
+                <div class="info">
+                    <a href="#" class="d-block">Welcome!! <b style="color:#fff !important"> @User.Identity.GetUserName()</b></a>
+                </div>
             </div>
+
+            <!-- Sidebar Menu -->
+            <nav class="mt-2">
+
+                <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
+
+                    @foreach (var parentPermission in permissions.Where(x => x.Level == "1"))
+                    {
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                @if (parentPermission.IconPath != null)
+                                {
+                                    <i class="nav-icon  @parentPermission.IconPath"></i>
+                                }
+                                else
+                                { <i class="nav-icon  fas fa-chart-pie"></i>}
+                                <p>
+                                    @parentPermission.DisplayName
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview" style="display: none;">
+                                @foreach (var childPermission in permissions.Where(x => x.Level == "2" && x.ParentId == parentPermission.PermissionId))
+                                {
+                                    <li class="nav-item">
+                                        <a href="@childPermission.URL" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>@childPermission.DisplayName</p>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+
+                    }
+                </ul>
+            </nav>
+            <!-- /.sidebar-menu -->
         </div>
-
-        <!-- Sidebar Menu -->
-        <nav class="mt-2">
-
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-
-                @foreach (var parentPermission in permissions.Where(x => x.Level == "1"))
-                {
-                    <li class="nav-item has-treeview">
-                        <a href="#" class="nav-link">
-                            @if (parentPermission.IconPath != null)
-                            {
-                                <i class="nav-icon  @parentPermission.IconPath"></i>  
-                            }
-                            else
-                            { <i class="nav-icon  fas fa-chart-pie"></i>}
-                            <p>
-                                @parentPermission.DisplayName
-                                <i class="right fas fa-angle-left"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview" style="display: none;">
-                            @foreach (var childPermission in permissions.Where(x => x.Level == "2" && x.ParentId == parentPermission.PermissionId))
-                            {
-                                <li class="nav-item">
-                                    <a href="@childPermission.URL" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>@childPermission.DisplayName</p>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </li>
-
-                }
-            </ul>
-        </nav>
-        <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
-</aside>
+        <!-- /.sidebar -->
+    </aside>

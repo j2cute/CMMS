@@ -465,7 +465,6 @@ namespace WebApplication.Controllers
             return RedirectToAction("Index");
         }
 
-
         #region Utilities
 
         private CageViewModels GetCage(int id)
