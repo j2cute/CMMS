@@ -372,8 +372,10 @@
     <Content Include="Content\fixedColumns.dataTables.min.css" />
     <Content Include="Content\fonts\font-awesome.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\Images\AdminLTELogo.jpg" />
     <Content Include="Content\Images\AdminLTELogo.png" />
     <Content Include="Content\Images\AdminLTELogo1.png" />
+    <Content Include="Content\Images\user.png" />
     <Content Include="Content\Img\part.png" />
     <Content Include="Content\Img\swap.svg" />
     <Content Include="Content\ionicons.min.css" />

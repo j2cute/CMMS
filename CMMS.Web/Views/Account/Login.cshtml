@@ -1,7 +1,5 @@
 ﻿@using ClassLibrary.Models
 @model LoginViewModel
-
-
 @{
     ViewBag.Title = "Log in";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -14,29 +12,15 @@
 <!--//** Navigation**//-->
 
 <nav class="navbar navbar-default navbar-fixed white no-background bootsnav navbar-scrollspy" data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
-
-
-
     <div class="container">
-
         <!-- Start Header Navigation -->
-
         <div class="navbar-header">
-
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
-
                 <i class="fa fa-bars"></i>
-
             </button>
 
             <a class="navbar-brand" href="#brand">
-
-                @*<h1>PN - CMMS</h1>*@
-                @*<img src="~/Content/LoginPage/logo.gif" class="logo" alt="logo" title="CMMMS">*@
-
-
             </a>
-
         </div>
 
         <!-- End Header Navigation -->
@@ -65,9 +49,6 @@
     </div>
 
 </nav>
-
-
-
 <!--//** Banner**//-->
 
 <section id="home">
@@ -91,70 +72,63 @@
                 </h2>
 
                 <p style="text-align:justify">Configuration & Maintenace Managment System is devloped for PN wide Configuration of Equipment Platform Wise & Development of there Maintenance Packages</p>
-
-                @*<a href="#" class="btn btn-transparent">G</a>*@
-
-
+ 
             </div>
 
             <!-- Sign Up -->
-            @*@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()*@
+      
+         
+            <div class="col-md-5 col-md-offset-1">
 
-                <div class="col-md-5 col-md-offset-1">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "signup-form", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
 
-                    <form class="signup-form">
+                    <h2 class="text-center">Sign in</h2>
 
-                        <h2 class="text-center">Sign in</h2>
+                    <hr>
 
-                        <hr>
+                    <div class="form-group">
 
-                        <div class="form-group">
-
-                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @autofocus = "", @placeholder = "User name" })
-                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
-                        </div>
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @autofocus = "", @placeholder = "User name" })
+                        @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                    </div>
 
 
-                        <div class="form-group">
+                    <div class="form-group">
 
-                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
-                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
 
-                        </div>
+                    </div>
 
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-1">
-                                    @Html.CheckBoxFor(m => m.RememberMe, new { @class = "" })
-                                </div>
-                                <div class="col-md-11">
-                                    
-                                    @Html.LabelFor(m => m.RememberMe, new { @class = "form-control-label" })
-                                </div>
-
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-1">
+                                @Html.CheckBoxFor(m => m.RememberMe, new { @class = "" })
                             </div>
-                          
+                            <div class="col-md-11">
+
+                                @Html.LabelFor(m => m.RememberMe, new { @class = "form-control-label" })
+                            </div>
 
                         </div>
 
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-blue btn-block">Sign in</button>
 
-                           @Html.ValidationSummary(true, "", new { @class = "text-danger", @id = "test" })
+                    </div>
 
-                        </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-blue btn-block">Sign in</button>
 
-                    </form>
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger", @id = "test" })
 
+                    </div>
+                }
                 </div>
-            
+         
         </div>
-
     </div>
-
 </section>
-@*@section Scripts {
+@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}*@
+}

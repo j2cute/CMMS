@@ -7,10 +7,13 @@
 <script src="@Url.Content("~/Scripts/AdminLTE/jquery-tailwind-toggle.js")"></script>
 
 <style>
-    .dropdown-menu-lg {
+   /* .dropdown-menu-lg {
         min-width: 165px !important;
     }
 
+    .nav-link{
+        padding-left:0rem !important;
+    }*/
 </style>
 
 @Html.AntiForgeryToken()
@@ -71,8 +74,7 @@
 
                 <div class="dropdown-divider cc_cursor"></div>
                 <a class="nav-link" data-modal='' href="@Url.Action("ChangePassword","Administration")">
-                    <i class="fa fa-key"></i> Change Password
-                    <span class="badge badge-danger navbar-badge"></span>
+                    <i class="fa fa-key"></i> Change Password <span class="badge badge-danger navbar-badge"></span>
                 </a>
 
                 <div class="dropdown-divider"></div>
