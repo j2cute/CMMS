@@ -6,92 +6,155 @@
     ViewBag.Title = "Log in";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-    <style>
-            /*
-        *
-        * ==========================================
-        * CUSTOM UTIL CLASSES
-        * ==========================================
-        *
-        */
-            .login,
-            .image {
-                min-height: 100vh;
-            }
-
-            .bg-image { /* background-image: url('https://res.cloudinary.com/mhmd/image/upload/v1555917661/art-colorful-contemporary-2047905_dxtao7.jpg');
-           */
-                background-image: url('../../Content/Img/loghead.png');
-                background-size: cover;
-                background-position: center center;
-            }
-
-        #test ul {
-            text-decoration: none;
-            list-style: none;
-        }
+<style>
+    .signup-form input {
+        height:auto !important;
+    }
 </style>
-<div class="container-fluid">
-    <div class="row no-gutter">
-        <!-- The image half -->
-        <div class="col-md-7 d-none d-md-flex bg-image"></div>
+<!--//** Navigation**//-->
+
+<nav class="navbar navbar-default navbar-fixed white no-background bootsnav navbar-scrollspy" data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
 
 
-        <!-- The content half -->
-        <div class="col-md-5 bg-light">
-            <div class="login d-flex align-items-center py-5">
 
-                <!-- Demo content-->
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-10 col-xl-8 mx-auto">
+    <div class="container">
 
-                            <h3 class="display-4">
-                                <img src="~/Content/LoginPage/logo.gif" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
-                                     style="opacity: .8;width:110px"><b>CMMS</b>
-                            </h3>
-                            <p class="text-muted mb-4">PN Configuration & Maintenance Management System</p>
-                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                            {
-                                @Html.AntiForgeryToken()
+        <!-- Start Header Navigation -->
 
-                                <div class="form-group mb-3">
-                                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control rounded-pill border-0 shadow-sm px-4", @autofocus = "", @placeholder = "User name" })
-                                    @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+        <div class="navbar-header">
 
-                                </div>
-                                <div class="form-group mb-3">
-                                    @Html.PasswordFor(m => m.Password, new { @class = "form-control rounded-pill border-0 shadow-sm px-4 text-primary", @placeholder = "Password" })
-                                    @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
 
-                                </div>
-                                <div class="custom-control custom-checkbox mb-3">
-                                    @*<label for="customCheck1" class="custom-control-label">Remember password</label>*@
+                <i class="fa fa-bars"></i>
 
-                                    @Html.CheckBoxFor(m => m.RememberMe, new { @class = "custom-control-input" })
-                                    @Html.LabelFor(m => m.RememberMe, new { @class = "custom-control-label" })
+            </button>
 
-                                </div>
-                                <input type="submit" value="Log in" class="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm" />
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger", @id = "test" })
+            <a class="navbar-brand" href="#brand">
+
+                @*<h1>PN - CMMS</h1>*@
+                @*<img src="~/Content/LoginPage/logo.gif" class="logo" alt="logo" title="CMMMS">*@
 
 
-                                <div class="text-center d-flex justify-content-between mt-4">
+            </a>
 
-                                    <p align="center"><strong>Designed & Developed by <a>PN Software Department</a>.</strong> All rights reserved.</p>
+        </div>
 
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div><!-- End -->
+        <!-- End Header Navigation -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
 
-            </div>
-        </div><!-- End -->
+        <div class="collapse navbar-collapse" id="navbar-menu">
+
+            <ul class="nav navbar-nav navbar-right">
+
+                <li class="scroll"><a href="#">Contact Admin</a></li>
+
+                <li class="scroll"><a href="#">About CMMS</a></li>
+
+                <li class="scroll"><a href="#">CMMS Help </a></li>
+
+                <li class="button-holder">
+                    <button type="button" class="btn btn-blue navbar-btn" data-toggle="modal" data-target="#">Sign Up</button>
+                </li>
+
+            </ul>
+
+        </div>
+
+        <!-- /.navbar-collapse -->
 
     </div>
-</div>
-@section Scripts {
+
+</nav>
+
+
+
+<!--//** Banner**//-->
+
+<section id="home">
+
+    <div class="container">
+
+        <div class="row">
+
+            <!-- Introduction -->
+
+            <div class="col-md-6 caption">
+
+                <h1>Welcome To CMMS</h1>
+
+                <h2>
+
+                    <span class="animated-text"></span>
+
+                    <span class="typed-cursor"></span>
+
+                </h2>
+
+                <p style="text-align:justify">Configuration & Maintenace Managment System is devloped for PN wide Configuration of Equipment Platform Wise & Development of there Maintenance Packages</p>
+
+                @*<a href="#" class="btn btn-transparent">G</a>*@
+
+
+            </div>
+
+            <!-- Sign Up -->
+            @*@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()*@
+
+                <div class="col-md-5 col-md-offset-1">
+
+                    <form class="signup-form">
+
+                        <h2 class="text-center">Sign in</h2>
+
+                        <hr>
+
+                        <div class="form-group">
+
+                            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @autofocus = "", @placeholder = "User name" })
+                            @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        <div class="form-group">
+
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control", @placeholder = "Password" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-1">
+                                    @Html.CheckBoxFor(m => m.RememberMe, new { @class = "" })
+                                </div>
+                                <div class="col-md-11">
+                                    
+                                    @Html.LabelFor(m => m.RememberMe, new { @class = "form-control-label" })
+                                </div>
+
+                            </div>
+                          
+
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-blue btn-block">Sign in</button>
+
+                           @Html.ValidationSummary(true, "", new { @class = "text-danger", @id = "test" })
+
+                        </div>
+
+                    </form>
+
+                </div>
+            
+        </div>
+
+    </div>
+
+</section>
+@*@section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
+}*@
