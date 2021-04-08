@@ -271,9 +271,10 @@ namespace WebApplication.Controllers
                                 if (eswbsDetail != null)
                                 {
                                     type = "success";
-                                    if (eswbsDetail.CageId != null && eswbsDetail.PartId != null)
-                                    {
-                                        var partDetails = db.tbl_Parts.Where(x => x.CageId == eswbsDetail.CageId && x.PartId == eswbsDetail.PartId).Select(x => new PartsModel
+                                  //  if (eswbsDetail.CageId != null && eswbsDetail.PartId != null)
+                                  if (eswbsDetail.PartId != null)
+                                        {
+                                        var partDetails = db.tbl_Parts.Where(x => x.PartId == eswbsDetail.PartId).Select(x => new PartsModel
                                         {
                                             Part_No = x.Part_No,
                                             PART_NAME = x.PART_NAME,
@@ -303,9 +304,9 @@ namespace WebApplication.Controllers
 
                                             vm.PartsModel = partDetails;
 
-                                            if (!String.IsNullOrWhiteSpace(partDetails.CageCode))
+                                            if (partDetails.CageId != null)
                                             {
-                                                var CageDetails = db.tbl_Cage.Where(x => x.CageCode == partDetails.CageCode).Select(x => new CageModel
+                                                var CageDetails = db.tbl_Cage.Where(x => x.CageId == partDetails.CageId).Select(x => new CageModel
                                                 {
                                                     CageCode = x.CageCode,
                                                     CageName = x.CageName,

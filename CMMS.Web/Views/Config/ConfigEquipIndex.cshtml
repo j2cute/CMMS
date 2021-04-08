@@ -27,6 +27,19 @@
     .selected td {
         background-color: #3c8dbc !important;
     }
+
+
+    .button-color {
+        background-color: #a9dae3 !important;
+        font-weight: bold;
+        color: #444 !important;
+    }
+
+    .btn {
+        padding: 0rem !important;
+        padding-right: .5rem !important;
+        padding-left: .5rem !important;
+    }
 </style>
 
 <script>
@@ -617,10 +630,13 @@
 <input type="hidden" name="Eswbs" id="Eswbs" />
 
 <section class="content">
+    <br />
     <div class="container-fluid">
         <div class="row" id="ConfigEquipment">
+
             <div class="col-md-12">
                 <div class="card" style="width:100%">
+
                     <div class="card-header">
                         <div class="row">
                             <div class="col-md-6">
@@ -635,97 +651,107 @@
                             </div>
                             <div class="col-md-6" style="text-align:right">
                                 <input type="hidden" name="selectedItems" id="selectedItems" />
-                                <input data-toggle="modal" data-target="#testModal" type="button" value="Add Child" class="btn btn-default" id="AddChild" />
-                                <input data-toggle="modal" data-target="#testModal" onclick="GetEditChild()" type="button" value="Edit ESWBS" class="btn btn-default" id="editChild" />
-                                <input data-toggle="modal" data-target="#delChildModal" type="button" value="Delete ESWBS" class="btn btn-default" id="delChild" />
+
+                                <input data-toggle="modal" data-target="#testModal" type="button" value="Add Child" class="btn button-color fa fa-plus" id="AddChild" />
+                                <input data-toggle="modal" data-target="#testModal" onclick="GetEditChild()" type="button" value="Edit ESWBS" class="btn button-color fa fa-plus" id="editChild" />
+
+                                <input data-toggle="modal" data-target="#delChildModal" type="button" value="Delete ESWBS" class="btn button-color fa fa-plus" id="delChild" />
                             </div>
                         </div>
                     </div>
+
                     <div class="card-body">
                         <div class="scroll" style="overflow-x: auto;  width: 100%;">
                             <div class="row">
                                 <div class="col-md-8">
                                     <div id="jstree" style="min-height:495px"></div>
                                 </div>
-                                <div class="col-md-4">
-                                    <fieldset class="border p-3" id="divDetails" style="display:none;border: 2px solid #dee2e6!important;">
-                                        <legend class="w-auto">Selected ESWBS Details</legend>
-                                        <input id="tbtitle" type="hidden" />
-                                        <input id="tbPartId" type="hidden" />
-                                        <input id="tbCageId" type="hidden" />
-                                        <input id="tbPEswbs" type="hidden" />
-                                        <input id="tbSmr" type="hidden" />
-                                        <div class="form-group">
-                                            <label><strong>Eswbs No:</strong></label>
-                                            <br />
-                                            <label id="tbEswbs"></label>
-                                            @*<input class="form-control" type="text" id="tbEswbs" readonly="readonly" />*@
+
+                                <br />
+                                <div class="col-md-4" id="divDetails" style="display:none;">
+                                    <div class="card">
+                                        <div class="card-header" style="background-color: #17a2b8 !important;">
+                                            <h1 style="color:white; font-size: 1.4rem;" class="card-title">Selected ESWBS Details</h1>
                                         </div>
-                                        <div class="form-group">
-                                            <label><strong>Eswbs Name:</strong></label>
-                                            <br />
-                                            <label id="tbEswbsName"></label>
-                                            @*<input class="form-control" id="tbEswbsName" type="text" readonly="readonly" />*@
+
+                                        <div class="card-body">
+                                            <div class="col-md-12" style="width:100%" >
+                               
+                                                    <input id="tbtitle" type="hidden" />
+                                                    <input id="tbPartId" type="hidden" />
+                                                    <input id="tbCageId" type="hidden" />
+                                                    <input id="tbPEswbs" type="hidden" />
+                                                    <input id="tbSmr" type="hidden" />
+                                                    <div class="form-group">
+                                                        <label><strong>Eswbs No:</strong></label>
+                                                        <br />
+                                                        <label id="tbEswbs"></label>
+                                                        @*<input class="form-control" type="text" id="tbEswbs" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>Eswbs Name:</strong></label>
+                                                        <br />
+                                                        <label id="tbEswbsName"></label>
+                                                        @*<input class="form-control" id="tbEswbsName" type="text" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>Part Name:</strong></label>
+                                                        <br />
+                                                        <label id="tbPartName"></label>
+                                                        @*<input class="form-control" id="tbPartName" type="text" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>Manufacturer Name:</strong></label>
+                                                        <br />
+                                                        <label id="tbManufacturer"></label>
+                                                        @*<input class="form-control" id="tbManufacturer" type="text" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>PMS No:</strong></label>
+                                                        <br />
+                                                        <label id="tbPms"></label>
+                                                        @*<input class="form-control" id="tbPms" type="text" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>Qty Per Assy:</strong></label>
+                                                        <br />
+                                                        <label id="tbQpa"></label>
+                                                        @*<input class="form-control" id="tbQpa" type="text" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>Part No:</strong></label>
+                                                        <br />
+                                                        <label id="tbPartNo"></label>
+                                                        @*<input class="form-control" id="tbPartNo" type="text" readonly="readonly" />*@
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label><strong>Cage Code:</strong></label>
+                                                        <br />
+                                                        <label id="tbCage"></label>
+                                                        @*<input class="form-control" id="tbCage" type="text" readonly="readonly" />*@
+                                                    </div>
+                                         
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label><strong>Part Name:</strong></label>
-                                            <br />
-                                            <label id="tbPartName"></label>
-                                            @*<input class="form-control" id="tbPartName" type="text" readonly="readonly" />*@
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Manufacturer Name:</strong></label>
-                                            <br />
-                                            <label id="tbManufacturer"></label>
-                                            @*<input class="form-control" id="tbManufacturer" type="text" readonly="readonly" />*@
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>PMS No:</strong></label>
-                                            <br />
-                                            <label id="tbPms"></label>
-                                            @*<input class="form-control" id="tbPms" type="text" readonly="readonly" />*@
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Qty Per Assy:</strong></label>
-                                            <br />
-                                            <label id="tbQpa"></label>
-                                            @*<input class="form-control" id="tbQpa" type="text" readonly="readonly" />*@
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Part No:</strong></label>
-                                            <br />
-                                            <label id="tbPartNo"></label>
-                                            @*<input class="form-control" id="tbPartNo" type="text" readonly="readonly" />*@
-                                        </div>
-                                        <div class="form-group">
-                                            <label><strong>Cage Code:</strong></label>
-                                            <br />
-                                            <label id="tbCage"></label>
-                                            @*<input class="form-control" id="tbCage" type="text" readonly="readonly" />*@
-                                        </div>
-                                    </fieldset>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                         <br />
-
                     </div>
-                </div>
 
+                </div>
             </div>
 
 
-
-
-
-
+           
 
 
         </div>
+
+
     </div>
-
-
-
 </section>
 
 
@@ -869,10 +895,6 @@
         </div>
     </div>
 </div>
-
-
-
-
 
 <div id='delChildModal' class='modal fade'>
     <div class="modal-dialog modal-lg" style="width: 40% !important;">
